@@ -75,6 +75,10 @@
   "settings.saveFailed": "Failed to save settings",
   "settings.resetFailed": "Failed to reset settings",
   "settings.saveGeminiFailed": "Failed to save Gemini settings",
-  "settings.resetGeminiFailed": "Failed to reset Gemini settings"
+  "settings.resetGeminiFailed": "Failed to reset Gemini settings",
+  "codex.title": "Codex Configuration",
+  "codex.noConfig": "No configuration options available",
+  "copilot.title": "Copilot Configuration",
+  "copilot.noConfig": "No configuration options available"
 }
 

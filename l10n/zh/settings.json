@@ -75,6 +75,10 @@
   "settings.saveFailed": "保存设置失败",
   "settings.resetFailed": "重置设置失败",
   "settings.saveGeminiFailed": "保存Gemini设置失败",
-  "settings.resetGeminiFailed": "重置Gemini设置失败"
+  "settings.resetGeminiFailed": "重置Gemini设置失败",
+  "codex.title": "Codex 配置",
+  "codex.noConfig": "暂无配置项",
+  "copilot.title": "Copilot 配置",
+  "copilot.noConfig": "暂无配置项"
 }
 

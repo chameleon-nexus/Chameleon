@@ -547,7 +547,11 @@ export class ChameleonSettingsPanel {
             geminiSaveAll: t('settings.gemini.saveAll'),
             geminiResetAll: t('settings.gemini.resetAll'),
             geminiSelectDefaultModel: t('settings.gemini.selectDefaultModel'),
-            geminiSelectTestProvider: t('settings.gemini.selectTestProvider')
+            geminiSelectTestProvider: t('settings.gemini.selectTestProvider'),
+            codexTitle: t('settings.codex.title'),
+            codexNoConfig: t('settings.codex.noConfig'),
+            copilotTitle: t('settings.copilot.title'),
+            copilotNoConfig: t('settings.copilot.noConfig')
         };
 
         return `<!DOCTYPE html>
@@ -868,6 +872,8 @@ export class ChameleonSettingsPanel {
         <div class="tab-header">
             <button class="tab-button active" onclick="switchTab('claude-code')">Claude Code</button>
             <button class="tab-button" onclick="switchTab('gemini')">${texts.geminiTitle}</button>
+            <button class="tab-button" onclick="switchTab('codex')">Codex</button>
+            <button class="tab-button" onclick="switchTab('copilot')">Copilot</button>
         </div>
         
         <!-- Claude Code Tab -->
@@ -1210,6 +1216,30 @@ export class ChameleonSettingsPanel {
                 <div id="geminiGlobalLoading" class="loading">${texts.loading}</div>
             </div>
         </div>
+        
+        <!-- Codex Tab -->
+        <div id="codex-tab" class="tab-content">
+            <div class="section">
+                <div class="section-title">${texts.codexTitle}</div>
+                <div class="form-group">
+                    <p style="color: var(--vscode-descriptionForeground); text-align: center; padding: 40px;">
+                        ${texts.codexNoConfig}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copilot Tab -->
+        <div id="copilot-tab" class="tab-content">
+            <div class="section">
+                <div class="section-title">${texts.copilotTitle}</div>
+                <div class="form-group">
+                    <p style="color: var(--vscode-descriptionForeground); text-align: center; padding: 40px;">
+                        ${texts.copilotNoConfig}
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1311,6 +1341,8 @@ export class ChameleonSettingsPanel {
                     console.error('[Webview] Gemini default model select element not found on tab switch!');
                 }
                 console.log('[Webview] ===== Gemini tab switch completed =====');
+            } else if (tabName === 'codex' || tabName === 'copilot') {
+                console.log('[Webview] Switched to', tabName, 'tab - no configuration available yet');
             } else {
                 console.log('[Webview] Switched to non-Gemini tab:', tabName);
             }
