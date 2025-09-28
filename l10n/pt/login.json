@@ -1,0 +1,18 @@
+{
+  "title": "Login - Chameleon",
+  "subtitle": "Coleção de Ferramentas CLI IA",
+  "username": "Nome de Usuário",
+  "password": "Senha",
+  "usernamePlaceholder": "Por favor digite o nome de usuário",
+  "passwordPlaceholder": "Por favor digite a senha",
+  "login": "Login",
+  "loggingIn": "Fazendo login...",
+  "loginSuccess": "Login bem-sucedido!",
+  "loginFailed": "Falha no login",
+  "networkError": "Erro de rede: {error}",
+  "invalidCredentials": "Nome de usuário ou senha inválidos",
+  "enterCredentials": "Por favor digite nome de usuário e senha",
+  "loginDescription": "Faça login para acessar mais recursos",
+  "error": "Erro",
+  "success": "Sucesso"
+}

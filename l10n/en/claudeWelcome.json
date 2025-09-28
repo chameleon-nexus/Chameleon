@@ -1,0 +1,63 @@
+{
+  "title": "Claude Code",
+  "desc": "Professional AI programming assistant supporting code generation, debugging and optimization",
+  "mode": "Claude Code Mode",
+  "official": "Claude Code (Official)",
+  "thirdParty": "Claude Code (Third-party AI)",
+  "settings": "⚙️ Claude Settings",
+  "settingsDesc": "Configure Claude Code models and parameters",
+  "depsTitle": "Dependency Status Check",
+  "depsLoading": "Checking dependencies...",
+  "exclusiveMode": "Claude Exclusive Mode",
+  "toolbox": "🧰 Claude Toolbox",
+  "toolboxDesc": "Professional tools including agent management, output styles, prompt generators, and more",
+  "launchTerminal": "Launch Terminal",
+  "recheckDeps": "Recheck Dependencies",
+  "backToNav": "← Back to Navigation",
+  "backToNavFailed": "Failed to return to navigation",
+  "depsLoadingComment": "Dependency status will be loaded dynamically here",
+  "configured": "Configured",
+  "notConfigured": "Not Configured",
+  "installed": "Installed",
+  "notInstalled": "Not Installed",
+  "clickToConfigure": "Click to Configure",
+  "launchCLIFailed": "Failed to launch CLI",
+  "checkDepsFailed": "Failed to check dependencies",
+  "openToolboxFailed": "Failed to open toolbox",
+  "openSettingsFailed": "Failed to open settings",
+  "switchModeFailed": "Failed to switch mode",
+  "unsupportedDependency": "Unsupported dependency",
+  "installDepsFailed": "Failed to install dependencies",
+  "openSystemSettingsFailed": "Failed to open system settings"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

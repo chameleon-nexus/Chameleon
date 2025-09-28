@@ -1,0 +1,18 @@
+{
+  "title": "लॉगिन - Chameleon",
+  "subtitle": "AI CLI उपकरण संग्रह",
+  "username": "उपयोगकर्ता नाम",
+  "password": "पासवर्ड",
+  "usernamePlaceholder": "कृपया उपयोगकर्ता नाम दर्ज करें",
+  "passwordPlaceholder": "कृपया पासवर्ड दर्ज करें",
+  "login": "लॉगिन",
+  "loggingIn": "लॉगिन हो रहा है...",
+  "loginSuccess": "लॉगिन सफल!",
+  "loginFailed": "लॉगिन विफल",
+  "networkError": "नेटवर्क त्रुटि: {error}",
+  "invalidCredentials": "अमान्य उपयोगकर्ता नाम या पासवर्ड",
+  "enterCredentials": "कृपया उपयोगकर्ता नाम और पासवर्ड दर्ज करें",
+  "loginDescription": "अधिक सुविधाओं तक पहुंचने के लिए लॉगिन करें",
+  "error": "त्रुटि",
+  "success": "सफलता"
+}

@@ -1,0 +1,37 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chameleonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ade80;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#chameleonGradient)" stroke="#15803d" stroke-width="2"/>
+  
+  <!-- Chameleon body -->
+  <ellipse cx="64" cy="75" rx="25" ry="20" fill="#22c55e" opacity="0.9"/>
+  
+  <!-- Chameleon head -->
+  <ellipse cx="64" cy="45" rx="18" ry="15" fill="#22c55e"/>
+  
+  <!-- Eyes -->
+  <circle cx="58" cy="42" r="3" fill="#ffffff"/>
+  <circle cx="70" cy="42" r="3" fill="#ffffff"/>
+  <circle cx="58" cy="42" r="1.5" fill="#000000"/>
+  <circle cx="70" cy="42" r="1.5" fill="#000000"/>
+  
+  <!-- Tail -->
+  <path d="M 35 80 Q 20 85 15 95 Q 10 105 20 110 Q 30 115 40 105 Q 45 95 35 80" fill="#16a34a"/>
+  
+  <!-- Spots on body -->
+  <circle cx="55" cy="70" r="2" fill="#15803d" opacity="0.6"/>
+  <circle cx="70" cy="75" r="1.5" fill="#15803d" opacity="0.6"/>
+  <circle cx="60" cy="85" r="1" fill="#15803d" opacity="0.6"/>
+  
+  <!-- Code symbol overlay -->
+  <text x="64" y="105" text-anchor="middle" font-family="monospace" font-size="16" font-weight="bold" fill="#ffffff" opacity="0.8">{ }</text>
+</svg>
+
+

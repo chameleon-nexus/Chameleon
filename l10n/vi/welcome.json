@@ -1,0 +1,14 @@
+{
+  "title": "Trợ lý AI Chameleon",
+  "subtitle": "Tận dụng AI tiên tiến để định hình lại quy trình lập trình và sáng tạo. Trạm làm việc AI cục bộ mã nguồn mở và có thể mở rộng của bạn.",
+  "manualInstallTitle": "📖 Hướng dẫn Cài đặt Thủ công (Khuyến nghị)",
+  "manualInstallDesc": "Xem các bước cài đặt hoàn chỉnh, khuyến nghị cài đặt thủ công",
+  "autoInstallTitle": "🚀 Cài đặt Tự động (Tính năng Beta)",
+  "autoInstallDesc": "⚠️ Tính năng beta, chỉ Windows, khuyến nghị cài đặt thủ công",
+  "startTitle": "🚀 Bắt đầu",
+  "startDesc": "Giải phóng tiềm năng của tất cả các mô hình AI chính. Vào Chameleon ngay bây giờ và trải nghiệm lập trình thông minh và quản lý kiến thức được tích hợp liền mạch.",
+  "systemSettingsTitle": "⚙️ Cài đặt Hệ thống",
+  "systemSettingsDesc": "Cấu hình ngôn ngữ, chủ đề và các tùy chọn hệ thống khác",
+  "aiSettingsTitle": "🤖 Cài đặt AI",
+  "aiSettingsDesc": "Tự do cấu hình và kết nối bất kỳ nhà cung cấp AI nào như DeepSeek, GPT, Gemini và xây dựng chuỗi công cụ AI cá nhân hóa của bạn."
+}

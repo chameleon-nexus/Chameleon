@@ -1,0 +1,13 @@
+{
+    "title": "إعدادات النظام",
+    "subtitle": "تكوين اللغة والسمة والتفضيلات الأخرى للنظام",
+    "language.title": "إعدادات اللغة",
+    "language.current": "تكوين لغة العرض",
+    "language.switch": "تغيير اللغة...",
+    "language.changeFailed": "فشل في فتح قائمة اختيار اللغة.",
+    "theme.title": "إعدادات السمة",
+    "theme.current": "السمة الحالية",
+    "theme.switch": "تبديل السمة"
+}
+
+

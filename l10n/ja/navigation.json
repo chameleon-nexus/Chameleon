@@ -1,0 +1,48 @@
+{
+  "title": "CLIツールナビゲーション - Chameleon",
+  "pageTitle": "CLIツールナビゲーション",
+  "subtitle": "使用したいAI CLIツールを選択してください",
+  "logout": "ログアウト",
+  "systemSettings": "システム設定",
+  "systemSettingsDesc": "ウェルカムパネルモードとその他のシステムオプションを設定",
+  "engineSettings": "エンジン設定",
+  "engineSettingsDesc": "AIエンジンプロバイダー、モデル、パラメータを設定",
+  "claudeCode": "Claude Code",
+  "claudeCodeDesc": "コード生成、レビュー、最適化をサポートする強力なAIプログラミングアシスタント。公式APIとサードパーティAIサービスをサポート。",
+  "claudeCodeButton": "Claude Codeを起動",
+  "gemini": "Gemini CLI",
+  "geminiDesc": "マルチエンジン切り替え機能を持つ強力なコマンドラインAIエージェントツール。インテリジェントなコード生成、文書処理、自動化機能を提供。",
+  "geminiButton": "Gemini CLIを起動",
+  "geminiModeEntered": "Geminiモードに入りました",
+  "geminiModeFailed": "Geminiモードへの入りに失敗しました",
+  "codex": "Codex",
+  "codexDesc": "OpenAIのコード生成モデル。プログラミングタスクに特化して最適化され、高品質なコードを迅速に生成できます。",
+  "codexButton": "Codexを起動",
+  "codexLaunched": "Codex CLIが起動しました",
+  "codexFailed": "Codex CLIの起動に失敗しました",
+  "cursor": "Cursor CLI",
+  "cursorDesc": "Cursorエディターのコマンドラインツール。強力なAI支援プログラミング機能を提供します。",
+  "cursorButton": "近日公開",
+  "cursorLaunched": "Cursor CLIが起動しました",
+  "cursorFailed": "Cursor CLIの起動に失敗しました",
+  "claudeModeFailed": "Claudeモードへの入りに失敗しました",
+  "logoutFailed": "ログアウトに失敗しました",
+  "openEngineSettingsFailed": "エンジン設定を開くのに失敗しました",
+  "openSystemSettingsFailed": "システム設定を開くのに失敗しました",
+  "claudeModeEntered": "Claude専用モードに入りました",
+  "logoutSuccess": "ログアウトしました"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

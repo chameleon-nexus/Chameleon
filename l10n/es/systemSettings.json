@@ -1,0 +1,13 @@
+{
+    "title": "Configuración del sistema",
+    "subtitle": "Configurar idioma, tema y otras preferencias del sistema",
+    "language.title": "Configuración de idioma",
+    "language.current": "Configurar idioma de visualización",
+    "language.switch": "Cambiar idioma...",
+    "language.changeFailed": "No se pudo abrir el menú de selección de idioma.",
+    "theme.title": "Configuración de tema",
+    "theme.current": "Tema actual",
+    "theme.switch": "Cambiar tema"
+}
+
+

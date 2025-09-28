@@ -1,0 +1,18 @@
+{
+  "title": "Login - Chameleon",
+  "subtitle": "AI CLI Tool Collection",
+  "username": "Username",
+  "password": "Password",
+  "usernamePlaceholder": "Please enter username",
+  "passwordPlaceholder": "Please enter password",
+  "login": "Login",
+  "loggingIn": "Logging in...",
+  "loginSuccess": "Login successful!",
+  "loginFailed": "Login failed",
+  "networkError": "Network error: {error}",
+  "invalidCredentials": "Invalid username or password",
+  "enterCredentials": "Please enter username and password",
+  "loginDescription": "Login to access more features",
+  "error": "Error",
+  "success": "Success"
+}

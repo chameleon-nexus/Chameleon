@@ -1,0 +1,14 @@
+{
+  "title": "Assistente IA Chameleon",
+  "subtitle": "Aproveite a IA de ponta para remodelar fluxos de trabalho de codificação e criativos. Sua estação de trabalho IA local de código aberto e extensível.",
+  "manualInstallTitle": "📖 Guia de Instalação Manual (Recomendado)",
+  "manualInstallDesc": "Ver passos completos de instalação, instalação manual recomendada",
+  "autoInstallTitle": "🚀 Instalação Automática (Recurso Beta)",
+  "autoInstallDesc": "⚠️ Recurso beta, apenas Windows, instalação manual recomendada",
+  "startTitle": "🚀 Começar",
+  "startDesc": "Libere o potencial de todos os modelos de IA principais. Entre no Chameleon agora e experimente programação inteligente e gerenciamento de conhecimento integrados perfeitamente.",
+  "systemSettingsTitle": "⚙️ Configurações do Sistema",
+  "systemSettingsDesc": "Configurar idioma, tema e outras preferências do sistema",
+  "aiSettingsTitle": "🤖 Configurações de IA",
+  "aiSettingsDesc": "Configure e conecte livremente qualquer provedor de IA como DeepSeek, GPT, Gemini e construa sua cadeia de ferramentas IA personalizada."
+}

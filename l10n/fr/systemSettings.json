@@ -1,0 +1,13 @@
+{
+    "title": "Paramètres système",
+    "subtitle": "Configurer la langue, le thème et autres préférences système",
+    "language.title": "Paramètres de langue",
+    "language.current": "Configurer la langue d'affichage",
+    "language.switch": "Changer de langue...",
+    "language.changeFailed": "Impossible d'ouvrir le menu de sélection de langue.",
+    "theme.title": "Paramètres de thème",
+    "theme.current": "Thème actuel",
+    "theme.switch": "Changer de thème"
+}
+
+

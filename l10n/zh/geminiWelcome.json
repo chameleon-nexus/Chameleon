@@ -1,0 +1,47 @@
+{
+  "title": "Gemini CLI",
+  "desc": "启动各种 AI 编程工具的终端界面",
+  "mode": "Gemini 模式",
+  "cliOfficial": "Gemini CLI (官方)",
+  "cliThirdParty": "Gemini CLI (第三方AI)",
+  "cliOfficialDep": "Gemini CLI (官方)",
+  "cliThirdPartyDep": "Gemini CLI (第三方)",
+  "selectCLIMode": "选择 CLI 模式",
+  "depsTitle": "依赖状态检查",
+  "depsLoading": "正在检查依赖...",
+  "cliDesc": "启动各种 AI 编程工具的终端界面",
+  "launchTerminal": "启动终端",
+  "recheckDeps": "重新检查依赖",
+  "cliLauncher": "🚀 CLI 启动器",
+  "launchTerminalFailed": "启动终端失败",
+  "checkDepsFailed": "检查依赖失败",
+  "launchAIToolsFailed": "启动 AI 工具失败",
+  "openSettingsFailed": "打开设置失败",
+  "switchModeFailed": "切换模式失败",
+  "unsupportedDependency": "不支持的依赖",
+  "installDepsFailed": "安装依赖失败",
+  "aiSettingsDesc": "配置 AI 模型参数和偏好",
+  "systemSettingsDesc": "配置欢迎面板模式和其他系统选项",
+  "configRouter": "Claude Code Router 配置",
+  "configured": "已配置",
+  "notConfigured": "未配置",
+  "installed": "已安装",
+  "notInstalled": "未安装",
+  "clickToConfigure": "点击配置",
+  "backToNav": "← 返回导航",
+  "backToNavFailed": "返回导航失败"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

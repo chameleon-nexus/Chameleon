@@ -1,0 +1,43 @@
+{
+  "title": "CLI Tools Navigation - Chameleon",
+  "pageTitle": "CLI Tools Navigation",
+  "subtitle": "Choose the AI CLI tool you want to use",
+  "logout": "Logout",
+  "systemSettings": "System Settings",
+  "systemSettingsDesc": "Configure welcome panel mode and other system options",
+  "engineSettings": "Engine Settings",
+  "engineSettingsDesc": "Configure AI engine providers, models and parameters",
+  "claudeCode": "Claude Code",
+  "claudeCodeDesc": "Powerful AI programming assistant that supports code generation, review and optimization. Supports official API and third-party AI services.",
+  "claudeCodeButton": "Launch Claude Code",
+  "gemini": "Gemini CLI",
+  "geminiDesc": "Powerful command-line AI agent tool with multi-engine switching, providing intelligent code generation, document processing and automation capabilities.",
+  "geminiButton": "Launch Gemini CLI",
+  "geminiModeEntered": "Entered Gemini mode",
+  "geminiModeFailed": "Failed to enter Gemini mode",
+  "codex": "Codex",
+  "codexDesc": "OpenAI's code generation model, specifically optimized for programming tasks, capable of quickly generating high-quality code.",
+  "codexButton": "Launch Codex",
+  "codexLaunched": "Codex CLI launched",
+  "codexFailed": "Failed to launch Codex CLI",
+  "claudeModeFailed": "Failed to enter Claude mode",
+  "logoutFailed": "Failed to logout",
+  "openEngineSettingsFailed": "Failed to open engine settings",
+  "openSystemSettingsFailed": "Failed to open system settings",
+  "claudeModeEntered": "Entered Claude exclusive mode",
+  "logoutSuccess": "Successfully logged out"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

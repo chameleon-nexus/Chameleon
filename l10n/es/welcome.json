@@ -1,0 +1,16 @@
+{
+  "title": "Asistente IA Chameleon",
+  "subtitle": "Aprovecha la IA de vanguardia para remodelar los flujos de trabajo de codificación y creativos. Tu estación de trabajo IA local de código abierto y extensible.",
+  "manualInstallTitle": "📖 Guía de Instalación Manual (Recomendado)",
+  "manualInstallDesc": "Ver pasos de instalación completos, instalación manual recomendada",
+  "autoInstallTitle": "🚀 Instalación Automática (Función Beta)",
+  "autoInstallDesc": "⚠️ Función beta, solo Windows, instalación manual recomendada",
+  "startTitle": "🚀 Comenzar",
+  "startDesc": "Libera el potencial de todos los modelos de IA principales. Entra a Chameleon ahora y experimenta la programación inteligente y gestión del conocimiento integradas sin problemas.",
+  "systemSettingsTitle": "⚙️ Configuración del Sistema",
+  "systemSettingsDesc": "Configurar idioma, tema y otras preferencias del sistema",
+  "aiSettingsTitle": "🤖 Configuración de IA",
+  "aiSettingsDesc": "Configura y conecta libremente cualquier proveedor de IA como DeepSeek, GPT, Gemini y construye tu cadena de herramientas IA personalizada.",
+  "cliTitle": "💻 Acceso CLI Claude",
+  "cliDesc": "Abrir Claude Code CLI con variables de entorno preconfiguradas para integración perfecta con el router Chameleon."
+}

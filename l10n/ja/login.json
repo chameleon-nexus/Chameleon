@@ -1,0 +1,18 @@
+{
+  "title": "ログイン - Chameleon",
+  "subtitle": "AI CLIツールコレクション",
+  "username": "ユーザー名",
+  "password": "パスワード",
+  "usernamePlaceholder": "ユーザー名を入力してください",
+  "passwordPlaceholder": "パスワードを入力してください",
+  "login": "ログイン",
+  "loggingIn": "ログイン中...",
+  "loginSuccess": "ログイン成功！",
+  "loginFailed": "ログイン失敗",
+  "networkError": "ネットワークエラー: {error}",
+  "invalidCredentials": "ユーザー名またはパスワードが無効です",
+  "enterCredentials": "ユーザー名とパスワードを入力してください",
+  "loginDescription": "より多くの機能にアクセスするためにログインしてください",
+  "error": "エラー",
+  "success": "成功"
+}

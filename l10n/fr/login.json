@@ -1,0 +1,18 @@
+{
+  "title": "Connexion - Chameleon",
+  "subtitle": "Collection d'outils CLI IA",
+  "username": "Nom d'utilisateur",
+  "password": "Mot de passe",
+  "usernamePlaceholder": "Veuillez saisir le nom d'utilisateur",
+  "passwordPlaceholder": "Veuillez saisir le mot de passe",
+  "login": "Se connecter",
+  "loggingIn": "Connexion en cours...",
+  "loginSuccess": "Connexion réussie !",
+  "loginFailed": "Échec de la connexion",
+  "networkError": "Erreur réseau : {error}",
+  "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
+  "enterCredentials": "Veuillez saisir le nom d'utilisateur et le mot de passe",
+  "loginDescription": "Connectez-vous pour accéder à plus de fonctionnalités",
+  "error": "Erreur",
+  "success": "Succès"
+}

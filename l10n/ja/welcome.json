@@ -1,0 +1,20 @@
+{
+  "title": "カメレオン インテリジェントアシスタント",
+  "subtitle": "最先端AIを活用し、コーディングとクリエイティブワークフローを再構築。あなたのオープンソース、拡張可能なローカルAIワークステーション。",
+  "manualInstallTitle": "📖 手動インストールガイド（推奨）",
+  "manualInstallDesc": "完全なインストール手順を表示、手動インストールを推奨",
+  "autoInstallTitle": "🚀 自動インストール（ベータ機能）",
+  "autoInstallDesc": "⚠️ ベータ機能、Windowsのみ、手動インストールを推奨",
+  "startTitle": "🚀 開始",
+  "startDesc": "すべての主流AIモデルの可能性を解き放つ。今すぐカメレオンに入り、シームレスに統合されたインテリジェントプログラミングとナレッジマネジメントを体験してください。",
+  "systemSettingsTitle": "⚙️ システム設定",
+  "systemSettingsDesc": "言語、テーマ、その他のシステム設定を構成",
+  "aiSettingsTitle": "🤖 AI設定",
+  "aiSettingsDesc": "サードパーティAIプロバイダー、モデル、APIキーなどのオプションを設定",
+  "cliTitle": "⌨️ CLIターミナル起動",
+  "cliDesc": "下記で選択したモードに基づいて、強力なコマンドラインインターフェースに直接アクセス。",
+  "cliModeTitle": "アクティブCLIモードを選択",
+  "systemSettingsOpenFailed": "システム設定を開くのに失敗しました",
+  "button.install": "インストール",
+  "button.website": "ウェブサイトを表示"
+}

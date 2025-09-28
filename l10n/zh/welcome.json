@@ -1,0 +1,20 @@
+{
+  "title": "Chameleon AI 助手",
+  "subtitle": "利用前沿AI重塑编程和创意工作流程。您的开源、可扩展本地AI工作站。",
+  "manualInstallTitle": "📖 手动安装指南（推荐）",
+  "manualInstallDesc": "查看完整安装步骤，推荐手动安装",
+  "autoInstallTitle": "🚀 自动安装（测试功能）",
+  "autoInstallDesc": "⚠️ 测试功能，仅限Windows，推荐手动安装",
+  "startTitle": "🚀 开始使用",
+  "startDesc": "释放所有主流AI模型的潜力。立即进入Chameleon，体验无缝集成的智能编程和知识管理。",
+  "systemSettingsTitle": "⚙️ 系统设置",
+  "systemSettingsDesc": "配置语言、主题和其他系统偏好",
+  "aiSettingsTitle": "🤖 AI设置",
+  "aiSettingsDesc": "配置第三方AI提供商、模型、API密钥和其他选项",
+  "cliTitle": "⌨️ 启动CLI终端",
+  "cliDesc": "根据下面选择的模式直接跳转到强大的命令行界面。",
+  "cliModeTitle": "选择活动CLI模式",
+  "systemSettingsOpenFailed": "打开系统设置失败",
+  "button.install": "安装",
+  "button.website": "查看网站"
+}

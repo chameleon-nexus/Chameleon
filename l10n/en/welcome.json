@@ -1,0 +1,20 @@
+{
+  "title": "Chameleon AI Assistant",
+  "subtitle": "Harness cutting-edge AI to reshape coding and creative workflows. Your open-source, extensible local AI workstation.",
+  "manualInstallTitle": "📖 Manual Installation Guide (Recommended)",
+  "manualInstallDesc": "View complete installation steps, manual installation recommended",
+  "autoInstallTitle": "🚀 Auto Install (Beta Feature)",
+  "autoInstallDesc": "⚠️ Beta feature, Windows only, manual installation recommended",
+  "startTitle": "🚀 Get Started",
+  "startDesc": "Unleash the potential of all mainstream AI models. Enter Chameleon now and experience seamlessly integrated intelligent programming and knowledge management.",
+  "systemSettingsTitle": "⚙️ System Settings",
+  "systemSettingsDesc": "Configure language, theme and other system preferences",
+  "aiSettingsTitle": "🤖 AI Settings",
+  "aiSettingsDesc": "Configure third-party AI providers, models, API keys, and other options",
+  "cliTitle": "⌨️ Launch CLI Terminal",
+  "cliDesc": "Jump directly into the powerful command-line interface based on the mode selected below.",
+  "cliModeTitle": "Select Active CLI Mode",
+  "systemSettingsOpenFailed": "Failed to open system settings",
+  "button.install": "Install",
+  "button.website": "View Website"
+}

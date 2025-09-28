@@ -1,0 +1,496 @@
+{
+  "name": "chameleon",
+  "displayName": "Chameleon - 智能文档助手",
+  "description": "专为文字工作者设计的智能文档处理和知识库管理工具",
+  "version": "0.1.0",
+  "publisher": "chameleon-ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chameleon-nexus/claude-code-vscode.git"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Documentation",
+    "Notebooks",
+    "Machine Learning",
+    "Productivity",
+    "Writing"
+  ],
+  "keywords": [
+    "文档处理",
+    "知识库",
+    "文字工作",
+    "智能写作",
+    "claude",
+    "notebook",
+    "ai",
+    "chameleon",
+    "文档助手"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onNotebook:chameleon-notebook",
+    "onCommand:chameleon.notebook.new",
+    "onCommand:chameleon.document.process",
+    "onCommand:chameleon.knowledge.manage"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "notebooks": [
+      {
+        "type": "chameleon-notebook",
+        "displayName": "Chameleon Notebook",
+        "selector": [
+          {
+            "filenamePattern": "*.chameleon"
+          }
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "chameleon.chat.send",
+        "title": "发送消息",
+        "category": "Chameleon",
+        "icon": "$(send)"
+      },
+      {
+        "command": "chameleon.chat.clear",
+        "title": "清空历史",
+        "category": "Chameleon",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "chameleon.folder.open",
+        "title": "打开文件夹",
+        "category": "Chameleon",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "chameleon.file.open",
+        "title": "打开文件",
+        "category": "Chameleon",
+        "icon": "$(file)"
+      },
+      {
+        "command": "chameleon.document.summarize",
+        "title": "生成摘要",
+        "category": "Chameleon",
+        "icon": "$(file-text)"
+      },
+      {
+        "command": "chameleon.document.optimize",
+        "title": "内容优化",
+        "category": "Chameleon",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "chameleon.document.translate",
+        "title": "智能翻译",
+        "category": "Chameleon",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "chameleon.installDeps",
+        "title": "一键安装所有依赖",
+        "category": "Chameleon",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "chameleon.execute.cell",
+        "title": "执行单元格",
+        "category": "Chameleon",
+        "icon": "$(play)"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "chameleonSessions",
+          "name": "Claude Sessions",
+          "when": "chameleon.extension.enabled"
+        }
+      ],
+      "chameleonSessions": [
+        {
+          "id": "chameleonPanel",
+          "name": "Claude Assistant",
+          "when": "chameleon.extension.enabled"
+        }
+      ],
+      "activitybar": [
+        {
+          "id": "chameleonAssistant",
+          "name": "Chameleon����",
+          "icon": "$(robot)",
+          "when": "chameleon.extension.enabled",
+          "title": "Chameleon����"
+        }
+      ],
+      "chameleonAssistant": [
+        {
+          "id": "chameleonChat",
+          "name": "AI�Ի�",
+          "when": "chameleon.extension.enabled"
+        }
+      ]
+    },
+    "menus": {
+      "explorer/context": [],
+      "editor/context": [
+        {
+          "command": "chameleon.document.summarize",
+          "group": "chameleon@1"
+        },
+        {
+          "command": "chameleon.document.optimize",
+          "group": "chameleon@3"
+        },
+        {
+          "command": "chameleon.document.translate",
+          "group": "chameleon@4"
+        }
+      ],
+      "notebook/toolbar": [
+        {
+          "command": "chameleon.execute.cell",
+          "group": "execute",
+          "when": "notebookType == chameleon-notebook"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "chameleon.chat.send",
+          "when": "view == chameleonChat",
+          "group": "navigation"
+        },
+        {
+          "command": "chameleon.chat.clear",
+          "when": "view == chameleonChat",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Chameleon",
+      "properties": {
+        "chameleon.defaultModel": {
+          "type": "string",
+          "default": "volcengine,deepseek-v3-250324",
+          "enum": [
+            "volcengine,deepseek-v3-250324",
+            "anthropic,claude-3-5-sonnet-20241022",
+            "anthropic,claude-3-5-haiku-20241022",
+            "openai,gpt-4o",
+            "openai,gpt-4o-mini",
+            "openai,gpt-4-turbo",
+            "openai,gpt-3.5-turbo",
+            "deepseek,deepseek-chat",
+            "deepseek,deepseek-reasoner",
+            "google,gemini-pro",
+            "google,gemini-pro-vision"
+          ],
+          "description": "Default AI model to use for document processing"
+        },
+        "chameleon.outputLanguage": {
+          "type": "string",
+          "default": "zh",
+          "enum": [
+            "zh",
+            "en",
+            "ja",
+            "fr",
+            "de",
+            "es",
+            "pt"
+          ],
+          "enumDescriptions": [
+            "中文",
+            "English",
+            "日本語",
+            "Français",
+            "Deutsch",
+            "Español",
+            "Português"
+          ],
+          "description": "Output language for document processing (summary, translation, optimization)"
+        },
+        "chameleon.providers": {
+          "type": "object",
+          "default": {
+            "volcengine": {
+              "name": "volcengine",
+              "api_base_url": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+              "api_key": "",
+              "models": [
+                "deepseek-v3-250324"
+              ],
+              "enabled": true
+            },
+            "anthropic": {
+              "name": "anthropic",
+              "api_base_url": "https://api.anthropic.com",
+              "api_key": "",
+              "models": [
+                "claude-3-5-sonnet-20241022",
+                "claude-3-5-haiku-20241022"
+              ],
+              "enabled": false
+            },
+            "openai": {
+              "name": "openai",
+              "api_base_url": "https://api.openai.com/v1",
+              "api_key": "",
+              "models": [
+                "gpt-4o",
+                "gpt-4o-mini",
+                "gpt-4-turbo",
+                "gpt-3.5-turbo"
+              ],
+              "enabled": false
+            }
+          },
+          "description": "AI provider configurations"
+        },
+        "chameleon.apiTimeout": {
+          "type": "number",
+          "default": 60000,
+          "description": "API timeout in milliseconds"
+        },
+        "chameleon.enableRouting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable intelligent model routing"
+        },
+        "chameleon.hideDefaultChat": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hide the default VS Code chat panel"
+        },
+        "chameleon.autoOpenPanel": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open Chameleon panel on startup"
+        },
+        "chameleon.activeCliMode": {
+          "type": "string",
+          "default": "claude-router",
+          "description": "选择要启动的活动AI命令行工具模式",
+          "enum": [
+            "claude-native",
+            "claude-router",
+            "gemini-native",
+            "gemini-router"
+          ],
+          "enumDescriptions": [
+            "原生 Claude Code (官方)",
+            "CCR Code (通过claude-code-router访问三方AI)",
+            "原生 Gemini CLI (官方)",
+            "GCR Code (通过gemini-cli-router访问三方AI)"
+          ]
+        },
+        "chameleon.geminiDefaultModel": {
+          "type": "string",
+          "default": "volcengine,deepseek-v3-250324",
+          "description": "Gemini CLI默认使用的AI模型配置",
+          "enum": [
+            "volcengine,deepseek-v3-250324",
+            "anthropic,claude-3-5-sonnet-20241022",
+            "anthropic,claude-3-5-haiku-20241022",
+            "openai,gpt-4o",
+            "openai,gpt-4o-mini",
+            "openai,gpt-4-turbo",
+            "openai,gpt-3.5-turbo",
+            "deepseek,deepseek-chat",
+            "deepseek,deepseek-reasoner",
+            "google,gemini-pro",
+            "google,gemini-pro-vision"
+          ]
+        },
+        "chameleon.welcomePanel.mode": {
+          "type": "string",
+          "default": "full",
+          "description": "欢迎面板显示模式",
+          "enum": [
+            "full",
+            "claude-only"
+          ],
+          "enumDescriptions": [
+            "完整模式（包含CLI启动器和所有AI工具）",
+            "Claude专用模式（仅显示Claude Code相关功能）"
+          ]
+        },
+        "chameleon.selectedAIModel": {
+          "type": "string",
+          "default": "auto",
+          "description": "聊天面板中选择的AI模型",
+          "enum": [
+            "auto",
+            "claude",
+            "gemini"
+          ],
+          "enumDescriptions": [
+            "自动选择（根据内容智能选择）",
+            "Claude模型",
+            "Gemini模型"
+          ]
+        },
+        "chameleon.subAgents": {
+          "type": "array",
+          "default": [],
+          "description": "Claude Code子代理配置列表",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "代理唯一标识符"
+              },
+              "name": {
+                "type": "string",
+                "description": "代理名称"
+              },
+              "description": {
+                "type": "string",
+                "description": "代理描述"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "代理的初始提示词"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "inactive"
+                ],
+                "description": "代理状态"
+              },
+              "createdAt": {
+                "type": "string",
+                "description": "创建时间"
+              },
+              "lastUsed": {
+                "type": "string",
+                "description": "最后使用时间"
+              }
+            }
+          }
+        },
+        "chameleon.outputStyle": {
+          "type": "object",
+          "default": {
+            "codeStyle": "standard",
+            "docStyle": "markdown",
+            "responseFormat": "structured",
+            "includeExamples": true,
+            "includeParams": true,
+            "includeMetadata": false
+          },
+          "description": "Claude Code输出样式配置",
+          "properties": {
+            "codeStyle": {
+              "type": "string",
+              "enum": [
+                "standard",
+                "compact",
+                "verbose"
+              ],
+              "description": "代码输出格式"
+            },
+            "docStyle": {
+              "type": "string",
+              "enum": [
+                "markdown",
+                "asciidoc",
+                "html"
+              ],
+              "description": "文档输出格式"
+            },
+            "responseFormat": {
+              "type": "string",
+              "enum": [
+                "structured",
+                "natural",
+                "mixed"
+              ],
+              "description": "响应输出格式"
+            },
+            "includeExamples": {
+              "type": "boolean",
+              "description": "是否包含示例"
+            },
+            "includeParams": {
+              "type": "boolean",
+              "description": "是否包含参数说明"
+            },
+            "includeMetadata": {
+              "type": "boolean",
+              "description": "是否包含元数据"
+            }
+          }
+        },
+        "chameleon.generatedPrompts": {
+          "type": "array",
+          "default": [],
+          "description": "生成的提示词历史记录",
+          "items": {
+            "type": "object"
+          }
+        },
+        "chameleon.promptImprovements": {
+          "type": "array",
+          "default": [],
+          "description": "提示词优化历史记录",
+          "items": {
+            "type": "object"
+          }
+        },
+        "chameleon.promptTemplates": {
+          "type": "array",
+          "default": [],
+          "description": "提示词模板库",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build-obfuscated",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build-obfuscated": "npm run compile && node scripts/obfuscate-build.js",
+    "build-clean": "npm run compile && npm run obfuscate",
+    "obfuscate": "node scripts/obfuscate.js",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
+    "esbuild": "^0.17.11",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "javascript-obfuscator": "^4.1.1",
+    "mocha": "^10.1.0",
+    "terser-webpack-plugin": "^5.3.14",
+    "typescript": "^4.9.5",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

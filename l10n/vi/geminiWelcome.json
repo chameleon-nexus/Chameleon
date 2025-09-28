@@ -1,0 +1,47 @@
+{
+  "title": "Gemini CLI",
+  "desc": "Launch terminal interface for various AI programming tools",
+  "mode": "Gemini Mode",
+  "cliOfficial": "Gemini CLI (Official)",
+  "cliThirdParty": "Gemini CLI (Third-party AI)",
+  "cliOfficialDep": "Gemini CLI (Official)",
+  "cliThirdPartyDep": "Gemini CLI (Third-party)",
+  "selectCLIMode": "Select CLI Mode",
+  "depsTitle": "Dependency Status Check",
+  "depsLoading": "Checking dependencies...",
+  "cliDesc": "Launch terminal interface for various AI programming tools",
+  "launchTerminal": "Launch Terminal",
+  "recheckDeps": "Recheck Dependencies",
+  "cliLauncher": "🚀 CLI Launcher",
+  "launchTerminalFailed": "Failed to launch terminal",
+  "checkDepsFailed": "Failed to check dependencies",
+  "launchAIToolsFailed": "Failed to launch AI tools",
+  "openSettingsFailed": "Failed to open settings",
+  "switchModeFailed": "Failed to switch mode",
+  "unsupportedDependency": "Unsupported dependency",
+  "installDepsFailed": "Failed to install dependencies",
+  "aiSettingsDesc": "Configure AI model parameters and preferences",
+  "systemSettingsDesc": "Configure welcome panel mode and other system options",
+  "configRouter": "Claude Code Router Configuration",
+  "configured": "Configured",
+  "notConfigured": "Not Configured",
+  "installed": "Installed",
+  "notInstalled": "Not Installed",
+  "clickToConfigure": "Click to Configure",
+  "backToNav": "← Back to Navigation",
+  "backToNavFailed": "Failed to return to navigation"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

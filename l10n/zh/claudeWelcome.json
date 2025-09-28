@@ -1,0 +1,46 @@
+{
+  "title": "Claude Code",
+  "desc": "专业的 AI 编程助手，支持代码生成、调试和优化",
+  "mode": "Claude Code 模式",
+  "official": "Claude Code (官方)",
+  "thirdParty": "Claude Code (第三方AI)",
+  "settings": "⚙️ Claude 设置",
+  "settingsDesc": "配置 Claude Code 模型和参数",
+  "depsTitle": "依赖状态检查",
+  "depsLoading": "正在检查依赖...",
+  "exclusiveMode": "Claude 专属模式",
+  "toolbox": "🧰 Claude 工具箱",
+  "toolboxDesc": "专业工具集合，包括代理管理、输出样式、提示生成器等",
+  "launchTerminal": "启动终端",
+  "recheckDeps": "重新检查依赖",
+  "backToNav": "← 返回导航",
+  "backToNavFailed": "返回导航失败",
+  "depsLoadingComment": "依赖状态将在此处动态加载",
+  "configured": "已配置",
+  "notConfigured": "未配置",
+  "installed": "已安装",
+  "notInstalled": "未安装",
+  "clickToConfigure": "点击配置",
+  "launchCLIFailed": "启动 CLI 失败",
+  "checkDepsFailed": "检查依赖失败",
+  "openToolboxFailed": "打开工具箱失败",
+  "openSettingsFailed": "打开设置失败",
+  "switchModeFailed": "切换模式失败",
+  "unsupportedDependency": "不支持的依赖",
+  "installDepsFailed": "安装依赖失败",
+  "openSystemSettingsFailed": "打开系统设置失败"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

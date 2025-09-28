@@ -1,0 +1,38 @@
+{
+  "title": "Chat Chameleon",
+  "subtitle": "Assistant IA Chat",
+  "placeholder": "Entrez votre question...",
+  "send": "Envoyer",
+  "clearHistory": "Effacer l'historique",
+  "aiModel": "Modèle IA:",
+  "auto": "Auto",
+  "thinking": "🤔 Réflexion...",
+  "processing": "🔧 Démarrage du traitement de la tâche...",
+  "generating": "🎯 Génération du résumé...",
+  "completed": "Traitement terminé",
+  "error": "Désolé, une erreur s'est produite lors du traitement de votre demande. Veuillez réessayer plus tard.",
+  "systemInit": "🔧 Initialisation du système terminée",
+  "workingDirectory": "📁 Répertoire de travail: {cwd}",
+  "availableTools": "🛠️ Outils disponibles: {tools}",
+  "toolCall": "🔧 Appel de l'outil: {name}",
+  "scanMode": "📝 Mode de balayage: {pattern}",
+  "readingFile": "📄 Lecture du fichier: {filename}",
+  "documentsFound": "✅ {count} fichiers de documents trouvés",
+  "fileContentRead": "✅ Contenu du fichier lu ({size} KB)",
+  "processingError": "Erreur de traitement du message de chat:",
+  "chameleonAssistant": "🦎 Assistant Chameleon"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

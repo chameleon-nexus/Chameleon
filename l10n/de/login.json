@@ -1,0 +1,18 @@
+{
+  "title": "Anmelden - Chameleon",
+  "subtitle": "AI CLI Tool-Sammlung",
+  "username": "Benutzername",
+  "password": "Passwort",
+  "usernamePlaceholder": "Bitte geben Sie den Benutzernamen ein",
+  "passwordPlaceholder": "Bitte geben Sie das Passwort ein",
+  "login": "Anmelden",
+  "loggingIn": "Wird angemeldet...",
+  "loginSuccess": "Anmeldung erfolgreich!",
+  "loginFailed": "Anmeldung fehlgeschlagen",
+  "networkError": "Netzwerkfehler: {error}",
+  "invalidCredentials": "Ungültiger Benutzername oder Passwort",
+  "enterCredentials": "Bitte geben Sie Benutzername und Passwort ein",
+  "loginDescription": "Melden Sie sich an, um auf weitere Funktionen zuzugreifen",
+  "error": "Fehler",
+  "success": "Erfolg"
+}

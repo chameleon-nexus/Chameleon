@@ -1,0 +1,18 @@
+{
+  "title": "تسجيل الدخول - Chameleon",
+  "subtitle": "مجموعة أدوات AI CLI",
+  "username": "اسم المستخدم",
+  "password": "كلمة المرور",
+  "usernamePlaceholder": "يرجى إدخال اسم المستخدم",
+  "passwordPlaceholder": "يرجى إدخال كلمة المرور",
+  "login": "تسجيل الدخول",
+  "loggingIn": "جاري تسجيل الدخول...",
+  "loginSuccess": "تم تسجيل الدخول بنجاح!",
+  "loginFailed": "فشل تسجيل الدخول",
+  "networkError": "خطأ في الشبكة: {error}",
+  "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
+  "enterCredentials": "يرجى إدخال اسم المستخدم وكلمة المرور",
+  "loginDescription": "سجل الدخول للوصول إلى المزيد من الميزات",
+  "error": "خطأ",
+  "success": "نجح"
+}

@@ -1,0 +1,47 @@
+{
+  "title": "Gemini CLI",
+  "desc": "様々なAIプログラミングツールのターミナルインターフェースを起動",
+  "mode": "Geminiモード",
+  "cliOfficial": "Gemini CLI（公式）",
+  "cliThirdParty": "Gemini CLI（サードパーティAI）",
+  "cliOfficialDep": "Gemini CLI（公式）",
+  "cliThirdPartyDep": "Gemini CLI（サードパーティ）",
+  "selectCLIMode": "CLIモードを選択",
+  "depsTitle": "依存関係ステータスチェック",
+  "depsLoading": "依存関係をチェック中...",
+  "cliDesc": "様々なAIプログラミングツールのターミナルインターフェースを起動",
+  "launchTerminal": "ターミナルを起動",
+  "recheckDeps": "依存関係を再チェック",
+  "cliLauncher": "🚀 CLIランチャー",
+  "launchTerminalFailed": "ターミナルの起動に失敗しました",
+  "checkDepsFailed": "依存関係のチェックに失敗しました",
+  "launchAIToolsFailed": "AIツールの起動に失敗しました",
+  "openSettingsFailed": "設定の開きに失敗しました",
+  "switchModeFailed": "モードの切り替えに失敗しました",
+  "unsupportedDependency": "サポートされていない依存関係",
+  "installDepsFailed": "依存関係のインストールに失敗しました",
+  "aiSettingsDesc": "AIモデルパラメータと設定を設定",
+  "systemSettingsDesc": "ウェルカムパネルモードとその他のシステムオプションを設定",
+  "configRouter": "Claude Code Router設定",
+  "configured": "設定済み",
+  "notConfigured": "未設定",
+  "installed": "インストール済み",
+  "notInstalled": "未インストール",
+  "clickToConfigure": "クリックして設定",
+  "backToNav": "← ナビゲーションに戻る",
+  "backToNavFailed": "ナビゲーションへの戻りに失敗しました"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

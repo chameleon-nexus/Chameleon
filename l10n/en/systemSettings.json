@@ -1,0 +1,19 @@
+{
+    "title": "System Settings",
+    "subtitle": "Configure language, theme and other system preferences",
+    "language.title": "Language Settings",
+    "language.current": "Configure Display Language",
+    "language.switch": "Change Language...",
+    "language.changeFailed": "Failed to open language picker.",
+    "theme.title": "Theme Settings",
+    "theme.current": "Current Theme",
+    "theme.switch": "Switch Theme",
+    "mode.title": "Welcome Panel Mode",
+    "mode.current": "Current Mode",
+    "mode.full": "Full Mode",
+    "mode.fullDesc": "Display Claude Code and Gemini CLI launchers with all AI tool options",
+    "mode.fullOption": "Full Mode (includes CLI launchers and all AI tools)",
+    "mode.claudeOnly": "Claude Only Mode",
+    "mode.claudeOnlyDesc": "Only display Claude Code related features with a cleaner interface",
+    "mode.claudeOnlyOption": "Claude Only Mode (only shows Claude Code related features)"
+}

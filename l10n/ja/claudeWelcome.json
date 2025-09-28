@@ -1,0 +1,46 @@
+{
+  "title": "Claude Code",
+  "desc": "コード生成、デバッグ、最適化をサポートするプロフェッショナルなAIプログラミングアシスタント",
+  "mode": "Claude Codeモード",
+  "official": "Claude Code（公式）",
+  "thirdParty": "Claude Code（サードパーティAI）",
+  "settings": "⚙️ Claude設定",
+  "settingsDesc": "Claude Codeモデルとパラメータを設定",
+  "depsTitle": "依存関係ステータスチェック",
+  "depsLoading": "依存関係をチェック中...",
+  "exclusiveMode": "Claude専用モード",
+  "toolbox": "🧰 Claudeツールボックス",
+  "toolboxDesc": "エージェント管理、出力スタイル、プロンプトジェネレーターなどを含むプロフェッショナルツール",
+  "launchTerminal": "ターミナルを起動",
+  "recheckDeps": "依存関係を再チェック",
+  "backToNav": "← ナビゲーションに戻る",
+  "backToNavFailed": "ナビゲーションへの戻りに失敗しました",
+  "depsLoadingComment": "依存関係ステータスはここに動的に読み込まれます",
+  "configured": "設定済み",
+  "notConfigured": "未設定",
+  "installed": "インストール済み",
+  "notInstalled": "未インストール",
+  "clickToConfigure": "クリックして設定",
+  "launchCLIFailed": "CLIの起動に失敗しました",
+  "checkDepsFailed": "依存関係のチェックに失敗しました",
+  "openToolboxFailed": "ツールボックスの開きに失敗しました",
+  "openSettingsFailed": "設定の開きに失敗しました",
+  "switchModeFailed": "モードの切り替えに失敗しました",
+  "unsupportedDependency": "サポートされていない依存関係",
+  "installDepsFailed": "依存関係のインストールに失敗しました",
+  "openSystemSettingsFailed": "システム設定の開きに失敗しました"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

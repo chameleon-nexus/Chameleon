@@ -1,0 +1,18 @@
+{
+  "title": "Вход - Chameleon",
+  "subtitle": "Коллекция инструментов ИИ CLI",
+  "username": "Имя пользователя",
+  "password": "Пароль",
+  "usernamePlaceholder": "Пожалуйста, введите имя пользователя",
+  "passwordPlaceholder": "Пожалуйста, введите пароль",
+  "login": "Войти",
+  "loggingIn": "Вход в систему...",
+  "loginSuccess": "Вход выполнен успешно!",
+  "loginFailed": "Ошибка входа",
+  "networkError": "Ошибка сети: {error}",
+  "invalidCredentials": "Неверное имя пользователя или пароль",
+  "enterCredentials": "Пожалуйста, введите имя пользователя и пароль",
+  "loginDescription": "Войдите, чтобы получить доступ к дополнительным функциям",
+  "error": "Ошибка",
+  "success": "Успех"
+}

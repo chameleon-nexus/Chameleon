@@ -1,0 +1,40 @@
+# VS Code Extension
+.vscode/
+out/
+*.vsix
+*.log
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+temp_*
+
+# Build artifacts
+dist/
+build/
+
+# Environment variables (security)
+.env
+.env.local
+.env.*.local
+
+# API keys and sensitive config
+*api-key*
+*secret*
+*private*
+

@@ -1,0 +1,13 @@
+{
+    "title": "Systemeinstellungen",
+    "subtitle": "Konfigurieren Sie Sprache, Design und andere Systemeinstellungen",
+    "language.title": "Spracheinstellungen",
+    "language.current": "Anzeigesprache konfigurieren",
+    "language.switch": "Sprache ändern...",
+    "language.changeFailed": "Sprachauswahlmenü konnte nicht geöffnet werden.",
+    "theme.title": "Design-Einstellungen",
+    "theme.current": "Aktuelles Design",
+    "theme.switch": "Design wechseln"
+}
+
+

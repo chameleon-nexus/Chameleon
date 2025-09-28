@@ -1,0 +1,13 @@
+{
+    "title": "Cài đặt hệ thống",
+    "subtitle": "Cấu hình ngôn ngữ, chủ đề và các tùy chọn hệ thống khác",
+    "language.title": "Cài đặt ngôn ngữ",
+    "language.current": "Cấu hình ngôn ngữ hiển thị",
+    "language.switch": "Thay đổi ngôn ngữ...",
+    "language.changeFailed": "Không thể mở menu chọn ngôn ngữ.",
+    "theme.title": "Cài đặt chủ đề",
+    "theme.current": "Chủ đề hiện tại",
+    "theme.switch": "Thay đổi chủ đề"
+}
+
+

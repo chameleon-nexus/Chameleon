@@ -1,0 +1,38 @@
+{
+  "title": "Chameleon Chat",
+  "subtitle": "AIアシスタントチャット",
+  "placeholder": "質問を入力してください...",
+  "send": "送信",
+  "clearHistory": "履歴をクリア",
+  "aiModel": "AIモデル:",
+  "auto": "自動",
+  "thinking": "🤔 思考中...",
+  "processing": "🔧 タスク処理を開始中...",
+  "generating": "🎯 要約を生成中...",
+  "completed": "処理完了",
+  "error": "申し訳ございませんが、リクエストの処理中にエラーが発生しました。後でもう一度お試しください。",
+  "systemInit": "🔧 システム初期化完了",
+  "workingDirectory": "📁 作業ディレクトリ: {cwd}",
+  "availableTools": "🛠️ 利用可能なツール: {tools}",
+  "toolCall": "🔧 ツール呼び出し: {name}",
+  "scanMode": "📝 スキャンモード: {pattern}",
+  "readingFile": "📄 ファイル読み取り: {filename}",
+  "documentsFound": "✅ {count}個のドキュメントファイルが見つかりました",
+  "fileContentRead": "✅ ファイル内容を読み取りました ({size} KB)",
+  "processingError": "チャットメッセージ処理エラー:",
+  "chameleonAssistant": "🦎 Chameleonアシスタント"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

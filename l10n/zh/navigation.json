@@ -1,0 +1,49 @@
+{
+  "title": "CLI工具导航 - Chameleon",
+  "pageTitle": "CLI工具导航",
+  "subtitle": "选择您要使用的 AI CLI 工具",
+  "logout": "退出登录",
+  "systemSettings": "系统设置",
+  "systemSettingsDesc": "配置欢迎面板模式和其他系统选项",
+  "engineSettings": "引擎设置",
+  "engineSettingsDesc": "配置AI引擎提供商、模型和参数",
+  "claudeCode": "Claude Code",
+  "claudeCodeDesc": "强大的 AI 编程助手，支持代码生成、审查和优化。支持官方 API 和第三方 AI 服务。",
+  "claudeCodeButton": "启动 Claude Code",
+  "gemini": "Gemini CLI",
+  "geminiDesc": "强大的命令行 AI 代理工具，具有多引擎切换功能，提供智能代码生成、文档处理和自动化能力。",
+  "geminiButton": "启动 Gemini CLI",
+  "geminiModeEntered": "已进入 Gemini 模式",
+  "geminiModeFailed": "进入 Gemini 模式失败",
+  "codex": "Codex",
+  "codexDesc": "OpenAI 的代码生成模型，专门针对编程任务优化，能够快速生成高质量代码。",
+  "codexButton": "启动 Codex",
+  "codexLaunched": "Codex CLI 已启动",
+  "codexFailed": "启动 Codex CLI 失败",
+  "claudeModeFailed": "进入 Claude 模式失败",
+  "logoutFailed": "退出登录失败",
+  "openEngineSettingsFailed": "打开引擎设置失败",
+  "openSystemSettingsFailed": "打开系统设置失败",
+  "claudeModeEntered": "已进入 Claude 专属模式",
+  "codexModeEntered": "已进入 Codex 专属模式",
+  "copilot": "Copilot CLI",
+  "copilotDesc": "GitHub Copilot 的命令行工具，提供强大的 AI 辅助编程功能",
+  "copilotButton": "启动 Copilot CLI",
+  "copilotModeEntered": "已进入 Copilot 专属模式",
+  "copilotFailed": "启动 Copilot CLI 失败",
+  "logoutSuccess": "已退出登录"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

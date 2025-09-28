@@ -1,0 +1,18 @@
+{
+  "title": "登录 - Chameleon",
+  "subtitle": "AI CLI 工具集合",
+  "username": "用户名",
+  "password": "密码",
+  "usernamePlaceholder": "请输入用户名",
+  "passwordPlaceholder": "请输入密码",
+  "login": "登录",
+  "loggingIn": "登录中...",
+  "loginSuccess": "登录成功！",
+  "loginFailed": "登录失败",
+  "networkError": "网络错误: {error}",
+  "invalidCredentials": "账号或密码错误",
+  "enterCredentials": "请输入用户名和密码",
+  "loginDescription": "登录后可访问更多功能",
+  "error": "错误",
+  "success": "成功"
+}

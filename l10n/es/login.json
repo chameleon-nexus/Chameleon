@@ -1,0 +1,18 @@
+{
+  "title": "Iniciar Sesión - Chameleon",
+  "subtitle": "Colección de Herramientas CLI IA",
+  "username": "Nombre de Usuario",
+  "password": "Contraseña",
+  "usernamePlaceholder": "Por favor ingrese el nombre de usuario",
+  "passwordPlaceholder": "Por favor ingrese la contraseña",
+  "login": "Iniciar Sesión",
+  "loggingIn": "Iniciando sesión...",
+  "loginSuccess": "¡Inicio de sesión exitoso!",
+  "loginFailed": "Error en el inicio de sesión",
+  "networkError": "Error de red: {error}",
+  "invalidCredentials": "Nombre de usuario o contraseña inválidos",
+  "enterCredentials": "Por favor ingrese nombre de usuario y contraseña",
+  "loginDescription": "Inicie sesión para acceder a más funciones",
+  "error": "Error",
+  "success": "Éxito"
+}

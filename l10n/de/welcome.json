@@ -1,0 +1,14 @@
+{
+  "title": "Chameleon KI-Assistent",
+  "subtitle": "Nutzen Sie modernste KI, um Codierung und kreative Arbeitsabläufe zu revolutionieren. Ihre Open-Source, erweiterbare lokale KI-Arbeitsstation.",
+  "manualInstallTitle": "📖 Handbuch zur manuellen Installation (Empfohlen)",
+  "manualInstallDesc": "Vollständige Installationsschritte anzeigen, manuelle Installation empfohlen",
+  "autoInstallTitle": "🚀 Automatische Installation (Beta-Funktion)",
+  "autoInstallDesc": "⚠️ Beta-Funktion, nur Windows, manuelle Installation empfohlen",
+  "startTitle": "🚀 Loslegen",
+  "startDesc": "Entfesseln Sie das Potenzial aller gängigen KI-Modelle. Betreten Sie Chameleon jetzt und erleben Sie nahtlos integrierte intelligente Programmierung und Wissensmanagement.",
+  "systemSettingsTitle": "⚙️ Systemeinstellungen",
+  "systemSettingsDesc": "Sprache, Design und andere Systemeinstellungen konfigurieren",
+  "aiSettingsTitle": "🤖 KI-Einstellungen",
+  "aiSettingsDesc": "Konfigurieren und verbinden Sie frei beliebige KI-Anbieter wie DeepSeek, GPT, Gemini und bauen Sie Ihre personalisierte KI-Toolchain.",
+}

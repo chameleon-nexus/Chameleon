@@ -1,0 +1,19 @@
+{
+    "title": "系统设置",
+    "subtitle": "配置语言、主题和其他系统偏好设置",
+    "language.title": "语言设置",
+    "language.current": "配置显示语言",
+    "language.switch": "更改语言...",
+    "language.changeFailed": "打开语言选择菜单失败。",
+    "theme.title": "主题设置",
+    "theme.current": "当前主题",
+    "theme.switch": "切换主题",
+    "mode.title": "欢迎面板模式",
+    "mode.current": "当前模式",
+    "mode.full": "完整模式",
+    "mode.fullDesc": "显示Claude Code和Gemini CLI启动器，包含所有AI工具选项",
+    "mode.fullOption": "完整模式（包含CLI启动器和所有AI工具）",
+    "mode.claudeOnly": "Claude专用模式",
+    "mode.claudeOnlyDesc": "仅显示Claude Code相关功能，界面更简洁",
+    "mode.claudeOnlyOption": "Claude专用模式（仅显示Claude Code相关功能）"
+}

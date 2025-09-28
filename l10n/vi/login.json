@@ -1,0 +1,18 @@
+{
+  "title": "Đăng Nhập - Chameleon",
+  "subtitle": "Bộ Sưu Tập Công Cụ AI CLI",
+  "username": "Tên Người Dùng",
+  "password": "Mật Khẩu",
+  "usernamePlaceholder": "Vui lòng nhập tên người dùng",
+  "passwordPlaceholder": "Vui lòng nhập mật khẩu",
+  "login": "Đăng Nhập",
+  "loggingIn": "Đang đăng nhập...",
+  "loginSuccess": "Đăng nhập thành công!",
+  "loginFailed": "Đăng nhập thất bại",
+  "networkError": "Lỗi mạng: {error}",
+  "invalidCredentials": "Tên người dùng hoặc mật khẩu không hợp lệ",
+  "enterCredentials": "Vui lòng nhập tên người dùng và mật khẩu",
+  "loginDescription": "Đăng nhập để truy cập thêm tính năng",
+  "error": "Lỗi",
+  "success": "Thành Công"
+}

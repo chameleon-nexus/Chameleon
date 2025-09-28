@@ -1,0 +1,14 @@
+{
+  "title": "카멜레온 AI 어시스턴트",
+  "subtitle": "최첨단 AI를 활용하여 코딩과 창작 워크플로우를 재구성하세요. 당신의 오픈소스, 확장 가능한 로컬 AI 워크스테이션.",
+  "manualInstallTitle": "📖 수동 설치 가이드 (권장)",
+  "manualInstallDesc": "완전한 설치 단계 보기, 수동 설치 권장",
+  "autoInstallTitle": "🚀 자동 설치 (베타 기능)",
+  "autoInstallDesc": "⚠️ 베타 기능, Windows만 지원, 수동 설치 권장",
+  "startTitle": "🚀 시작하기",
+  "startDesc": "모든 주류 AI 모델의 잠재력을 발휘하세요. 지금 카멜레온에 들어가서 원활하게 통합된 지능형 프로그래밍과 지식 관리를 경험하세요.",
+  "systemSettingsTitle": "⚙️ 시스템 설정",
+  "systemSettingsDesc": "언어, 테마 및 기타 시스템 환경설정 구성",
+  "aiSettingsTitle": "🤖 AI 설정",
+  "aiSettingsDesc": "DeepSeek, GPT, Gemini와 같은 모든 AI 공급업체를 자유롭게 구성하고 연결하여 개인화된 AI 도구 체인을 구축하세요."
+}
