@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { t } from '../utils/i18n';
+import { AgentRegistryService, AgentInfo, SearchFilters } from '../services/agentRegistryService';
 
 export class AgentMarketplacePanel {
     public static currentPanel: AgentMarketplacePanel | undefined;
@@ -9,6 +10,7 @@ export class AgentMarketplacePanel {
     private readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
+    private agentService: AgentRegistryService;
 
     public static createOrShow(extensionUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor
@@ -41,6 +43,7 @@ export class AgentMarketplacePanel {
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this._panel = panel;
         this._extensionUri = extensionUri;
+        this.agentService = new AgentRegistryService(vscode.extensions.getExtension('chameleon.chameleon')?.extensionContext!);
 
         // Set the webview's initial html content
         this._update();
@@ -87,6 +90,43 @@ export class AgentMarketplacePanel {
         const styleVSCodeUri = webview.asWebviewUri(
             vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css')
         );
+
+        // Collect all translations needed for JavaScript
+        const jsTranslations = {
+            title: t('agentMarketplace.title'),
+            subtitle: t('agentMarketplace.subtitle'),
+            filters: {
+                cliType: t('agentMarketplace.filtersCliType'),
+                category: t('agentMarketplace.filtersCategory'),
+                search: t('agentMarketplace.filtersSearch'),
+                allCliTypes: t('agentMarketplace.filtersAllCliTypes'),
+                allCategories: t('agentMarketplace.filtersAllCategories'),
+                searchPlaceholder: t('agentMarketplace.filtersSearchPlaceholder')
+            },
+            categories: {
+                architecture: t('agentMarketplace.categoriesArchitecture'),
+                programming: t('agentMarketplace.categoriesProgramming'),
+                infrastructure: t('agentMarketplace.categoriesInfrastructure'),
+                quality: t('agentMarketplace.categoriesQuality'),
+                data: t('agentMarketplace.categoriesData'),
+                documentation: t('agentMarketplace.categoriesDocumentation'),
+                business: t('agentMarketplace.categoriesBusiness')
+            },
+            actions: {
+                downloadToClaudeCode: t('agentMarketplace.actionsDownloadToClaudeCode'),
+                downloadToCodex: t('agentMarketplace.actionsDownloadToCodex'),
+                convertToCodex: t('agentMarketplace.actionsConvertToCodex')
+            },
+            messages: {
+                loading: t('agentMarketplace.messagesLoading'),
+                noResults: t('agentMarketplace.messagesNoResults')
+            },
+            compatibility: {
+                claudeCode: t('agentMarketplace.compatibilityClaudeCode'),
+                codex: t('agentMarketplace.compatibilityCodex')
+            }
+        };
+        const jsTranslationsJSON = JSON.stringify(jsTranslations);
 
         // Use a nonce to only allow a specific script to be run.
         const nonce = this.getNonce();
@@ -305,46 +345,112 @@ export class AgentMarketplacePanel {
             </head>
             <body>
                 <div class="header">
-                    <h1>${t('agentMarketplace.title')}</h1>
-                    <p>${t('agentMarketplace.subtitle')}</p>
+                    <h1 id="pageTitle"></h1>
+                    <p id="pageSubtitle"></p>
                 </div>
                 
                 <div class="filters">
                     <div class="filter-group">
-                        <label>${t('agentMarketplace.filters.cliType')}</label>
+                        <label id="cliTypeLabel"></label>
                         <select class="filter-select" id="cliTypeFilter">
-                            <option value="">${t('agentMarketplace.filters.allCliTypes')}</option>
-                            <option value="claude-code">${t('agentMarketplace.compatibility.claudeCode')}</option>
-                            <option value="codex">${t('agentMarketplace.compatibility.codex')}</option>
+                            <option value="" id="allCliTypesOption"></option>
+                            <option value="claude-code" id="claudeCodeOption"></option>
+                            <option value="codex" id="codexOption"></option>
                         </select>
                     </div>
                     
                     <div class="filter-group">
-                        <label>${t('agentMarketplace.filters.category')}</label>
+                        <label id="categoryLabel"></label>
                         <select class="filter-select" id="categoryFilter">
-                            <option value="">${t('agentMarketplace.filters.allCategories')}</option>
-                            <option value="architecture">${t('agentMarketplace.categories.architecture')}</option>
-                            <option value="programming">${t('agentMarketplace.categories.programming')}</option>
-                            <option value="infrastructure">${t('agentMarketplace.categories.infrastructure')}</option>
-                            <option value="quality">${t('agentMarketplace.categories.quality')}</option>
-                            <option value="data">${t('agentMarketplace.categories.data')}</option>
-                            <option value="documentation">${t('agentMarketplace.categories.documentation')}</option>
-                            <option value="business">${t('agentMarketplace.categories.business')}</option>
+                            <option value="" id="allCategoriesOption"></option>
+                            <option value="architecture" id="architectureOption"></option>
+                            <option value="programming" id="programmingOption"></option>
+                            <option value="infrastructure" id="infrastructureOption"></option>
+                            <option value="quality" id="qualityOption"></option>
+                            <option value="data" id="dataOption"></option>
+                            <option value="documentation" id="documentationOption"></option>
+                            <option value="business" id="businessOption"></option>
                         </select>
                     </div>
                     
                     <div class="filter-group">
-                        <label>${t('agentMarketplace.filters.search')}</label>
-                        <input type="text" class="search-input" id="searchInput" placeholder="${t('agentMarketplace.filters.searchPlaceholder')}">
+                        <label id="searchLabel"></label>
+                        <input type="text" class="search-input" id="searchInput" placeholder="">
                     </div>
                 </div>
                 
                 <div id="agentGrid" class="agent-grid">
-                    <div class="loading">${t('agentMarketplace.messages.loading')}</div>
+                    <div class="loading" id="loadingText"></div>
                 </div>
 
                 <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
+                    
+                    // Get translations from TypeScript
+                    const translations = ${jsTranslationsJSON};
+                    
+                    // Initialize UI with translations when DOM is ready
+                    function initializeTranslations() {
+                        console.log('Setting translations...');
+                        console.log('CLI Type translation:', translations.filters.cliType);
+                        console.log('Claude Code translation:', translations.compatibility.claudeCode);
+                        
+                        const pageTitle = document.getElementById('pageTitle');
+                        if (pageTitle) pageTitle.textContent = translations.title;
+                        
+                        const pageSubtitle = document.getElementById('pageSubtitle');
+                        if (pageSubtitle) pageSubtitle.textContent = translations.subtitle;
+                        
+                        const cliTypeLabel = document.getElementById('cliTypeLabel');
+                        if (cliTypeLabel) cliTypeLabel.textContent = translations.filters.cliType;
+                        
+                        const categoryLabel = document.getElementById('categoryLabel');
+                        if (categoryLabel) categoryLabel.textContent = translations.filters.category;
+                        
+                        const searchLabel = document.getElementById('searchLabel');
+                        if (searchLabel) searchLabel.textContent = translations.filters.search;
+                        
+                        const allCliTypesOption = document.getElementById('allCliTypesOption');
+                        if (allCliTypesOption) allCliTypesOption.textContent = translations.filters.allCliTypes;
+                        
+                        const claudeCodeOption = document.getElementById('claudeCodeOption');
+                        if (claudeCodeOption) claudeCodeOption.textContent = translations.compatibility.claudeCode;
+                        
+                        const codexOption = document.getElementById('codexOption');
+                        if (codexOption) codexOption.textContent = translations.compatibility.codex;
+                        
+                        const allCategoriesOption = document.getElementById('allCategoriesOption');
+                        if (allCategoriesOption) allCategoriesOption.textContent = translations.filters.allCategories;
+                        
+                        const architectureOption = document.getElementById('architectureOption');
+                        if (architectureOption) architectureOption.textContent = translations.categories.architecture;
+                        
+                        const programmingOption = document.getElementById('programmingOption');
+                        if (programmingOption) programmingOption.textContent = translations.categories.programming;
+                        
+                        const infrastructureOption = document.getElementById('infrastructureOption');
+                        if (infrastructureOption) infrastructureOption.textContent = translations.categories.infrastructure;
+                        
+                        const qualityOption = document.getElementById('qualityOption');
+                        if (qualityOption) qualityOption.textContent = translations.categories.quality;
+                        
+                        const dataOption = document.getElementById('dataOption');
+                        if (dataOption) dataOption.textContent = translations.categories.data;
+                        
+                        const documentationOption = document.getElementById('documentationOption');
+                        if (documentationOption) documentationOption.textContent = translations.categories.documentation;
+                        
+                        const businessOption = document.getElementById('businessOption');
+                        if (businessOption) businessOption.textContent = translations.categories.business;
+                        
+                        const searchInput = document.getElementById('searchInput');
+                        if (searchInput) searchInput.placeholder = translations.filters.searchPlaceholder;
+                        
+                        const loadingText = document.getElementById('loadingText');
+                        if (loadingText) loadingText.textContent = translations.messages.loading;
+                        
+                        console.log('Translations set successfully');
+                    }
                     
                     // Sample agent data
                     const agents = [
@@ -440,7 +546,7 @@ export class AgentMarketplacePanel {
                         const grid = document.getElementById('agentGrid');
                         
                         if (filteredAgents.length === 0) {
-                            grid.innerHTML = '<div class="no-results">${t('agentMarketplace.messages.noResults')}</div>';
+                            grid.innerHTML = '<div class="no-results">' + translations.messages.noResults + '</div>';
                             return;
                         }
                         
@@ -458,14 +564,14 @@ export class AgentMarketplacePanel {
                                 </div>
                                 
                                 <div class="compatibility">
-                                    \${agent.compatibility['claude-code'] ? '<span class="compatibility-badge compatibility-claude">Claude Code</span>' : ''}
-                                    \${agent.compatibility['codex'] ? '<span class="compatibility-badge compatibility-codex">Codex</span>' : ''}
+                                    \${agent.compatibility['claude-code'] ? '<span class="compatibility-badge compatibility-claude">' + translations.compatibility.claudeCode + '</span>' : ''}
+                                    \${agent.compatibility['codex'] ? '<span class="compatibility-badge compatibility-codex">' + translations.compatibility.codex + '</span>' : ''}
                                 </div>
                                 
                                 <div class="agent-actions">
-                                    \${agent.compatibility['claude-code'] ? \`<button class="action-button action-button-primary" onclick="downloadAgent('\${agent.id}', 'claude-code')">${t('agentMarketplace.actions.downloadToClaudeCode')}</button>\` : ''}
-                                    \${agent.compatibility['codex'] ? \`<button class="action-button action-button-primary" onclick="downloadAgent('\${agent.id}', 'codex')">${t('agentMarketplace.actions.downloadToCodex')}</button>\` : ''}
-                                    \${agent.compatibility['claude-code'] && agent.compatibility['codex'] ? \`<button class="action-button action-button-secondary" onclick="convertAgent('\${agent.id}', 'claude-code', 'codex')">${t('agentMarketplace.actions.convertToCodex')}</button>\` : ''}
+                                    \${agent.compatibility['claude-code'] ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'claude-code\\')">' + translations.actions.downloadToClaudeCode + '</button>' : ''}
+                                    \${agent.compatibility['codex'] ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'codex\\')">' + translations.actions.downloadToCodex + '</button>' : ''}
+                                    \${agent.compatibility['claude-code'] && agent.compatibility['codex'] ? '<button class="action-button action-button-secondary" onclick="convertAgent(\\'' + agent.id + '\\', \\'claude-code\\', \\'codex\\')">' + translations.actions.convertToCodex + '</button>' : ''}
                                 </div>
                             </div>
                         \`).join('');
@@ -509,13 +615,31 @@ export class AgentMarketplacePanel {
                         });
                     }
                     
-                    // Event listeners
-                    document.getElementById('cliTypeFilter').addEventListener('change', filterAgents);
-                    document.getElementById('categoryFilter').addEventListener('change', filterAgents);
-                    document.getElementById('searchInput').addEventListener('input', filterAgents);
+                    // Initialize everything when DOM is ready
+                    function initializeApp() {
+                        console.log('Initializing Agent Marketplace...');
+                        console.log('Translations:', translations);
+                        
+                        // Initialize translations
+                        initializeTranslations();
+                        
+                        // Render agents
+                        renderAgents();
+                        
+                        // Add event listeners
+                        document.getElementById('cliTypeFilter').addEventListener('change', filterAgents);
+                        document.getElementById('categoryFilter').addEventListener('change', filterAgents);
+                        document.getElementById('searchInput').addEventListener('input', filterAgents);
+                        
+                        console.log('Agent Marketplace initialized successfully');
+                    }
                     
-                    // Initial render
-                    renderAgents();
+                    // Check if DOM is ready
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', initializeApp);
+                    } else {
+                        initializeApp();
+                    }
                 </script>
             </body>
             </html>`;
@@ -531,7 +655,7 @@ export class AgentMarketplacePanel {
         try {
             const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
             if (!workspaceFolder) {
-                vscode.window.showErrorMessage(t('agentMarketplace.messages.workspaceRequired'));
+                vscode.window.showErrorMessage(t('agentMarketplace.messagesWorkspaceRequired'));
                 return;
             }
 
@@ -541,9 +665,9 @@ export class AgentMarketplacePanel {
                 await this.downloadToCodex(agent, workspaceFolder.uri);
             }
 
-            vscode.window.showInformationMessage(t('agentMarketplace.messages.downloadSuccess', { name: agent.name }));
+            vscode.window.showInformationMessage(t('agentMarketplace.messagesDownloadSuccess', { name: agent.name }));
         } catch (error) {
-            vscode.window.showErrorMessage(t('agentMarketplace.messages.downloadFailed', { error: error }));
+            vscode.window.showErrorMessage(t('agentMarketplace.messagesDownloadFailed', { error: error }));
         }
     }
 
@@ -552,14 +676,14 @@ export class AgentMarketplacePanel {
             try {
                 const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
                 if (!workspaceFolder) {
-                    vscode.window.showErrorMessage(t('agentMarketplace.messages.workspaceRequired'));
+                    vscode.window.showErrorMessage(t('agentMarketplace.messagesWorkspaceRequired'));
                     return;
                 }
 
                 await this.convertClaudeToCodex(agent, workspaceFolder.uri);
-                vscode.window.showInformationMessage(t('agentMarketplace.messages.convertSuccess', { name: agent.name }));
+                vscode.window.showInformationMessage(t('agentMarketplace.messagesConvertSuccess', { name: agent.name }));
             } catch (error) {
-                vscode.window.showErrorMessage(t('agentMarketplace.messages.convertFailed', { error: error }));
+                vscode.window.showErrorMessage(t('agentMarketplace.messagesConvertFailed', { error: error }));
             }
         }
     }

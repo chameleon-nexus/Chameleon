@@ -498,7 +498,7 @@ export class NavigationPanel {
                     <p class="feature-description">
                         ${t('navigation.engineSettingsDesc')}
                     </p>
-                    <button class="feature-button">Open Settings</button>
+                    <button class="feature-button">${t('navigation.engineSettingsButton')}</button>
                 </div>
                 
                 <div class="feature-card" onclick="showSystemSettings()">
@@ -507,7 +507,7 @@ export class NavigationPanel {
                     <p class="feature-description">
                         ${t('navigation.systemSettingsDesc')}
                     </p>
-                    <button class="feature-button">Open Settings</button>
+                    <button class="feature-button">${t('navigation.systemSettingsButton')}</button>
                 </div>
             </div>
         </div>

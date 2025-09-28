@@ -34,7 +34,9 @@
   "logoutSuccess": "已退出登录",
   "agentMarketplace": "代理商城",
   "agentMarketplaceDesc": "发现和下载专业的AI代理，提升开发效率",
-  "agentMarketplaceButton": "进入商城"
+  "agentMarketplaceButton": "进入商城",
+  "engineSettingsButton": "打开设置",
+  "systemSettingsButton": "打开设置"
 }
 
 

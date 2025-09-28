@@ -1,39 +1,29 @@
 {
   "title": "Agent Marketplace",
   "subtitle": "Discover and download specialized AI agents for your development workflow",
-  "filters": {
-    "cliType": "CLI Type",
-    "category": "Category",
-    "search": "Search",
-    "allCliTypes": "All CLI Types",
-    "allCategories": "All Categories",
-    "searchPlaceholder": "Search agents..."
-  },
-  "categories": {
-    "architecture": "Architecture",
-    "programming": "Programming",
-    "infrastructure": "Infrastructure",
-    "quality": "Quality & Security",
-    "data": "Data & AI",
-    "documentation": "Documentation",
-    "business": "Business"
-  },
-  "actions": {
-    "downloadToClaudeCode": "Download to Claude Code",
-    "downloadToCodex": "Download to Codex",
-    "convertToCodex": "Convert to Codex"
-  },
-  "messages": {
-    "loading": "Loading agents...",
-    "noResults": "No agents found matching your criteria",
-    "downloadSuccess": "Agent \"{name}\" downloaded successfully!",
-    "downloadFailed": "Failed to download agent: {error}",
-    "convertSuccess": "Agent \"{name}\" converted to Codex format!",
-    "convertFailed": "Failed to convert agent: {error}",
-    "workspaceRequired": "Please open a workspace first"
-  },
-  "compatibility": {
-    "claudeCode": "Claude Code",
-    "codex": "Codex"
-  }
+  "filtersCliType": "CLI Type",
+  "filtersCategory": "Category",
+  "filtersSearch": "Search",
+  "filtersAllCliTypes": "All CLI Types",
+  "filtersAllCategories": "All Categories",
+  "filtersSearchPlaceholder": "Search agents...",
+  "categoriesArchitecture": "Architecture",
+  "categoriesProgramming": "Programming",
+  "categoriesInfrastructure": "Infrastructure",
+  "categoriesQuality": "Quality & Security",
+  "categoriesData": "Data & AI",
+  "categoriesDocumentation": "Documentation",
+  "categoriesBusiness": "Business",
+  "actionsDownloadToClaudeCode": "Download to Claude Code",
+  "actionsDownloadToCodex": "Download to Codex",
+  "actionsConvertToCodex": "Convert to Codex",
+  "messagesLoading": "Loading agents...",
+  "messagesNoResults": "No agents found matching your criteria",
+  "messagesDownloadSuccess": "Agent \"{name}\" downloaded successfully!",
+  "messagesDownloadFailed": "Failed to download agent: {error}",
+  "messagesConvertSuccess": "Agent \"{name}\" converted to Codex format!",
+  "messagesConvertFailed": "Failed to convert agent: {error}",
+  "messagesWorkspaceRequired": "Please open a workspace first",
+  "compatibilityClaudeCode": "Claude Code",
+  "compatibilityCodex": "Codex"
 }
