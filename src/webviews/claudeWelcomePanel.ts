@@ -88,6 +88,12 @@ export class ClaudeWelcomePanel {
                         case 'backToNavigation':
                             await this.backToNavigation();
                             break;
+                        case 'showSettings':
+                            await this.showSettings();
+                            break;
+                        case 'showSystemSettings':
+                            await this.showSystemSettings();
+                            break;
                         case 'openSettings':
                             await this.showClaudeSettings();
                             break;
@@ -188,16 +194,24 @@ export class ClaudeWelcomePanel {
         }
     }
 
+    private async showSettings() {
+        try {
+            const { ChameleonSettingsPanel } = await import('./settingsPanel');
+            ChameleonSettingsPanel.createOrShow(this.extensionUri, 'claude');
+        } catch (error) {
+            vscode.window.showErrorMessage(`${t('claudeWelcome.openSettingsFailed')}: ${(error as Error).message}`);
+        }
+    }
+
     private async showSystemSettings() {
         try {
-            // 直接导入系统设置面板
             const { SystemSettingsPanel } = await import('./systemSettingsPanel');
             SystemSettingsPanel.createOrShow(this.extensionUri);
         } catch (error) {
-            // console.error('导入系统设置面板失败:', error);
             vscode.window.showErrorMessage(`${t('claudeWelcome.openSystemSettingsFailed')}: ${(error as Error).message}`);
         }
     }
+
 
     private async installDependency(dependency: string) {
         try {
@@ -488,6 +502,18 @@ export class ClaudeWelcomePanel {
                 <div class="feature-desc">${t('claudeWelcome.toolboxDesc')}</div>
             </div>
 
+            <!-- Claude Settings -->
+            <div class="feature-block" onclick="showSettings()" style="cursor: pointer;">
+                <div class="feature-title">${t('claudeWelcome.settings')}</div>
+                <div class="feature-desc">${t('claudeWelcome.settingsDesc')}</div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="feature-block" onclick="showSystemSettings()" style="cursor: pointer;">
+                <div class="feature-title">${t('claudeWelcome.systemSettings')}</div>
+                <div class="feature-desc">${t('claudeWelcome.systemSettingsDesc')}</div>
+            </div>
+
             <!-- Claude Settings - Hidden -->
             <!-- <div class="feature-block" onclick="showClaudeSettings()" style="cursor: pointer;">
                 <div class="feature-title">${t('claudeWelcome.settings')}</div>
@@ -539,6 +565,14 @@ export class ClaudeWelcomePanel {
         
         function backToNavigation() {
             vscode.postMessage({ command: 'backToNavigation' });
+        }
+        
+        function showSettings() {
+            vscode.postMessage({ command: 'showSettings' });
+        }
+        
+        function showSystemSettings() {
+            vscode.postMessage({ command: 'showSystemSettings' });
         }
         
         function showDependenciesLoading() {

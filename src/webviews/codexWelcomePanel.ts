@@ -145,7 +145,8 @@ export class CodexWelcomePanel {
 
     private async showSettings() {
         try {
-            await vscode.commands.executeCommand('chameleon.settings');
+            const { ChameleonSettingsPanel } = await import('./settingsPanel');
+            ChameleonSettingsPanel.createOrShow(this.extensionUri, 'codex');
         } catch (error) {
             vscode.window.showErrorMessage(`${t('codexWelcome.openSettingsFailed')}: ${(error as Error).message}`);
         }

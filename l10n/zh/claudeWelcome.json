@@ -6,6 +6,8 @@
   "thirdParty": "Claude Code (第三方AI)",
   "settings": "⚙️ Claude 设置",
   "settingsDesc": "配置 Claude Code 模型和参数",
+  "systemSettings": "⚙️ 系统设置",
+  "systemSettingsDesc": "配置欢迎面板模式和其他系统选项",
   "depsTitle": "依赖状态检查",
   "depsLoading": "正在检查依赖...",
   "exclusiveMode": "Claude 专属模式",

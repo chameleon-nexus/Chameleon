@@ -10,19 +10,21 @@ export class ChameleonSettingsPanel {
 
     private readonly panel: vscode.WebviewPanel;
     private readonly extensionUri: vscode.Uri;
+    private readonly sourcePage?: string;
     private disposables: vscode.Disposable[] = [];
 
     // 2. 将构造函数变为私有，防止外部直接 new
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, sourcePage?: string) {
         this.panel = panel;
         this.extensionUri = extensionUri;
+        this.sourcePage = sourcePage;
         this.setupWebview();
 
         this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
     }
 
     // 3. 创建一个静态方法来创建或显示面板
-    public static createOrShow(extensionUri: vscode.Uri) {
+    public static createOrShow(extensionUri: vscode.Uri, sourcePage?: string) {
         const column = vscode.window.activeTextEditor
             ? vscode.window.activeTextEditor.viewColumn
             : undefined;
@@ -47,7 +49,7 @@ export class ChameleonSettingsPanel {
             }
         );
 
-        ChameleonSettingsPanel.currentPanel = new ChameleonSettingsPanel(panel, extensionUri);
+        ChameleonSettingsPanel.currentPanel = new ChameleonSettingsPanel(panel, extensionUri, sourcePage);
     }
 
     private setupWebview(): void {
@@ -870,14 +872,14 @@ export class ChameleonSettingsPanel {
     <!-- Tab Navigation -->
     <div class="tab-container">
         <div class="tab-header">
-            <button class="tab-button active" onclick="switchTab('claude-code')">Claude Code</button>
-            <button class="tab-button" onclick="switchTab('gemini')">${texts.geminiTitle}</button>
-            <button class="tab-button" onclick="switchTab('codex')">Codex</button>
-            <button class="tab-button" onclick="switchTab('copilot')">Copilot</button>
+            <button class="tab-button ${this.sourcePage === 'claude' || !this.sourcePage ? 'active' : ''}" onclick="switchTab('claude-code')">Claude Code</button>
+            <button class="tab-button ${this.sourcePage === 'gemini' ? 'active' : ''}" onclick="switchTab('gemini')">${texts.geminiTitle}</button>
+            <button class="tab-button ${this.sourcePage === 'codex' ? 'active' : ''}" onclick="switchTab('codex')">Codex</button>
+            <button class="tab-button ${this.sourcePage === 'copilot' ? 'active' : ''}" onclick="switchTab('copilot')">Copilot</button>
         </div>
         
         <!-- Claude Code Tab -->
-        <div id="claude-code-tab" class="tab-content active">
+        <div id="claude-code-tab" class="tab-content ${this.sourcePage === 'claude' || !this.sourcePage ? 'active' : ''}">
             <!-- AI Provider Configuration Section -->
     <div class="section">
         <div class="section-title">${texts.providerTitle}</div>
@@ -1064,7 +1066,7 @@ export class ChameleonSettingsPanel {
         </div>
         
         <!-- Gemini Tab -->
-        <div id="gemini-tab" class="tab-content">
+        <div id="gemini-tab" class="tab-content ${this.sourcePage === 'gemini' ? 'active' : ''}">
             <!-- Gemini AI Provider Configuration Section -->
             <div class="section">
                 <div class="section-title">${texts.geminiProviderConfig}</div>
@@ -1218,7 +1220,7 @@ export class ChameleonSettingsPanel {
         </div>
         
         <!-- Codex Tab -->
-        <div id="codex-tab" class="tab-content">
+        <div id="codex-tab" class="tab-content ${this.sourcePage === 'codex' ? 'active' : ''}">
             <div class="section">
                 <div class="section-title">${texts.codexTitle}</div>
                 <div class="form-group">
@@ -1230,7 +1232,7 @@ export class ChameleonSettingsPanel {
         </div>
         
         <!-- Copilot Tab -->
-        <div id="copilot-tab" class="tab-content">
+        <div id="copilot-tab" class="tab-content ${this.sourcePage === 'copilot' ? 'active' : ''}">
             <div class="section">
                 <div class="section-title">${texts.copilotTitle}</div>
                 <div class="form-group">

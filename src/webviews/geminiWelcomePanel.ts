@@ -67,6 +67,12 @@ export class GeminiWelcomePanel {
                     case 'backToNavigation':
                         await this.backToNavigation();
                         break;
+                    case 'showSettings':
+                        await this.showSettings();
+                        break;
+                    case 'showSystemSettings':
+                        await this.showSystemSettings();
+                        break;
                     case 'installDependency':
                         await this.installDependency(message.dependency);
                         break;
@@ -137,23 +143,7 @@ export class GeminiWelcomePanel {
         }
     }
 
-    private async showSettings() {
-        try {
-            await vscode.commands.executeCommand('chameleon.settings');
-        } catch (error) {
-            vscode.window.showErrorMessage(`${t('geminiWelcome.openSettingsFailed')}: ${(error as Error).message}`);
-        }
-    }
 
-    private async showSystemSettings() {
-        try {
-            const { SystemSettingsPanel } = await import('./systemSettingsPanel');
-            SystemSettingsPanel.createOrShow(this.extensionUri);
-        } catch (error) {
-            console.error('导入系统设置面板失败:', error);
-            vscode.window.showErrorMessage(`${t('welcome.systemSettingsOpenFailed')}: ${(error as Error).message}`);
-        }
-    }
 
     private async switchMode(mode: string) {
         try {
@@ -171,6 +161,24 @@ export class GeminiWelcomePanel {
             NavigationPanel.createOrShow(this.extensionUri, this.extensionContext);
         } catch (error) {
             vscode.window.showErrorMessage(`${t('geminiWelcome.backToNavFailed')}: ${(error as Error).message}`);
+        }
+    }
+
+    private async showSettings() {
+        try {
+            const { ChameleonSettingsPanel } = await import('./settingsPanel');
+            ChameleonSettingsPanel.createOrShow(this.extensionUri, 'gemini');
+        } catch (error) {
+            vscode.window.showErrorMessage(`${t('geminiWelcome.openSettingsFailed')}: ${(error as Error).message}`);
+        }
+    }
+
+    private async showSystemSettings() {
+        try {
+            const { SystemSettingsPanel } = await import('./systemSettingsPanel');
+            SystemSettingsPanel.createOrShow(this.extensionUri);
+        } catch (error) {
+            vscode.window.showErrorMessage(`${t('geminiWelcome.openSystemSettingsFailed')}: ${(error as Error).message}`);
         }
     }
 
@@ -492,6 +500,18 @@ export class GeminiWelcomePanel {
                 </div>
             </div>
 
+            <!-- Gemini Settings -->
+            <div class="feature-block" onclick="showSettings()" style="cursor: pointer;">
+                <div class="feature-title">${t('geminiWelcome.settings')}</div>
+                <div class="feature-desc">${t('geminiWelcome.settingsDesc')}</div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="feature-block" onclick="showSystemSettings()" style="cursor: pointer;">
+                <div class="feature-title">${t('geminiWelcome.systemSettings')}</div>
+                <div class="feature-desc">${t('geminiWelcome.systemSettingsDesc')}</div>
+            </div>
+
             <!-- AI Tools Launcher - Hidden -->
             <!-- <div class="feature-block">
                 <div class="feature-title">
@@ -571,6 +591,14 @@ export class GeminiWelcomePanel {
 
         function backToNavigation() {
             vscode.postMessage({ command: 'backToNavigation' });
+        }
+        
+        function showSettings() {
+            vscode.postMessage({ command: 'showSettings' });
+        }
+        
+        function showSystemSettings() {
+            vscode.postMessage({ command: 'showSystemSettings' });
         }
 
         function installDependency(dep) {

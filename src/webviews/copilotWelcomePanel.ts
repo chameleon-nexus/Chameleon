@@ -145,7 +145,8 @@ export class CopilotWelcomePanel {
 
     private async showSettings() {
         try {
-            await vscode.commands.executeCommand('chameleon.settings');
+            const { ChameleonSettingsPanel } = await import('./settingsPanel');
+            ChameleonSettingsPanel.createOrShow(this.extensionUri, 'copilot');
         } catch (error) {
             vscode.window.showErrorMessage(`${t('copilotWelcome.openSettingsFailed')}: ${(error as Error).message}`);
         }

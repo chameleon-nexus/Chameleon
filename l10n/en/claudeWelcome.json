@@ -6,6 +6,8 @@
   "thirdParty": "Claude Code (Third-party AI)",
   "settings": "⚙️ Claude Settings",
   "settingsDesc": "Configure Claude Code models and parameters",
+  "systemSettings": "⚙️ System Settings",
+  "systemSettingsDesc": "Configure welcome panel mode and other system options",
   "depsTitle": "Dependency Status Check",
   "depsLoading": "Checking dependencies...",
   "exclusiveMode": "Claude Exclusive Mode",
