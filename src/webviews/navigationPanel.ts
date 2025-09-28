@@ -74,6 +74,9 @@ export class NavigationPanel {
                     case 'showSystemSettings':
                         await this.showSystemSettings();
                         break;
+                    case 'openAgentMarketplace':
+                        await this.openAgentMarketplace();
+                        break;
                 }
             },
             undefined,
@@ -171,6 +174,15 @@ export class NavigationPanel {
         } catch (error) {
             // console.error('导入系统设置面板失败:', error);
             vscode.window.showErrorMessage(`${t('navigation.openSystemSettingsFailed')}: ${(error as Error).message}`);
+        }
+    }
+
+    private async openAgentMarketplace() {
+        try {
+            const { AgentMarketplacePanel } = await import('./agentMarketplacePanel');
+            AgentMarketplacePanel.createOrShow(this.extensionUri);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to open Agent Marketplace: ${(error as Error).message}`);
         }
     }
 
@@ -323,46 +335,84 @@ export class NavigationPanel {
             transform: none;
         }
         
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
+        .section {
+            margin-bottom: 50px;
         }
         
-        .setting-card {
-            background: var(--vscode-editor-background);
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--vscode-foreground);
+            margin: 0 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--vscode-panel-border);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--vscode-panel-background);
             border: 1px solid var(--vscode-panel-border);
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 24px;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 200px;
         }
         
-        .setting-card:hover {
+        .feature-card:hover {
             border-color: var(--vscode-focusBorder);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
         
-        .setting-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
         }
         
-        .setting-title {
-            font-size: 16px;
+        .feature-title {
+            font-size: 18px;
             font-weight: 600;
             color: var(--vscode-textLink-foreground);
-            margin: 0 0 4px 0;
+            margin: 0 0 12px 0;
         }
         
-        .setting-desc {
-            font-size: 12px;
+        .feature-description {
+            font-size: 14px;
             color: var(--vscode-descriptionForeground);
-            margin: 0;
-            line-height: 1.4;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-button {
+            background: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+            margin-top: auto;
+        }
+        
+        .feature-button:hover {
+            background: var(--vscode-button-hoverBackground);
         }
         
         @media (max-width: 768px) {
@@ -370,7 +420,7 @@ export class NavigationPanel {
                 grid-template-columns: 1fr;
             }
             
-            .settings-grid {
+            .features-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -387,55 +437,78 @@ export class NavigationPanel {
             <button class="logout-button" onclick="logout()">${t('navigation.logout')}</button>
         </div>
         
-        <div class="tools-grid">
-            <div class="tool-card" onclick="launchClaude()">
-                <div class="tool-icon">🤖</div>
-                <h3 class="tool-title">${t('navigation.claudeCode')}</h3>
-                <p class="tool-description">
-                    ${t('navigation.claudeCodeDesc')}
-                </p>
-                <button class="tool-button">${t('navigation.claudeCodeButton')}</button>
-            </div>
-            
-            <div class="tool-card" onclick="launchGemini()">
-                <div class="tool-icon">💎</div>
-                <h3 class="tool-title">${t('navigation.gemini')}</h3>
-                <p class="tool-description">
-                    ${t('navigation.geminiDesc')}
-                </p>
-                <button class="tool-button">${t('navigation.geminiButton')}</button>
-            </div>
-            
-            <div class="tool-card" onclick="launchCodex()">
-                <div class="tool-icon">⚡</div>
-                <h3 class="tool-title">${t('navigation.codex')}</h3>
-                <p class="tool-description">
-                    ${t('navigation.codexDesc')}
-                </p>
-                <button class="tool-button">${t('navigation.codexButton')}</button>
-            </div>
-            
-            
-            <div class="tool-card" onclick="launchCopilot()">
-                <div class="tool-icon">🤖</div>
-                <h3 class="tool-title">${t('navigation.copilot')}</h3>
-                <p class="tool-description">
-                    ${t('navigation.copilotDesc')}
-                </p>
-                <button class="tool-button">${t('navigation.copilotButton')}</button>
+        <!-- CLI Tools Section -->
+        <div class="section">
+            <h2 class="section-title">CLI Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-card" onclick="launchClaude()">
+                    <div class="tool-icon">🤖</div>
+                    <h3 class="tool-title">${t('navigation.claudeCode')}</h3>
+                    <p class="tool-description">
+                        ${t('navigation.claudeCodeDesc')}
+                    </p>
+                    <button class="tool-button">${t('navigation.claudeCodeButton')}</button>
+                </div>
+                
+                <div class="tool-card" onclick="launchGemini()">
+                    <div class="tool-icon">💎</div>
+                    <h3 class="tool-title">${t('navigation.gemini')}</h3>
+                    <p class="tool-description">
+                        ${t('navigation.geminiDesc')}
+                    </p>
+                    <button class="tool-button">${t('navigation.geminiButton')}</button>
+                </div>
+                
+                <div class="tool-card" onclick="launchCodex()">
+                    <div class="tool-icon">⚡</div>
+                    <h3 class="tool-title">${t('navigation.codex')}</h3>
+                    <p class="tool-description">
+                        ${t('navigation.codexDesc')}
+                    </p>
+                    <button class="tool-button">${t('navigation.codexButton')}</button>
+                </div>
+                
+                <div class="tool-card" onclick="launchCopilot()">
+                    <div class="tool-icon">🤖</div>
+                    <h3 class="tool-title">${t('navigation.copilot')}</h3>
+                    <p class="tool-description">
+                        ${t('navigation.copilotDesc')}
+                    </p>
+                    <button class="tool-button">${t('navigation.copilotButton')}</button>
+                </div>
             </div>
         </div>
         
-        <div class="settings-grid">
-            <div class="setting-card" onclick="showEngineSettings()">
-                <div class="setting-icon">🔧</div>
-                <div class="setting-title">${t('navigation.engineSettings')}</div>
-                <div class="setting-desc">${t('navigation.engineSettingsDesc')}</div>
-            </div>
-            <div class="setting-card" onclick="showSystemSettings()">
-                <div class="setting-icon">⚙️</div>
-                <div class="setting-title">${t('navigation.systemSettings')}</div>
-                <div class="setting-desc">${t('navigation.systemSettingsDesc')}</div>
+        <!-- Features & Settings Section -->
+        <div class="section">
+            <h2 class="section-title">Features & Settings</h2>
+            <div class="features-grid">
+                <div class="feature-card" onclick="openAgentMarketplace()">
+                    <div class="feature-icon">🛒</div>
+                    <h3 class="feature-title">${t('navigation.agentMarketplace')}</h3>
+                    <p class="feature-description">
+                        ${t('navigation.agentMarketplaceDesc')}
+                    </p>
+                    <button class="feature-button">${t('navigation.agentMarketplaceButton')}</button>
+                </div>
+                
+                <div class="feature-card" onclick="showEngineSettings()">
+                    <div class="feature-icon">🔧</div>
+                    <h3 class="feature-title">${t('navigation.engineSettings')}</h3>
+                    <p class="feature-description">
+                        ${t('navigation.engineSettingsDesc')}
+                    </p>
+                    <button class="feature-button">Open Settings</button>
+                </div>
+                
+                <div class="feature-card" onclick="showSystemSettings()">
+                    <div class="feature-icon">⚙️</div>
+                    <h3 class="feature-title">${t('navigation.systemSettings')}</h3>
+                    <p class="feature-description">
+                        ${t('navigation.systemSettingsDesc')}
+                    </p>
+                    <button class="feature-button">Open Settings</button>
+                </div>
             </div>
         </div>
     </div>
@@ -483,6 +556,12 @@ export class NavigationPanel {
         function showSystemSettings() {
             vscode.postMessage({
                 command: 'showSystemSettings'
+            });
+        }
+        
+        function openAgentMarketplace() {
+            vscode.postMessage({
+                command: 'openAgentMarketplace'
             });
         }
     </script>

@@ -25,7 +25,10 @@
   "openEngineSettingsFailed": "Failed to open engine settings",
   "openSystemSettingsFailed": "Failed to open system settings",
   "claudeModeEntered": "Entered Claude exclusive mode",
-  "logoutSuccess": "Successfully logged out"
+  "logoutSuccess": "Successfully logged out",
+  "agentMarketplace": "Agent Marketplace",
+  "agentMarketplaceDesc": "Discover and download specialized AI agents for your development workflow",
+  "agentMarketplaceButton": "Enter Marketplace"
 }
 
 

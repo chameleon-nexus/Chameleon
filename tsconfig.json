@@ -18,7 +18,9 @@
   },
   "exclude": [
     "node_modules",
-    ".vscode-test"
+    ".vscode-test",
+    "agents.md-main",
+    "agents-main"
   ]
 }
 

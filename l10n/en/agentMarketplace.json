@@ -1,0 +1,39 @@
+{
+  "title": "Agent Marketplace",
+  "subtitle": "Discover and download specialized AI agents for your development workflow",
+  "filters": {
+    "cliType": "CLI Type",
+    "category": "Category",
+    "search": "Search",
+    "allCliTypes": "All CLI Types",
+    "allCategories": "All Categories",
+    "searchPlaceholder": "Search agents..."
+  },
+  "categories": {
+    "architecture": "Architecture",
+    "programming": "Programming",
+    "infrastructure": "Infrastructure",
+    "quality": "Quality & Security",
+    "data": "Data & AI",
+    "documentation": "Documentation",
+    "business": "Business"
+  },
+  "actions": {
+    "downloadToClaudeCode": "Download to Claude Code",
+    "downloadToCodex": "Download to Codex",
+    "convertToCodex": "Convert to Codex"
+  },
+  "messages": {
+    "loading": "Loading agents...",
+    "noResults": "No agents found matching your criteria",
+    "downloadSuccess": "Agent \"{name}\" downloaded successfully!",
+    "downloadFailed": "Failed to download agent: {error}",
+    "convertSuccess": "Agent \"{name}\" converted to Codex format!",
+    "convertFailed": "Failed to convert agent: {error}",
+    "workspaceRequired": "Please open a workspace first"
+  },
+  "compatibility": {
+    "claudeCode": "Claude Code",
+    "codex": "Codex"
+  }
+}

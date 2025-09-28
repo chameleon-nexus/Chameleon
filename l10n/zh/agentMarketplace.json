@@ -1,0 +1,39 @@
+{
+  "title": "代理商城",
+  "subtitle": "发现和下载专业的AI代理，提升开发效率",
+  "filters": {
+    "cliType": "CLI类型",
+    "category": "分类",
+    "search": "搜索",
+    "allCliTypes": "所有CLI类型",
+    "allCategories": "所有分类",
+    "searchPlaceholder": "搜索代理..."
+  },
+  "categories": {
+    "architecture": "架构设计",
+    "programming": "编程语言",
+    "infrastructure": "基础设施",
+    "quality": "质量与安全",
+    "data": "数据与AI",
+    "documentation": "文档编写",
+    "business": "业务分析"
+  },
+  "actions": {
+    "downloadToClaudeCode": "下载到Claude Code",
+    "downloadToCodex": "下载到Codex",
+    "convertToCodex": "转换为Codex格式"
+  },
+  "messages": {
+    "loading": "正在加载代理...",
+    "noResults": "未找到匹配条件的代理",
+    "downloadSuccess": "代理 \"{name}\" 下载成功！",
+    "downloadFailed": "下载代理失败：{error}",
+    "convertSuccess": "代理 \"{name}\" 已转换为Codex格式！",
+    "convertFailed": "转换代理失败：{error}",
+    "workspaceRequired": "请先打开一个工作区"
+  },
+  "compatibility": {
+    "claudeCode": "Claude Code",
+    "codex": "Codex"
+  }
+}

@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-Regular.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-RegularItalic.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-Medium.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: italic;
+  font-weight: 500;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-MediumItalic.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-Semibold.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: italic;
+  font-weight: 600;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-SemiboldItalic.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-Bold.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'OpenAI Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: url('https://cdn.openai.com/common/fonts/openai-sans/OpenAISans-BoldItalic.woff2')
+    format('woff2');
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-sans: 'OpenAI Sans', Arial, Helvetica, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'OpenAI Sans', Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Ensure code blocks wrap and do not scroll horizontally */
+pre {
+  overflow-x: visible;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
