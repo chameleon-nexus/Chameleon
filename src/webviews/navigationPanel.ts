@@ -252,6 +252,9 @@ export class NavigationPanel {
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 280px;
         }
         
         .tool-card:hover {
@@ -277,6 +280,10 @@ export class NavigationPanel {
             color: var(--vscode-descriptionForeground);
             margin: 0 0 20px 0;
             line-height: 1.5;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .tool-button {
@@ -291,6 +298,7 @@ export class NavigationPanel {
             cursor: pointer;
             width: 100%;
             transition: background-color 0.2s;
+            margin-top: auto;
         }
         
         .tool-button:hover {
