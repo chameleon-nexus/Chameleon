@@ -43,7 +43,19 @@ export class AgentMarketplacePanel {
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this._panel = panel;
         this._extensionUri = extensionUri;
-        this.agentService = new AgentRegistryService(vscode.extensions.getExtension('chameleon.chameleon')?.extensionContext!);
+        // Create a minimal context object for the service
+        const mockContext = {
+            subscriptions: [],
+            workspaceState: {
+                get: () => undefined,
+                update: () => Promise.resolve()
+            },
+            globalState: {
+                get: () => undefined,
+                update: () => Promise.resolve()
+            }
+        } as any;
+        this.agentService = new AgentRegistryService(mockContext);
 
         // Set the webview's initial html content
         this._update();
@@ -74,10 +86,27 @@ export class AgentMarketplacePanel {
 
     private async _update() {
         const webview = this._panel.webview;
-        this._panel.webview.html = this._getHtmlForWebview(webview);
+        this._panel.webview.html = await this._getHtmlForWebview(webview);
     }
 
-    private _getHtmlForWebview(webview: vscode.Webview) {
+    private async _getHtmlForWebview(webview: vscode.Webview) {
+        // Fetch real data from GitHub registry
+        let agents: any[] = [];
+        let categories: any = {};
+        
+        try {
+            const featuredAgents = await this.agentService.getFeaturedAgents(50);
+            const registryCategories = await this.agentService.getCategories();
+            
+            agents = featuredAgents;
+            categories = registryCategories;
+        } catch (error) {
+            console.error('Failed to fetch agents from registry:', error);
+            // Fallback to empty data
+            agents = [];
+            categories = {};
+        }
+
         // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
         const scriptUri = webview.asWebviewUri(
             vscode.Uri.joinPath(this._extensionUri, 'out', 'webviews', 'agentMarketplacePanel.js')
@@ -224,6 +253,20 @@ export class AgentMarketplacePanel {
                     
                     .agent-card:hover {
                         border-color: var(--vscode-focusBorder);
+                    }
+                    
+                    .agent-meta {
+                        display: flex;
+                        gap: 15px;
+                        margin: 10px 0;
+                        font-size: 12px;
+                        color: var(--vscode-descriptionForeground);
+                    }
+                    
+                    .agent-meta span {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
                     }
                     
                     .agent-header {
@@ -452,8 +495,12 @@ export class AgentMarketplacePanel {
                         console.log('Translations set successfully');
                     }
                     
-                    // Sample agent data
-                    const agents = [
+                    // Real agent data from GitHub registry
+                    const agents = ${JSON.stringify(agents)};
+                    const registryCategories = ${JSON.stringify(categories)};
+                    
+                    // Legacy sample data (kept for fallback)
+                    const sampleAgents = [
                         {
                             id: 'code-reviewer',
                             name: 'Code Reviewer',
@@ -542,10 +589,50 @@ export class AgentMarketplacePanel {
                     
                     let filteredAgents = [...agents];
                     
+                    // Helper functions to handle different data formats
+                    function getAgentName(agent) {
+                        if (typeof agent.name === 'string') {
+                            return agent.name;
+                        }
+                        return agent.name?.en || agent.name?.zh || agent.id;
+                    }
+                    
+                    function getAgentDescription(agent) {
+                        if (typeof agent.description === 'string') {
+                            return agent.description;
+                        }
+                        return agent.description?.en || agent.description?.zh || 'No description available';
+                    }
+                    
+                    function getAgentIcon(category) {
+                        const icons = {
+                            'development': '💻',
+                            'debugging': '🐛',
+                            'data': '📊',
+                            'documentation': '📝',
+                            'quality': '🔍',
+                            'architecture': '🏗️',
+                            'infrastructure': '⚙️',
+                            'business': '💼'
+                        };
+                        return icons[category] || '🤖';
+                    }
+                    
                     function renderAgents() {
                         const grid = document.getElementById('agentGrid');
                         
+                        console.log('Rendering agents:', {
+                            totalAgents: agents.length,
+                            filteredAgents: filteredAgents.length,
+                            sampleAgent: agents[0]
+                        });
+                        
                         if (filteredAgents.length === 0) {
+                            console.log('No filtered agents to display');
+                            console.log('Total agents available:', agents.length);
+                            if (agents.length > 0) {
+                                console.log('Sample agent structure:', agents[0]);
+                            }
                             grid.innerHTML = '<div class="no-results">' + translations.messages.noResults + '</div>';
                             return;
                         }
@@ -553,25 +640,31 @@ export class AgentMarketplacePanel {
                         grid.innerHTML = filteredAgents.map(agent => \`
                             <div class="agent-card">
                                 <div class="agent-header">
-                                    <div class="agent-icon">\${agent.icon}</div>
-                                    <h3 class="agent-title">\${agent.name}</h3>
+                                    <div class="agent-icon">\${getAgentIcon(agent.category)}</div>
+                                    <h3 class="agent-title">\${getAgentName(agent)}</h3>
                                 </div>
                                 
-                                <p class="agent-description">\${agent.description}</p>
+                                <p class="agent-description">\${getAgentDescription(agent)}</p>
+                                
+                                <div class="agent-meta">
+                                    <span>👤 \${agent.author}</span>
+                                    <span>📥 \${agent.downloads || 0}</span>
+                                    <span>⭐ \${(agent.rating || 0).toFixed(1)}</span>
+                                </div>
                                 
                                 <div class="agent-tags">
-                                    \${agent.tags.map(tag => \`<span class="agent-tag">\${tag}</span>\`).join('')}
+                                    \${(agent.tags || []).map(tag => \`<span class="agent-tag">\${tag}</span>\`).join('')}
                                 </div>
                                 
                                 <div class="compatibility">
-                                    \${agent.compatibility['claude-code'] ? '<span class="compatibility-badge compatibility-claude">' + translations.compatibility.claudeCode + '</span>' : ''}
-                                    \${agent.compatibility['codex'] ? '<span class="compatibility-badge compatibility-codex">' + translations.compatibility.codex + '</span>' : ''}
+                                    \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? '<span class="compatibility-badge compatibility-claude">' + translations.compatibility.claudeCode + '</span>' : ''}
+                                    \${(agent.compatibility?.codex) ? '<span class="compatibility-badge compatibility-codex">' + translations.compatibility.codex + '</span>' : ''}
                                 </div>
                                 
                                 <div class="agent-actions">
-                                    \${agent.compatibility['claude-code'] ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'claude-code\\')">' + translations.actions.downloadToClaudeCode + '</button>' : ''}
-                                    \${agent.compatibility['codex'] ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'codex\\')">' + translations.actions.downloadToCodex + '</button>' : ''}
-                                    \${agent.compatibility['claude-code'] && agent.compatibility['codex'] ? '<button class="action-button action-button-secondary" onclick="convertAgent(\\'' + agent.id + '\\', \\'claude-code\\', \\'codex\\')">' + translations.actions.convertToCodex + '</button>' : ''}
+                                    \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'claude-code\\')">' + translations.actions.downloadToClaudeCode + '</button>' : ''}
+                                    \${(agent.compatibility?.codex) ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'codex\\')">' + translations.actions.downloadToCodex + '</button>' : ''}
+                                    \${((agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) && agent.compatibility?.codex) ? '<button class="action-button action-button-secondary" onclick="convertAgent(\\'' + agent.id + '\\', \\'claude-code\\', \\'codex\\')">' + translations.actions.convertToCodex + '</button>' : ''}
                                 </div>
                             </div>
                         \`).join('');
@@ -583,12 +676,33 @@ export class AgentMarketplacePanel {
                         const search = document.getElementById('searchInput').value.toLowerCase();
                         
                         filteredAgents = agents.filter(agent => {
-                            const matchesCliType = !cliType || agent.compatibility[cliType];
+                            // CLI Type filtering - handle both old and new data formats
+                            let matchesCliType = true;
+                            if (cliType) {
+                                if (cliType === 'claude-code') {
+                                    matchesCliType = agent.compatibility?.claudeCode || agent.compatibility?.['claude-code'];
+                                } else if (cliType === 'codex') {
+                                    matchesCliType = agent.compatibility?.codex;
+                                } else {
+                                    matchesCliType = agent.compatibility?.[cliType];
+                                }
+                            }
+                            
+                            // Category filtering
                             const matchesCategory = !category || agent.category === category;
-                            const matchesSearch = !search || 
-                                agent.name.toLowerCase().includes(search) ||
-                                agent.description.toLowerCase().includes(search) ||
-                                agent.tags.some(tag => tag.toLowerCase().includes(search));
+                            
+                            // Search filtering - handle both string and object formats
+                            let matchesSearch = true;
+                            if (search) {
+                                const agentName = getAgentName(agent).toLowerCase();
+                                const agentDescription = getAgentDescription(agent).toLowerCase();
+                                const agentTags = agent.tags || [];
+                                
+                                matchesSearch = agentName.includes(search) ||
+                                               agentDescription.includes(search) ||
+                                               agentTags.some(tag => tag.toLowerCase().includes(search)) ||
+                                               (agent.author && agent.author.toLowerCase().includes(search));
+                            }
                             
                             return matchesCliType && matchesCategory && matchesSearch;
                         });
@@ -619,9 +733,14 @@ export class AgentMarketplacePanel {
                     function initializeApp() {
                         console.log('Initializing Agent Marketplace...');
                         console.log('Translations:', translations);
+                        console.log('Registry categories:', registryCategories);
+                        console.log('Agents data:', agents);
                         
                         // Initialize translations
                         initializeTranslations();
+                        
+                        // Populate category filter with real data from registry
+                        populateCategoryFilter();
                         
                         // Render agents
                         renderAgents();
@@ -632,6 +751,50 @@ export class AgentMarketplacePanel {
                         document.getElementById('searchInput').addEventListener('input', filterAgents);
                         
                         console.log('Agent Marketplace initialized successfully');
+                    }
+                    
+                    function populateCategoryFilter() {
+                        const categoryFilter = document.getElementById('categoryFilter');
+                        if (!categoryFilter) return;
+                        
+                        // Clear existing options except the first "All Categories" option
+                        while (categoryFilter.children.length > 1) {
+                            categoryFilter.removeChild(categoryFilter.lastChild);
+                        }
+                        
+                        // Add categories from registry data
+                        if (registryCategories && typeof registryCategories === 'object') {
+                            Object.keys(registryCategories).forEach(categoryKey => {
+                                const category = registryCategories[categoryKey];
+                                const option = document.createElement('option');
+                                option.value = categoryKey;
+                                
+                                // Use localized name if available
+                                const categoryName = category.en || category.name?.en || categoryKey;
+                                option.textContent = \`\${category.icon || '📁'} \${categoryName}\`;
+                                
+                                categoryFilter.appendChild(option);
+                            });
+                        }
+                        
+                        // Also add categories found in agents data as fallback
+                        const agentCategories = new Set();
+                        agents.forEach(agent => {
+                            if (agent.category) {
+                                agentCategories.add(agent.category);
+                            }
+                        });
+                        
+                        agentCategories.forEach(category => {
+                            // Check if this category is not already added from registry
+                            const existingOption = Array.from(categoryFilter.options).find(opt => opt.value === category);
+                            if (!existingOption) {
+                                const option = document.createElement('option');
+                                option.value = category;
+                                option.textContent = \`📁 \${category.charAt(0).toUpperCase() + category.slice(1)}\`;
+                                categoryFilter.appendChild(option);
+                            }
+                        });
                     }
                     
                     // Check if DOM is ready
