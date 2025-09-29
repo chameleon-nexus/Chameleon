@@ -60,7 +60,11 @@ export class AgentInstallerService {
                 throw new Error(`Agent ${agentId} not found`);
             }
 
-            const version = options.version || agent.version || 'latest';
+            // Ensure we have a concrete version number
+            let version = options.version || agent.version || '1.0.0';
+            if (version === 'latest') {
+                version = '1.0.0'; // Default to 1.0.0 if version is 'latest'
+            }
             const target = options.target || 'claude-code';
             
             // Check if already installed
@@ -75,7 +79,7 @@ export class AgentInstallerService {
             const content = await this.registryService.downloadAgent(agentId, version);
             
             // Determine install path
-            const installPath = this.getInstallPath(target, agentId);
+            const installPath = this.getInstallPath(target, agentId, version);
             await this.ensureDir(path.dirname(installPath));
             
             // Write agent file
@@ -179,25 +183,28 @@ export class AgentInstallerService {
         await vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(installDir));
     }
 
-    private getInstallPath(target: string, agentId: string): string {
+    private getInstallPath(target: string, agentId: string, version: string): string {
         const homeDir = os.homedir();
         
-        // Parse agentId to get the actual agent name (without author prefix)
-        const { id } = this.parseAgentId(agentId);
+        // Parse agentId to get author and agent name
+        const { author, id } = this.parseAgentId(agentId);
+        
+        // Create filename with format: author_agent-name_version.md
+        const filename = `${author}_${id}_v${version}.md`;
         
         switch (target) {
             case 'claude-code':
                 // Install to Claude Code's user agents directory: ~/.claude/agents/
-                return path.join(homeDir, '.claude', 'agents', `${id}.md`);
+                return path.join(homeDir, '.claude', 'agents', filename);
             case 'codex':
                 // Install to Codex agents directory: ~/.codex/agents/
-                return path.join(homeDir, '.codex', 'agents', `${id}.md`);
+                return path.join(homeDir, '.codex', 'agents', filename);
             case 'copilot':
                 // Install to Copilot agents directory: ~/.copilot/agents/
-                return path.join(homeDir, '.copilot', 'agents', `${id}.md`);
+                return path.join(homeDir, '.copilot', 'agents', filename);
             default:
                 // Fallback for unknown targets
-                return path.join(homeDir, `.${target}`, 'agents', `${id}.md`);
+                return path.join(homeDir, `.${target}`, 'agents', filename);
         }
     }
 
