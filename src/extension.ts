@@ -68,7 +68,7 @@ export async function activate(context: vscode.ExtensionContext) {
 // 确保Chameleon布局
 function ensureChameleonLayout(context: vscode.ExtensionContext) {
     // 延迟执行，确保VS Code完全启动
-    setTimeout(() => {
+    setTimeout(async () => {
         try {
             // 检查是否有Chameleon相关的标签页
             const allTabs = vscode.window.tabGroups.all.flatMap(group => group.tabs);
@@ -77,10 +77,17 @@ function ensureChameleonLayout(context: vscode.ExtensionContext) {
                 tab.label.includes('chameleon')
             );
             
-            // 如果没有Chameleon标签页，显示登录页面
+            // 如果没有Chameleon标签页，根据配置决定显示登录页还是导航页
             if (!hasChameleonTab) {
-                console.log('没有找到Chameleon标签页，显示登录页面');
-                showLoginPanel(context);
+                const requireLogin = vscode.workspace.getConfiguration('chameleon').get<boolean>('requireLogin', false);
+                
+                if (requireLogin) {
+                    console.log('需要登录验证，显示登录页面');
+                    showLoginPanel(context);
+                } else {
+                    console.log('跳过登录验证，直接显示导航页面');
+                    showNavigationPanel(context);
+                }
             } else {
                 console.log('Chameleon标签页已存在');
             }

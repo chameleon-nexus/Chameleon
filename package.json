@@ -274,6 +274,11 @@
           "default": true,
           "description": "Automatically open Chameleon panel on startup"
         },
+        "chameleon.requireLogin": {
+          "type": "boolean",
+          "default": false,
+          "description": "Require user authentication to access Chameleon features. When enabled, users must log in before accessing the navigation panel. When disabled, users can directly access the navigation panel without authentication."
+        },
         "chameleon.activeCliMode": {
           "type": "string",
           "default": "claude-router",

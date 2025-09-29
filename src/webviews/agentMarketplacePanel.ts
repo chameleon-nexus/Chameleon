@@ -144,15 +144,7 @@ export class AgentMarketplacePanel {
                 allCategories: t('agentMarketplace.filtersAllCategories'),
                 searchPlaceholder: t('agentMarketplace.filtersSearchPlaceholder')
             },
-            categories: {
-                architecture: t('agentMarketplace.categoriesArchitecture'),
-                programming: t('agentMarketplace.categoriesProgramming'),
-                infrastructure: t('agentMarketplace.categoriesInfrastructure'),
-                quality: t('agentMarketplace.categoriesQuality'),
-                data: t('agentMarketplace.categoriesData'),
-                documentation: t('agentMarketplace.categoriesDocumentation'),
-                business: t('agentMarketplace.categoriesBusiness')
-            },
+            // Categories will be populated dynamically from registry data
             actions: {
                 downloadToClaudeCode: t('agentMarketplace.actionsDownloadToClaudeCode'),
                 downloadToCodex: t('agentMarketplace.actionsDownloadToCodex'),
@@ -433,13 +425,7 @@ export class AgentMarketplacePanel {
                         <label id="categoryLabel"></label>
                         <select class="filter-select" id="categoryFilter">
                             <option value="" id="allCategoriesOption"></option>
-                            <option value="architecture" id="architectureOption"></option>
-                            <option value="programming" id="programmingOption"></option>
-                            <option value="infrastructure" id="infrastructureOption"></option>
-                            <option value="quality" id="qualityOption"></option>
-                            <option value="data" id="dataOption"></option>
-                            <option value="documentation" id="documentationOption"></option>
-                            <option value="business" id="businessOption"></option>
+                            <!-- Categories will be populated dynamically by JavaScript -->
                         </select>
                     </div>
                     
@@ -492,26 +478,7 @@ export class AgentMarketplacePanel {
                         const allCategoriesOption = document.getElementById('allCategoriesOption');
                         if (allCategoriesOption) allCategoriesOption.textContent = translations.filters.allCategories;
                         
-                        const architectureOption = document.getElementById('architectureOption');
-                        if (architectureOption) architectureOption.textContent = translations.categories.architecture;
-                        
-                        const programmingOption = document.getElementById('programmingOption');
-                        if (programmingOption) programmingOption.textContent = translations.categories.programming;
-                        
-                        const infrastructureOption = document.getElementById('infrastructureOption');
-                        if (infrastructureOption) infrastructureOption.textContent = translations.categories.infrastructure;
-                        
-                        const qualityOption = document.getElementById('qualityOption');
-                        if (qualityOption) qualityOption.textContent = translations.categories.quality;
-                        
-                        const dataOption = document.getElementById('dataOption');
-                        if (dataOption) dataOption.textContent = translations.categories.data;
-                        
-                        const documentationOption = document.getElementById('documentationOption');
-                        if (documentationOption) documentationOption.textContent = translations.categories.documentation;
-                        
-                        const businessOption = document.getElementById('businessOption');
-                        if (businessOption) businessOption.textContent = translations.categories.business;
+                        // Categories will be populated dynamically by populateCategoryFilter()
                         
                         const searchInput = document.getElementById('searchInput');
                         if (searchInput) searchInput.placeholder = translations.filters.searchPlaceholder;
@@ -526,93 +493,7 @@ export class AgentMarketplacePanel {
                     let agents = ${JSON.stringify(agents)};
                     const registryCategories = ${JSON.stringify(categories)};
                     
-                    // Legacy sample data (kept for fallback)
-                    const sampleAgents = [
-                        {
-                            id: 'code-reviewer',
-                            name: 'Code Reviewer',
-                            description: 'Elite code review expert specializing in security vulnerabilities and performance optimization',
-                            icon: '🔍',
-                            category: 'quality',
-                            tags: ['security', 'quality', 'review'],
-                            compatibility: {
-                                'claude-code': true,
-                                'codex': true
-                            },
-                            model: 'opus',
-                            tools: ['Read', 'Grep', 'Bash', 'Edit']
-                        },
-                        {
-                            id: 'backend-architect',
-                            name: 'Backend Architect',
-                            description: 'RESTful API design, microservice boundaries, and database schemas expert',
-                            icon: '🏗️',
-                            category: 'architecture',
-                            tags: ['api', 'microservices', 'database'],
-                            compatibility: {
-                                'claude-code': true,
-                                'codex': true
-                            },
-                            model: 'opus',
-                            tools: ['Read', 'Write', 'Bash']
-                        },
-                        {
-                            id: 'security-auditor',
-                            name: 'Security Auditor',
-                            description: 'Vulnerability assessment and OWASP compliance specialist',
-                            icon: '🛡️',
-                            category: 'quality',
-                            tags: ['security', 'audit', 'owasp'],
-                            compatibility: {
-                                'claude-code': true,
-                                'codex': false
-                            },
-                            model: 'opus',
-                            tools: ['Read', 'Grep', 'Bash']
-                        },
-                        {
-                            id: 'python-pro',
-                            name: 'Python Pro',
-                            description: 'Advanced Python development with optimization and best practices',
-                            icon: '🐍',
-                            category: 'programming',
-                            tags: ['python', 'optimization', 'best-practices'],
-                            compatibility: {
-                                'claude-code': true,
-                                'codex': true
-                            },
-                            model: 'sonnet',
-                            tools: ['Read', 'Write', 'Bash']
-                        },
-                        {
-                            id: 'devops-troubleshooter',
-                            name: 'DevOps Troubleshooter',
-                            description: 'Production debugging, log analysis, and deployment troubleshooting',
-                            icon: '🔧',
-                            category: 'infrastructure',
-                            tags: ['devops', 'debugging', 'production'],
-                            compatibility: {
-                                'claude-code': true,
-                                'codex': true
-                            },
-                            model: 'sonnet',
-                            tools: ['Read', 'Bash', 'Grep']
-                        },
-                        {
-                            id: 'data-scientist',
-                            name: 'Data Scientist',
-                            description: 'Data analysis, SQL queries, and BigQuery operations expert',
-                            icon: '📊',
-                            category: 'data',
-                            tags: ['data', 'sql', 'analysis'],
-                            compatibility: {
-                                'claude-code': true,
-                                'codex': true
-                            },
-                            model: 'opus',
-                            tools: ['Read', 'Bash']
-                        }
-                    ];
+                    // No more sample data - only use real GitHub registry data
                     
                     let filteredAgents = [...agents];
                     
@@ -620,13 +501,24 @@ export class AgentMarketplacePanel {
                     // Use the language setting passed from the backend
                     const currentLanguage = '${getCurrentLanguage()}';
                     
-                    function getLocalizedText(textObj, fallback = '') {
+                    // 修复乱码的分类名称映射
+                    const categoryNameFixes = {
+                        'systems-programming': '系统与底层编程',
+                        'database-management': '数据库管理'
+                    };
+                    
+                    function getLocalizedText(textObj, fallback = '', categoryKey = '') {
                         if (typeof textObj === 'string') {
                             return textObj;
                         }
                         
                         if (!textObj || typeof textObj !== 'object') {
                             return fallback;
+                        }
+                        
+                        // 如果是分类名称且有修复映射，优先使用修复的名称
+                        if (currentLanguage === 'zh' && categoryKey && categoryNameFixes[categoryKey]) {
+                            return categoryNameFixes[categoryKey];
                         }
                         
                         // Priority: current language -> English -> Chinese -> Japanese -> any available -> fallback
@@ -929,52 +821,51 @@ export class AgentMarketplacePanel {
                     }
                     
                     function populateCategoryFilter() {
+                        console.log('=== populateCategoryFilter START ===');
+                        console.log('registryCategories:', registryCategories);
+                        console.log('agents data:', agents);
+                        
                         const categoryFilter = document.getElementById('categoryFilter');
-                        if (!categoryFilter) return;
+                        if (!categoryFilter) {
+                            console.log('❌ categoryFilter element not found');
+                            return;
+                        }
                         
                         // Clear existing options except the first "All Categories" option
+                        console.log('清理现有选项，保留第一个选项');
                         while (categoryFilter.children.length > 1) {
                             categoryFilter.removeChild(categoryFilter.lastChild);
                         }
                         
+                        let addedFromRegistry = 0;
+                        let addedFromAgents = 0;
+                        
                         // Add categories from registry data with i18n support
                         if (registryCategories && typeof registryCategories === 'object') {
+                            console.log('📊 从注册表数据添加分类，总数:', Object.keys(registryCategories).length);
                             Object.keys(registryCategories).forEach(categoryKey => {
                                 const category = registryCategories[categoryKey];
+                                console.log('分类 ' + categoryKey + ':', category);
+                                
                                 const option = document.createElement('option');
                                 option.value = categoryKey;
                                 
-                                // Debug category data
-                                console.log('Category data for', categoryKey, ':', category);
-                                
                                 // Use localized category name
-                                const categoryName = getLocalizedText(category.name || category, categoryKey);
-                                console.log('Resolved category name:', categoryName);
+                                const categoryName = getLocalizedText(category.name || category, categoryKey, categoryKey);
+                                console.log('解析分类名称 ' + categoryKey + ': ' + categoryName);
                                 
-                                option.textContent = \`📁 \${categoryName}\`;
-                                
+                                option.textContent = '📁 ' + categoryName;
                                 categoryFilter.appendChild(option);
+                                addedFromRegistry++;
                             });
+                        } else {
+                            console.log('❌ registryCategories为空或不是对象');
                         }
                         
-                        // Also add categories found in agents data as fallback
-                        const agentCategories = new Set();
-                        agents.forEach(agent => {
-                            if (agent.category) {
-                                agentCategories.add(agent.category);
-                            }
-                        });
+                        // No longer add categories from agent data - only use registry categories
                         
-                        agentCategories.forEach(category => {
-                            // Check if this category is not already added from registry
-                            const existingOption = Array.from(categoryFilter.options).find(opt => opt.value === category);
-                            if (!existingOption) {
-                                const option = document.createElement('option');
-                                option.value = category;
-                                option.textContent = \`📁 \${category.charAt(0).toUpperCase() + category.slice(1)}\`;
-                                categoryFilter.appendChild(option);
-                            }
-                        });
+                        console.log('✅ 分类添加完成: 注册表(' + addedFromRegistry + ') = 总计(' + (categoryFilter.options.length - 1) + ')');
+                        console.log('=== populateCategoryFilter END ===');
                     }
                     
                     // Check if DOM is ready

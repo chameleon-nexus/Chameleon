@@ -147,9 +147,17 @@ export class NavigationPanel {
             // 关闭导航面板
             this.panel.dispose();
             
-            // 重新显示登录页面
-            const { LoginPanel } = await import('./loginPanel');
-            LoginPanel.createOrShow(this.extensionUri, this.extensionContext);
+            // 检查是否需要登录验证
+            const requireLogin = vscode.workspace.getConfiguration('chameleon').get<boolean>('requireLogin', false);
+            
+            if (requireLogin) {
+                // 重新显示登录页面
+                const { LoginPanel } = await import('./loginPanel');
+                LoginPanel.createOrShow(this.extensionUri, this.extensionContext);
+            } else {
+                // 如果不需要登录验证，重新显示导航页面
+                NavigationPanel.createOrShow(this.extensionUri, this.extensionContext);
+            }
             
             vscode.window.showInformationMessage(t('navigation.logoutSuccess'));
         } catch (error) {
@@ -187,6 +195,9 @@ export class NavigationPanel {
     }
 
     private _getHtmlTemplate(): string {
+        // 检查是否需要登录验证来决定是否显示退出登录按钮
+        const requireLogin = vscode.workspace.getConfiguration('chameleon').get<boolean>('requireLogin', false);
+        
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -433,9 +444,10 @@ export class NavigationPanel {
             <p>${t('navigation.subtitle')}</p>
         </div>
         
+        ${requireLogin ? `
         <div class="logout-section">
             <button class="logout-button" onclick="logout()">${t('navigation.logout')}</button>
-        </div>
+        </div>` : ''}
         
         <!-- CLI Tools Section -->
         <div class="section">
