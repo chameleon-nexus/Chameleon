@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { t, getCurrentLanguage } from '../utils/i18n';
 import { AgentRegistryService, AgentInfo, SearchFilters } from '../services/agentRegistryService';
+import { AgentInstallerService, InstalledAgent } from '../services/agentInstallerService';
 
 export class AgentMarketplacePanel {
     public static currentPanel: AgentMarketplacePanel | undefined;
@@ -11,6 +12,7 @@ export class AgentMarketplacePanel {
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
     private agentService: AgentRegistryService;
+    private installerService: AgentInstallerService;
 
     public static createOrShow(extensionUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor
@@ -56,6 +58,7 @@ export class AgentMarketplacePanel {
             }
         } as any;
         this.agentService = new AgentRegistryService(mockContext);
+        this.installerService = new AgentInstallerService();
 
         // Set the webview's initial html content
         this._update();
@@ -71,8 +74,17 @@ export class AgentMarketplacePanel {
                     case 'searchAgents':
                         this.searchAgents(message.query, message.cliType, message.category);
                         return;
-                    case 'downloadAgent':
-                        this.downloadAgent(message.agent, message.targetType);
+                    case 'installAgent':
+                        this.installAgent(message.agent, message.targetType);
+                        return;
+                    case 'uninstallAgent':
+                        this.uninstallAgent(message.agent, message.targetType);
+                        return;
+                    case 'checkInstallStatus':
+                        this.checkInstallStatus(message.agents);
+                        return;
+                    case 'openInstallDirectory':
+                        this.openInstallDirectory();
                         return;
                     case 'convertAgent':
                         this.convertAgent(message.agent, message.fromType, message.toType);
@@ -371,6 +383,21 @@ export class AgentMarketplacePanel {
                     
                     .action-button-secondary:hover {
                         background-color: var(--vscode-button-secondaryHoverBackground);
+                    }
+                    
+                    .action-button-danger {
+                        background-color: #d73a49;
+                        color: white;
+                    }
+                    
+                    .action-button-danger:hover {
+                        background-color: #b52636;
+                    }
+                    
+                    .install-buttons-wrapper {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.5rem;
                     }
                     
                     .loading {
@@ -690,9 +717,17 @@ export class AgentMarketplacePanel {
                                 </div>
                                 
                                 <div class="agent-actions">
-                                    \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'claude-code\\')">' + translations.actions.downloadToClaudeCode + '</button>' : ''}
-                                    \${(agent.compatibility?.codex) ? '<button class="action-button action-button-primary" onclick="downloadAgent(\\'' + agent.id + '\\', \\'codex\\')">' + translations.actions.downloadToCodex + '</button>' : ''}
-                                    \${((agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) && agent.compatibility?.codex) ? '<button class="action-button action-button-secondary" onclick="convertAgent(\\'' + agent.id + '\\', \\'claude-code\\', \\'codex\\')">' + translations.actions.convertToCodex + '</button>' : ''}
+                                    <div class="install-buttons-wrapper" id="install-buttons-\${agent.id}">
+                                        \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? 
+                                            '<button class="action-button action-button-primary install-btn-claude" data-agent-id="' + agent.id + '" data-target="claude-code">' + translations.actions.downloadToClaudeCode + '</button>' + 
+                                            '<button class="action-button action-button-danger uninstall-btn-claude" data-agent-id="' + agent.id + '" data-target="claude-code" style="display: none;">卸载 Claude Code</button>'
+                                            : ''}
+                                        \${(agent.compatibility?.codex) ? 
+                                            '<button class="action-button action-button-primary install-btn-codex" data-agent-id="' + agent.id + '" data-target="codex">' + translations.actions.downloadToCodex + '</button>' + 
+                                            '<button class="action-button action-button-danger uninstall-btn-codex" data-agent-id="' + agent.id + '" data-target="codex" style="display: none;">卸载 Codex</button>'
+                                            : ''}
+                                        \${((agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) && agent.compatibility?.codex) ? '<button class="action-button action-button-secondary convert-btn" data-agent-id="' + agent.id + '" data-from="claude-code" data-to="codex">' + translations.actions.convertToCodex + '</button>' : ''}
+                                    </div>
                                 </div>
                             </div>
                         \`).join('');
@@ -720,13 +755,87 @@ export class AgentMarketplacePanel {
                         vscode.postMessage(message);
                     }
                     
-                    function downloadAgent(agentId, targetType) {
+                    function installAgent(agentId, targetType) {
                         const agent = agents.find(a => a.id === agentId);
                         vscode.postMessage({
-                            command: 'downloadAgent',
+                            command: 'installAgent',
                             agent: agent,
                             targetType: targetType
                         });
+                    }
+                    
+                    function uninstallAgent(agentId, targetType) {
+                        const agent = agents.find(a => a.id === agentId);
+                        vscode.postMessage({
+                            command: 'uninstallAgent',
+                            agent: agent,
+                            targetType: targetType
+                        });
+                    }
+                    
+                    function updateInstallButtons() {
+                        if (!window.installStatus) {
+                            return;
+                        }
+                        
+                        for (const agentId in window.installStatus) {
+                            const status = window.installStatus[agentId];
+                            
+                            // Update Claude Code buttons
+                            const installBtnClaude = document.querySelector(\`.install-btn-claude[data-agent-id="\${agentId}"]\`);
+                            const uninstallBtnClaude = document.querySelector(\`.uninstall-btn-claude[data-agent-id="\${agentId}"]\`);
+                            
+                            if (installBtnClaude && uninstallBtnClaude) {
+                                if (status['claude-code']) {
+                                    installBtnClaude.style.display = 'none';
+                                    uninstallBtnClaude.style.display = 'inline-block';
+                                } else {
+                                    installBtnClaude.style.display = 'inline-block';
+                                    uninstallBtnClaude.style.display = 'none';
+                                }
+                            }
+                            
+                            // Update Codex buttons
+                            const installBtnCodex = document.querySelector(\`.install-btn-codex[data-agent-id="\${agentId}"]\`);
+                            const uninstallBtnCodex = document.querySelector(\`.uninstall-btn-codex[data-agent-id="\${agentId}"]\`);
+                            
+                            if (installBtnCodex && uninstallBtnCodex) {
+                                if (status['codex']) {
+                                    installBtnCodex.style.display = 'none';
+                                    uninstallBtnCodex.style.display = 'inline-block';
+                                } else {
+                                    installBtnCodex.style.display = 'inline-block';
+                                    uninstallBtnCodex.style.display = 'none';
+                                }
+                            }
+                        }
+                    }
+                    
+                    function addAgentButtonListeners() {
+                        // Remove existing listeners to avoid duplicates
+                        document.removeEventListener('click', handleAgentButtonClick);
+                        
+                        // Add event delegation for all agent buttons
+                        document.addEventListener('click', handleAgentButtonClick);
+                    }
+                    
+                    function handleAgentButtonClick(event) {
+                        const target = event.target;
+                        
+                        if (target.classList.contains('install-btn-claude') || target.classList.contains('install-btn-codex')) {
+                            const agentId = target.getAttribute('data-agent-id');
+                            const targetType = target.getAttribute('data-target');
+                            installAgent(agentId, targetType);
+                        } else if (target.classList.contains('uninstall-btn-claude') || target.classList.contains('uninstall-btn-codex')) {
+                            const agentId = target.getAttribute('data-agent-id');
+                            const targetType = target.getAttribute('data-target');
+                            uninstallAgent(agentId, targetType);
+                        } else if (target.classList.contains('convert-btn')) {
+                            const agentId = target.getAttribute('data-agent-id');
+                            const fromType = target.getAttribute('data-from');
+                            const toType = target.getAttribute('data-to');
+                            convertAgent(agentId, fromType, toType);
+                        }
                     }
                     
                     function convertAgent(agentId, fromType, toType) {
@@ -759,10 +868,21 @@ export class AgentMarketplacePanel {
                         console.log('Rendering initial agents...');
                         renderAgents();
                         
+                        // Check install status for all agents
+                        if (agents.length > 0) {
+                            vscode.postMessage({
+                                command: 'checkInstallStatus',
+                                agents: agents
+                            });
+                        }
+                        
                         // Add event listeners
                         document.getElementById('cliTypeFilter').addEventListener('change', handleFilterChange);
                         document.getElementById('categoryFilter').addEventListener('change', handleFilterChange);
                         document.getElementById('searchInput').addEventListener('input', handleFilterChange);
+                        
+                        // Add agent button event listeners
+                        addAgentButtonListeners();
                         
                         // Listen for messages from VS Code
                         window.addEventListener('message', event => {
@@ -777,10 +897,24 @@ export class AgentMarketplacePanel {
                                     window.showRating = message.showRating;
                                     console.log('showRating set to:', window.showRating);
                                     renderAgents();
+                                    // Re-add button listeners after rendering
+                                    addAgentButtonListeners();
+                                    // Check install status for new agents
+                                    if (agents.length > 0) {
+                                        vscode.postMessage({
+                                            command: 'checkInstallStatus',
+                                            agents: agents
+                                        });
+                                    }
                                     break;
                                 case 'searchError':
                                     console.error('Search error:', message.error);
                                     document.getElementById('agentGrid').innerHTML = \`<div class="no-results">搜索失败: \${message.error}</div>\`;
+                                    break;
+                                case 'installStatus':
+                                    console.log('Received install status:', message.status);
+                                    window.installStatus = message.status;
+                                    updateInstallButtons();
                                     break;
                             }
                         });
@@ -904,23 +1038,62 @@ export class AgentMarketplacePanel {
         }
     }
 
-    private async downloadAgent(agent: any, targetType: string) {
+    private async installAgent(agent: any, targetType: string = 'claude-code') {
         try {
-            const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
-            if (!workspaceFolder) {
-                vscode.window.showErrorMessage(t('agentMarketplace.messagesWorkspaceRequired'));
-                return;
-            }
-
-            if (targetType === 'claude-code') {
-                await this.downloadToClaudeCode(agent, workspaceFolder.uri);
-            } else if (targetType === 'codex') {
-                await this.downloadToCodex(agent, workspaceFolder.uri);
-            }
-
-            vscode.window.showInformationMessage(t('agentMarketplace.messagesDownloadSuccess', { name: agent.name }));
+            await this.installerService.installAgent(agent.id, {
+                target: targetType,
+                version: agent.version,
+                force: false
+            });
+            
+            // Refresh install status in UI
+            this.checkInstallStatus([agent]);
         } catch (error) {
-            vscode.window.showErrorMessage(t('agentMarketplace.messagesDownloadFailed', { error: error instanceof Error ? error.message : String(error) }));
+            console.error('Install agent failed:', error);
+        }
+    }
+
+    private async uninstallAgent(agent: any, targetType: string = 'claude-code') {
+        try {
+            await this.installerService.uninstallAgent(agent.id, targetType);
+            
+            // Refresh install status in UI
+            this.checkInstallStatus([agent]);
+        } catch (error) {
+            console.error('Uninstall agent failed:', error);
+        }
+    }
+
+    private async checkInstallStatus(agents: any[]) {
+        try {
+            const installedAgents = await this.installerService.getInstalledAgents();
+            
+            // Create a map of installed status for each agent
+            const installStatus: { [key: string]: { [target: string]: boolean } } = {};
+            
+            for (const agent of agents) {
+                installStatus[agent.id] = {
+                    'claude-code': installedAgents.some(ia => ia.id === agent.id && ia.target === 'claude-code'),
+                    'codex': installedAgents.some(ia => ia.id === agent.id && ia.target === 'codex'),
+                    'copilot': installedAgents.some(ia => ia.id === agent.id && ia.target === 'copilot')
+                };
+            }
+
+            // Send install status back to webview
+            this._panel.webview.postMessage({
+                command: 'installStatus',
+                status: installStatus
+            });
+        } catch (error) {
+            console.error('Check install status failed:', error);
+        }
+    }
+
+    private async openInstallDirectory() {
+        try {
+            await this.installerService.openInstallDirectory();
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to open install directory: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
 
