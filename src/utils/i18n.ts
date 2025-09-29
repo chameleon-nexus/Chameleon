@@ -92,3 +92,8 @@ export function t(key: string, ...args: any[]): string {
     
     return message;
 }
+
+// Export current language for use in webviews
+export function getCurrentLanguage(): string {
+    return language;
+}

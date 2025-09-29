@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { t } from '../utils/i18n';
+import { t, getCurrentLanguage } from '../utils/i18n';
 import { AgentRegistryService, AgentInfo, SearchFilters } from '../services/agentRegistryService';
 
 export class AgentMarketplacePanel {
@@ -589,19 +589,47 @@ export class AgentMarketplacePanel {
                     
                     let filteredAgents = [...agents];
                     
-                    // Helper functions to handle different data formats
-                    function getAgentName(agent) {
-                        if (typeof agent.name === 'string') {
-                            return agent.name;
+                    // Helper functions to handle different data formats with i18n support
+                    // Use the language setting passed from the backend
+                    const currentLanguage = '${getCurrentLanguage()}';
+                    
+                    function getLocalizedText(textObj, fallback = '') {
+                        if (typeof textObj === 'string') {
+                            return textObj;
                         }
-                        return agent.name?.en || agent.name?.zh || agent.id;
+                        
+                        if (!textObj || typeof textObj !== 'object') {
+                            return fallback;
+                        }
+                        
+                        // Priority: current language -> English -> Chinese -> Japanese -> any available -> fallback
+                        return textObj[currentLanguage] || 
+                               textObj.en || 
+                               textObj.zh || 
+                               textObj.ja || 
+                               Object.values(textObj)[0] || 
+                               fallback;
+                    }
+                    
+                    function getAgentName(agent) {
+                        return getLocalizedText(agent.name, agent.id);
                     }
                     
                     function getAgentDescription(agent) {
+                        // Debug logging
+                        console.log('Agent description data:', agent.description);
+                        console.log('Current language:', currentLanguage);
+                        
                         if (typeof agent.description === 'string') {
                             return agent.description;
                         }
-                        return agent.description?.en || agent.description?.zh || 'No description available';
+                        
+                        if (!agent.description || typeof agent.description !== 'object') {
+                            return 'No description available';
+                        }
+                        
+                        // Use getLocalizedText to get the best available description
+                        return getLocalizedText(agent.description, 'No description available');
                     }
                     
                     function getAgentIcon(category) {
@@ -775,15 +803,20 @@ export class AgentMarketplacePanel {
                             categoryFilter.removeChild(categoryFilter.lastChild);
                         }
                         
-                        // Add categories from registry data
+                        // Add categories from registry data with i18n support
                         if (registryCategories && typeof registryCategories === 'object') {
                             Object.keys(registryCategories).forEach(categoryKey => {
                                 const category = registryCategories[categoryKey];
                                 const option = document.createElement('option');
                                 option.value = categoryKey;
                                 
-                                // Use localized name if available from new structure
-                                const categoryName = category.name?.en || category.en || categoryKey;
+                                // Debug category data
+                                console.log('Category data for', categoryKey, ':', category);
+                                
+                                // Use localized category name
+                                const categoryName = getLocalizedText(category.name || category, categoryKey);
+                                console.log('Resolved category name:', categoryName);
+                                
                                 option.textContent = \`📁 \${categoryName}\`;
                                 
                                 categoryFilter.appendChild(option);
