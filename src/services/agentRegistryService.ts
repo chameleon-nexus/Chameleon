@@ -6,34 +6,73 @@ import * as https from 'https';
 
 export interface AgentInfo {
     id: string;
-    name: { en: string; zh: string };
-    description: { en: string; zh: string };
+    name: { en: string; zh: string; ja: string };
+    description: { en: string; zh: string; ja: string };
     author: string;
     category: string;
     tags: string[];
-    latest: string;
-    versions: string[];
+    version: string;
+    versions: Record<string, any>;
     downloads: number;
     rating: number;
-    ratingCount: number;
+    ratingCount?: number;
     license: string;
     compatibility: {
-        claudeCode: {
+        claudeCode?: {
+            minVersion: string;
+            tested?: string[];
+        };
+        'claude-code'?: boolean | {
+            minVersion: string;
+            tested?: string[];
+        };
+        codex?: {
+            minVersion: string;
+            tested?: string[];
+        };
+        copilot?: {
             minVersion: string;
             tested?: string[];
         };
     };
     createdAt: string;
     updatedAt: string;
+    files?: {
+        latest: string;
+    };
 }
 
 export interface Registry {
     version: string;
     lastUpdated: string;
     totalAgents: number;
-    agents: { [key: string]: AgentInfo };
-    categories: { [key: string]: any };
+    languages: string[];
+    categories: { [key: string]: CategoryInfo };
+    featured: {
+        count: number;
+        url: string;
+        description: {
+            en: string;
+            zh: string;
+            ja: string;
+        };
+    };
     stats: any;
+}
+
+export interface CategoryInfo {
+    count: number;
+    url: string;
+    name: {
+        en: string;
+        zh: string;
+        ja: string;
+    };
+    description: {
+        en: string;
+        zh: string;
+        ja: string;
+    };
 }
 
 export interface SearchFilters {
@@ -56,7 +95,7 @@ export class AgentRegistryService {
      */
     async getRegistry(): Promise<Registry> {
         return this.fetchWithCache('registry', async () => {
-            const url = `${AgentRegistryService.BASE_URL}/registry.json`;
+            const url = `${AgentRegistryService.BASE_URL}/index/main.json`;
             
             try {
                 const response = await this.httpGet(url);
@@ -87,157 +126,61 @@ export class AgentRegistryService {
 
     private getMockRegistry(): Registry {
         return {
-            version: "1.0.0",
+            version: "2.0.0",
             lastUpdated: new Date().toISOString(),
             totalAgents: 5,
-            agents: {
-                "python-pro": {
-                    id: "python-pro",
-                    name: { en: "Python Pro", zh: "Python 专家" },
-                    description: { en: "Expert Python developer for all your coding needs", zh: "专业的 Python 开发专家" },
-                    author: "wshobson",
-                    category: "development",
-                    tags: ["python", "development", "coding"],
-                    latest: "1.0.0",
-                    versions: ["1.0.0"],
-                    downloads: 1250,
-                    rating: 4.8,
-                    ratingCount: 45,
-                    license: "MIT",
-                    compatibility: {
-                        claudeCode: {
-                            minVersion: "1.0.0",
-                            tested: ["1.0.0"]
-                        }
-                    },
-                    createdAt: "2024-01-15T00:00:00Z",
-                    updatedAt: "2024-01-15T00:00:00Z"
-                },
-                "code-reviewer": {
-                    id: "code-reviewer",
-                    name: { en: "Code Reviewer", zh: "代码审查专家" },
-                    description: { en: "Professional code review expert specializing in security and quality", zh: "专业的代码审查专家，专注于安全和质量" },
-                    author: "wshobson",
-                    category: "development",
-                    tags: ["review", "security", "quality"],
-                    latest: "1.0.0",
-                    versions: ["1.0.0"],
-                    downloads: 890,
-                    rating: 4.9,
-                    ratingCount: 32,
-                    license: "MIT",
-                    compatibility: {
-                        claudeCode: {
-                            minVersion: "1.0.0",
-                            tested: ["1.0.0"]
-                        }
-                    },
-                    createdAt: "2024-01-15T00:00:00Z",
-                    updatedAt: "2024-01-15T00:00:00Z"
-                },
-                "debugger": {
-                    id: "debugger",
-                    name: { en: "Debugger", zh: "调试专家" },
-                    description: { en: "Expert at finding and fixing bugs in your code", zh: "专业的代码调试和错误修复专家" },
-                    author: "wshobson",
-                    category: "debugging",
-                    tags: ["debug", "troubleshoot", "fix"],
-                    latest: "1.0.0",
-                    versions: ["1.0.0"],
-                    downloads: 675,
-                    rating: 4.7,
-                    ratingCount: 28,
-                    license: "MIT",
-                    compatibility: {
-                        claudeCode: {
-                            minVersion: "1.0.0",
-                            tested: ["1.0.0"]
-                        }
-                    },
-                    createdAt: "2024-01-15T00:00:00Z",
-                    updatedAt: "2024-01-15T00:00:00Z"
-                },
-                "data-scientist": {
-                    id: "data-scientist",
-                    name: { en: "Data Scientist", zh: "数据科学家" },
-                    description: { en: "Advanced data analysis and machine learning expert", zh: "高级数据分析和机器学习专家" },
-                    author: "wshobson",
-                    category: "data",
-                    tags: ["data", "analysis", "ml", "statistics"],
-                    latest: "1.0.0",
-                    versions: ["1.0.0"],
-                    downloads: 1100,
-                    rating: 4.6,
-                    ratingCount: 38,
-                    license: "MIT",
-                    compatibility: {
-                        claudeCode: {
-                            minVersion: "1.0.0",
-                            tested: ["1.0.0"]
-                        }
-                    },
-                    createdAt: "2024-01-15T00:00:00Z",
-                    updatedAt: "2024-01-15T00:00:00Z"
-                },
-                "docs-architect": {
-                    id: "docs-architect",
-                    name: { en: "Documentation Architect", zh: "文档架构师" },
-                    description: { en: "Creates comprehensive and well-structured documentation", zh: "创建全面且结构良好的文档" },
-                    author: "wshobson",
-                    category: "documentation",
-                    tags: ["documentation", "writing", "structure"],
-                    latest: "1.0.0",
-                    versions: ["1.0.0"],
-                    downloads: 520,
-                    rating: 4.5,
-                    ratingCount: 22,
-                    license: "MIT",
-                    compatibility: {
-                        claudeCode: {
-                            minVersion: "1.0.0",
-                            tested: ["1.0.0"]
-                        }
-                    },
-                    createdAt: "2024-01-15T00:00:00Z",
-                    updatedAt: "2024-01-15T00:00:00Z"
+            languages: ["en", "zh", "ja"],
+            featured: {
+                count: 5,
+                url: "index/featured.json",
+                description: {
+                    en: "Top featured agents",
+                    zh: "热门代理",
+                    ja: "おすすめエージェント"
                 }
             },
             categories: {
-                "development": {
-                    en: "Code Development",
-                    zh: "代码开发",
-                    description: {
-                        en: "Agents for coding, refactoring, and code quality",
-                        zh: "用于编码、重构和代码质量的代理"
+                "ui-mobile": {
+                    count: 2,
+                    url: "index/categories/ui-mobile.json",
+                    name: {
+                        en: "UI/UX & Mobile",
+                        zh: "UI/UX与移动端",
+                        ja: "UI/UX・モバイル"
                     },
-                    icon: "💻"
+                    description: {
+                        en: "User interface design, mobile development, and visual validation",
+                        zh: "用户界面设计、移动开发和视觉验证",
+                        ja: "ユーザーインターフェース設計、モバイル開発、ビジュアル検証"
+                    }
                 },
-                "debugging": {
-                    en: "Problem Solving",
-                    zh: "问题排查",
-                    description: {
-                        en: "Agents for debugging and troubleshooting",
-                        zh: "用于调试和故障排除的代理"
+                "web-programming": {
+                    count: 2,
+                    url: "index/categories/web-programming.json",
+                    name: {
+                        en: "Web & Application Programming",
+                        zh: "Web与应用程序编程",
+                        ja: "Web・アプリケーションプログラミング"
                     },
-                    icon: "🐛"
-                },
-                "data": {
-                    en: "Data & Analytics",
-                    zh: "数据分析",
                     description: {
-                        en: "Agents for data analysis and processing",
-                        zh: "用于数据分析和处理的代理"
-                    },
-                    icon: "📊"
+                        en: "Modern web development with JavaScript, Python, and other dynamic languages",
+                        zh: "使用JavaScript、Python等动态语言进行现代Web开发",
+                        ja: "JavaScript、Pythonなどの動的言語によるモダンWeb開発"
+                    }
                 },
                 "documentation": {
-                    en: "Documentation",
-                    zh: "文档编写",
-                    description: {
-                        en: "Agents for writing and maintaining documentation",
-                        zh: "用于编写和维护文档的代理"
+                    count: 1,
+                    url: "index/categories/documentation.json",
+                    name: {
+                        en: "Documentation & Technical Writing",
+                        zh: "文档与技术写作",
+                        ja: "ドキュメント・技術文書"
                     },
-                    icon: "📝"
+                    description: {
+                        en: "Technical documentation, API specs, and content creation",
+                        zh: "技术文档、API规范和内容创建",
+                        ja: "技術文書、API仕様、コンテンツ作成"
+                    }
                 }
             },
             stats: {
@@ -249,12 +192,230 @@ export class AgentRegistryService {
         };
     }
 
+    private getMockAgents(): AgentInfo[] {
+        return [
+            {
+                id: "python-pro",
+                name: { en: "Python Pro", zh: "Python 专家", ja: "Python プロ" },
+                description: { en: "Expert Python developer for all your coding needs", zh: "专业的 Python 开发专家", ja: "すべてのコーディングニーズに対応する専門的なPython開発者" },
+                author: "wshobson",
+                category: "web-programming",
+                tags: ["python", "development", "coding"],
+                version: "1.0.0",
+                versions: { "1.0.0": {} },
+                downloads: 1250,
+                rating: 4.8,
+                ratingCount: 45,
+                license: "MIT",
+                compatibility: {
+                    claudeCode: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    },
+                    codex: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    }
+                },
+                createdAt: "2024-01-15T00:00:00Z",
+                updatedAt: "2024-01-15T00:00:00Z"
+            },
+            {
+                id: "code-reviewer",
+                name: { en: "Code Reviewer", zh: "代码审查专家", ja: "コードレビューア" },
+                description: { en: "Professional code review expert specializing in security and quality", zh: "专业的代码审查专家，专注于安全和质量", ja: "セキュリティと品質に特化したプロのコードレビュー専門家" },
+                author: "wshobson",
+                category: "web-programming",
+                tags: ["review", "security", "quality"],
+                version: "1.0.0",
+                versions: { "1.0.0": {} },
+                downloads: 890,
+                rating: 4.9,
+                ratingCount: 32,
+                license: "MIT",
+                compatibility: {
+                    claudeCode: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    },
+                    codex: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    }
+                },
+                createdAt: "2024-01-15T00:00:00Z",
+                updatedAt: "2024-01-15T00:00:00Z"
+            },
+            {
+                id: "ui-ux-designer",
+                name: { en: "UI/UX Designer", zh: "UI/UX设计师", ja: "UI/UXデザイナー" },
+                description: { en: "Interface design, wireframes, design systems", zh: "界面设计、线框图、设计系统", ja: "インターフェース設計、ワイヤーフレーム、デザインシステム" },
+                author: "wshobson",
+                category: "ui-mobile",
+                tags: ["ui", "ux", "design"],
+                version: "1.0.0",
+                versions: { "1.0.0": {} },
+                downloads: 675,
+                rating: 4.7,
+                ratingCount: 28,
+                license: "MIT",
+                compatibility: {
+                    claudeCode: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    },
+                    codex: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    }
+                },
+                createdAt: "2024-01-15T00:00:00Z",
+                updatedAt: "2024-01-15T00:00:00Z"
+            },
+            {
+                id: "mobile-developer",
+                name: { en: "Mobile Developer", zh: "移动开发者", ja: "モバイル開発者" },
+                description: { en: "React Native and Flutter application development", zh: "React Native和Flutter应用开发", ja: "React NativeとFlutterアプリケーション開発" },
+                author: "wshobson",
+                category: "ui-mobile",
+                tags: ["mobile", "react-native", "flutter"],
+                version: "1.0.0",
+                versions: { "1.0.0": {} },
+                downloads: 1100,
+                rating: 4.6,
+                ratingCount: 38,
+                license: "MIT",
+                compatibility: {
+                    claudeCode: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    },
+                    codex: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    }
+                },
+                createdAt: "2024-01-15T00:00:00Z",
+                updatedAt: "2024-01-15T00:00:00Z"
+            },
+            {
+                id: "docs-architect",
+                name: { en: "Documentation Architect", zh: "文档架构师", ja: "ドキュメントアーキテクト" },
+                description: { en: "Creates comprehensive and well-structured documentation", zh: "创建全面且结构良好的文档", ja: "包括的で構造化されたドキュメントを作成" },
+                author: "wshobson",
+                category: "documentation",
+                tags: ["documentation", "writing", "structure"],
+                version: "1.0.0",
+                versions: { "1.0.0": {} },
+                downloads: 520,
+                rating: 4.5,
+                ratingCount: 22,
+                license: "MIT",
+                compatibility: {
+                    claudeCode: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    },
+                    codex: {
+                        minVersion: "1.0.0",
+                        tested: ["1.0.0"]
+                    }
+                },
+                createdAt: "2024-01-15T00:00:00Z",
+                updatedAt: "2024-01-15T00:00:00Z"
+            }
+        ];
+    }
+
+    /**
+     * 获取热门 Agents
+     */
+    async getFeaturedAgents(): Promise<AgentInfo[]> {
+        return this.fetchWithCache('featured', async () => {
+            const url = `${AgentRegistryService.BASE_URL}/index/featured.json`;
+            
+            try {
+                const response = await this.httpGet(url);
+                const featuredData = JSON.parse(response);
+                return featuredData.agents || [];
+            } catch (error) {
+                console.error('Failed to fetch featured agents:', error);
+                // Fallback to mock data
+                return this.getMockAgents();
+            }
+        });
+    }
+
+    /**
+     * 获取分类 Agents
+     */
+    async getCategoryAgents(category: string): Promise<AgentInfo[]> {
+        return this.fetchWithCache(`category-${category}`, async () => {
+            const url = `${AgentRegistryService.BASE_URL}/index/categories/${category}.json`;
+            console.log(`Fetching category agents for: ${category} from ${url}`);
+            
+            try {
+                const response = await this.httpGet(url);
+                const categoryData = JSON.parse(response);
+                console.log(`Successfully fetched data for category ${category}:`, categoryData);
+                console.log(`Agents array:`, categoryData.agents);
+                console.log(`Agents count: ${categoryData.agents?.length || 0}`);
+                const agents = categoryData.agents || [];
+                console.log(`About to return ${agents.length} agents from getCategoryAgents`);
+                return agents;
+            } catch (error) {
+                console.error(`Failed to fetch category ${category}:`, error);
+                // Return mock data filtered by category
+                const mockAgents = this.getMockAgents();
+                const filtered = mockAgents.filter(agent => agent.category === category);
+                console.log(`Using mock data: ${mockAgents.length} total, ${filtered.length} filtered for category ${category}`);
+                console.log('Mock agents categories:', mockAgents.map(a => a.category));
+                return filtered;
+            }
+        });
+    }
+
+    /**
+     * 获取所有 Agents (用于搜索)
+     */
+    async getAllAgents(): Promise<AgentInfo[]> {
+        const registry = await this.getRegistry();
+        const categories = Object.keys(registry.categories);
+        
+        // 并行获取所有分类的agents
+        const categoryPromises = categories.map(category => 
+            this.getCategoryAgents(category).catch(() => [])
+        );
+        
+        const categoryResults = await Promise.all(categoryPromises);
+        const allAgents = categoryResults.flat();
+        
+        // 去重 (按agent ID)
+        const uniqueAgents = allAgents.filter((agent, index, self) => 
+            index === self.findIndex(a => a.id === agent.id)
+        );
+        
+        return uniqueAgents;
+    }
+
     /**
      * 搜索 Agents
      */
     async searchAgents(query: string, filters: SearchFilters = {}): Promise<AgentInfo[]> {
-        const registry = await this.getRegistry();
-        let results = Object.values(registry.agents);
+        let results: AgentInfo[] = [];
+
+        if (filters.category) {
+            // 如果选择了分类，获取分类agents
+            console.log(`Getting category agents for: ${filters.category}`);
+            results = await this.getCategoryAgents(filters.category);
+            console.log(`Got ${results.length} agents from getCategoryAgents`);
+            console.log(`First agent:`, results[0]);
+        } else {
+            // 没有选择分类，获取热门agents
+            console.log('Getting featured agents');
+            results = await this.getFeaturedAgents();
+            console.log(`Got ${results.length} featured agents`);
+        }
 
         // 文本搜索
         if (query) {
@@ -262,16 +423,15 @@ export class AgentRegistryService {
             results = results.filter(agent => 
                 agent.name.en.toLowerCase().includes(lowerQuery) ||
                 agent.name.zh.toLowerCase().includes(lowerQuery) ||
+                agent.name.ja.toLowerCase().includes(lowerQuery) ||
                 agent.description.en.toLowerCase().includes(lowerQuery) ||
                 agent.description.zh.toLowerCase().includes(lowerQuery) ||
+                agent.description.ja.toLowerCase().includes(lowerQuery) ||
                 agent.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
             );
         }
 
-        // 分类过滤
-        if (filters.category) {
-            results = results.filter(agent => agent.category === filters.category);
-        }
+        // 分类过滤已经在getCategoryAgents中完成，无需重复过滤
 
         // 标签过滤
         if (filters.tag) {
@@ -320,11 +480,13 @@ export class AgentRegistryService {
             // Parse author and name from agentId
             const [author, name] = this.parseAgentId(agentId);
             const url = `${AgentRegistryService.BASE_URL}/agents/${author}/${name}/metadata.json`;
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch agent details: ${response.statusText}`);
+            
+            try {
+                const response = await this.httpGet(url);
+                return JSON.parse(response);
+            } catch (error) {
+                throw new Error(`Failed to fetch agent details: ${error}`);
             }
-            return await response.json();
         });
     }
 
@@ -333,23 +495,19 @@ export class AgentRegistryService {
      */
     async downloadAgent(agentId: string, version?: string): Promise<string> {
         const details = await this.getAgentDetails(agentId);
-        const targetVersion = version || details.latest;
-        const versionInfo = details.versions[targetVersion];
+        const targetVersion = version || details.version;
         
-        if (!versionInfo) {
-            throw new Error(`Version ${targetVersion} not found for agent ${agentId}`);
-        }
-
         // Parse author and name from agentId
         const [author, name] = this.parseAgentId(agentId);
-        const agentUrl = `${AgentRegistryService.BASE_URL}/agents/${author}/${name}/agent.md`;
-        const response = await fetch(agentUrl);
+        const filename = `${name}_v${targetVersion}.md`;
+        const agentUrl = `${AgentRegistryService.BASE_URL}/agents/${author}/${name}/${filename}`;
         
-        if (!response.ok) {
-            throw new Error(`Failed to download agent: ${response.statusText}`);
+        try {
+            const response = await this.httpGet(agentUrl);
+            return response;
+        } catch (error) {
+            throw new Error(`Failed to download agent: ${error}`);
         }
-        
-        return await response.text();
     }
 
     /**
@@ -392,19 +550,19 @@ export class AgentRegistryService {
      * 检查 Agent 更新
      */
     async checkForUpdates(installedAgents: string[]): Promise<Array<{id: string; currentVersion: string; latestVersion: string}>> {
-        const registry = await this.getRegistry();
+        const allAgents = await this.getAllAgents();
         const updates = [];
 
         for (const agentId of installedAgents) {
-            const agent = registry.agents[agentId];
+            const agent = allAgents.find(a => a.id === agentId);
             if (agent) {
                 // 这里简化处理，实际应该读取本地文件的版本信息
                 const currentVersion = "1.0.0"; // 从本地文件解析
-                if (agent.latest !== currentVersion) {
+                if (agent.version !== currentVersion) {
                     updates.push({
                         id: agentId,
                         currentVersion,
-                        latestVersion: agent.latest
+                        latestVersion: agent.version
                     });
                 }
             }
@@ -422,13 +580,6 @@ export class AgentRegistryService {
     }
 
     /**
-     * 获取热门 Agents
-     */
-    async getFeaturedAgents(limit: number = 10): Promise<AgentInfo[]> {
-        return this.searchAgents('', { sortBy: 'downloads', limit });
-    }
-
-    /**
      * 解析 Agent ID
      */
     private parseAgentId(agentId: string): [string, string] {
@@ -436,8 +587,8 @@ export class AgentRegistryService {
         if (parts.length === 2) {
             return [parts[0], parts[1]];
         }
-        // Default to community if no author specified
-        return ['community', agentId];
+        // Default to wshobson if no author specified
+        return ['wshobson', agentId];
     }
 
     /**
@@ -446,10 +597,13 @@ export class AgentRegistryService {
     private async fetchWithCache<T>(key: string, fetcher: () => Promise<T>): Promise<T> {
         const cached = this.cache.get(key);
         if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
+            console.log(`Returning cached data for ${key}:`, cached.data);
             return cached.data;
         }
 
+        console.log(`Fetching fresh data for ${key}`);
         const data = await fetcher();
+        console.log(`Caching and returning data for ${key}:`, data);
         this.cache.set(key, { data, timestamp: Date.now() });
         return data;
     }

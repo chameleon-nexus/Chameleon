@@ -95,7 +95,7 @@ export class AgentMarketplacePanel {
         let categories: any = {};
         
         try {
-            const featuredAgents = await this.agentService.getFeaturedAgents(50);
+            const featuredAgents = await this.agentService.getFeaturedAgents();
             const registryCategories = await this.agentService.getCategories();
             
             agents = featuredAgents;
@@ -496,7 +496,7 @@ export class AgentMarketplacePanel {
                     }
                     
                     // Real agent data from GitHub registry
-                    const agents = ${JSON.stringify(agents)};
+                    let agents = ${JSON.stringify(agents)};
                     const registryCategories = ${JSON.stringify(categories)};
                     
                     // Legacy sample data (kept for fallback)
@@ -649,7 +649,7 @@ export class AgentMarketplacePanel {
                                 <div class="agent-meta">
                                     <span>👤 \${agent.author}</span>
                                     <span>📥 \${agent.downloads || 0}</span>
-                                    <span>⭐ \${(agent.rating || 0).toFixed(1)}</span>
+                                    \${window.showRating !== false ? \`<span>⭐ \${(agent.rating || 0).toFixed(1)}</span>\` : ''}
                                 </div>
                                 
                                 <div class="agent-tags">
@@ -670,44 +670,26 @@ export class AgentMarketplacePanel {
                         \`).join('');
                     }
                     
-                    function filterAgents() {
+                    
+                    function handleFilterChange() {
+                        console.log('handleFilterChange called');
+                        
                         const cliType = document.getElementById('cliTypeFilter').value;
                         const category = document.getElementById('categoryFilter').value;
-                        const search = document.getElementById('searchInput').value.toLowerCase();
+                        const search = document.getElementById('searchInput').value;
                         
-                        filteredAgents = agents.filter(agent => {
-                            // CLI Type filtering - handle both old and new data formats
-                            let matchesCliType = true;
-                            if (cliType) {
-                                if (cliType === 'claude-code') {
-                                    matchesCliType = agent.compatibility?.claudeCode || agent.compatibility?.['claude-code'];
-                                } else if (cliType === 'codex') {
-                                    matchesCliType = agent.compatibility?.codex;
-                                } else {
-                                    matchesCliType = agent.compatibility?.[cliType];
-                                }
-                            }
-                            
-                            // Category filtering
-                            const matchesCategory = !category || agent.category === category;
-                            
-                            // Search filtering - handle both string and object formats
-                            let matchesSearch = true;
-                            if (search) {
-                                const agentName = getAgentName(agent).toLowerCase();
-                                const agentDescription = getAgentDescription(agent).toLowerCase();
-                                const agentTags = agent.tags || [];
-                                
-                                matchesSearch = agentName.includes(search) ||
-                                               agentDescription.includes(search) ||
-                                               agentTags.some(tag => tag.toLowerCase().includes(search)) ||
-                                               (agent.author && agent.author.toLowerCase().includes(search));
-                            }
-                            
-                            return matchesCliType && matchesCategory && matchesSearch;
-                        });
+                        console.log('Filter values:', { cliType, category, search });
                         
-                        renderAgents();
+                        // 发送搜索请求到VS Code扩展
+                        const message = {
+                            command: 'searchAgents',
+                            query: search,
+                            cliType: cliType,
+                            category: category
+                        };
+                        
+                        console.log('Sending message to VS Code:', message);
+                        vscode.postMessage(message);
                     }
                     
                     function downloadAgent(agentId, targetType) {
@@ -742,13 +724,44 @@ export class AgentMarketplacePanel {
                         // Populate category filter with real data from registry
                         populateCategoryFilter();
                         
-                        // Render agents
+                        // Initialize showRating flag - show rating for featured agents by default
+                        window.showRating = true;
+                        
+                        // Render initial agents (from server data)
+                        console.log('Rendering initial agents...');
                         renderAgents();
                         
                         // Add event listeners
-                        document.getElementById('cliTypeFilter').addEventListener('change', filterAgents);
-                        document.getElementById('categoryFilter').addEventListener('change', filterAgents);
-                        document.getElementById('searchInput').addEventListener('input', filterAgents);
+                        document.getElementById('cliTypeFilter').addEventListener('change', handleFilterChange);
+                        document.getElementById('categoryFilter').addEventListener('change', handleFilterChange);
+                        document.getElementById('searchInput').addEventListener('input', handleFilterChange);
+                        
+                        // Listen for messages from VS Code
+                        window.addEventListener('message', event => {
+                            const message = event.data;
+                            console.log('Received message from VS Code:', message);
+                            
+                            switch (message.command) {
+                                case 'searchResults':
+                                    console.log('Updating agents with search results:', message.agents.length, 'agents');
+                                    agents = message.agents;
+                                    filteredAgents = agents;
+                                    window.showRating = message.showRating;
+                                    console.log('showRating set to:', window.showRating);
+                                    renderAgents();
+                                    break;
+                                case 'searchError':
+                                    console.error('Search error:', message.error);
+                                    document.getElementById('agentGrid').innerHTML = \`<div class="no-results">搜索失败: \${message.error}</div>\`;
+                                    break;
+                            }
+                        });
+                        
+                        // Trigger initial search after everything is set up
+                        console.log('Triggering initial search...');
+                        setTimeout(() => {
+                            handleFilterChange();
+                        }, 100);
                         
                         console.log('Agent Marketplace initialized successfully');
                     }
@@ -769,9 +782,9 @@ export class AgentMarketplacePanel {
                                 const option = document.createElement('option');
                                 option.value = categoryKey;
                                 
-                                // Use localized name if available
-                                const categoryName = category.en || category.name?.en || categoryKey;
-                                option.textContent = \`\${category.icon || '📁'} \${categoryName}\`;
+                                // Use localized name if available from new structure
+                                const categoryName = category.name?.en || category.en || categoryKey;
+                                option.textContent = \`📁 \${categoryName}\`;
                                 
                                 categoryFilter.appendChild(option);
                             });
@@ -809,9 +822,53 @@ export class AgentMarketplacePanel {
     }
 
     private async searchAgents(query: string, cliType: string, category: string) {
-        // This would typically search a database or API
-        // For now, we'll just return the filtered results from the frontend
-        console.log('Searching agents:', { query, cliType, category });
+        console.log('VS Code searchAgents called with:', { query, cliType, category });
+        
+        try {
+            const filters: SearchFilters = {};
+            if (category && category !== 'all') {
+                filters.category = category;
+            }
+            
+            console.log('Using filters:', filters);
+            let results = await this.agentService.searchAgents(query, filters);
+            console.log('Initial search results count:', results.length);
+            
+            // CLI类型过滤
+            if (cliType && cliType !== 'all') {
+                console.log('Applying CLI type filter:', cliType);
+                const beforeFilterCount = results.length;
+                results = results.filter(agent => {
+                    if (cliType === 'claude-code') {
+                        // 处理两种格式：新格式 {claudeCode: {...}} 和 GitHub格式 {"claude-code": true}
+                        return agent.compatibility?.claudeCode || agent.compatibility?.['claude-code'];
+                    } else if (cliType === 'codex') {
+                        return agent.compatibility?.codex;
+                    } else if (cliType === 'copilot') {
+                        return agent.compatibility?.copilot;
+                    }
+                    return false;
+                });
+                console.log(`CLI filter applied: ${beforeFilterCount} -> ${results.length}`);
+            }
+            
+            const showRating = !category || category === 'all'; // 只有在查看热门时显示评分
+            console.log('Final results:', { count: results.length, showRating });
+            
+            // 发送搜索结果回webview
+            this._panel.webview.postMessage({
+                command: 'searchResults',
+                agents: results,
+                showRating: showRating
+            });
+            
+        } catch (error) {
+            console.error('Search failed:', error);
+            this._panel.webview.postMessage({
+                command: 'searchError',
+                error: error instanceof Error ? error.message : String(error)
+            });
+        }
     }
 
     private async downloadAgent(agent: any, targetType: string) {
@@ -830,7 +887,7 @@ export class AgentMarketplacePanel {
 
             vscode.window.showInformationMessage(t('agentMarketplace.messagesDownloadSuccess', { name: agent.name }));
         } catch (error) {
-            vscode.window.showErrorMessage(t('agentMarketplace.messagesDownloadFailed', { error: error }));
+            vscode.window.showErrorMessage(t('agentMarketplace.messagesDownloadFailed', { error: error instanceof Error ? error.message : String(error) }));
         }
     }
 
