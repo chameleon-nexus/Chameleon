@@ -97,14 +97,8 @@ export class AgentRegistryService {
         return this.fetchWithCache('registry', async () => {
             const url = `${AgentRegistryService.BASE_URL}/index/main.json`;
             
-            try {
-                const response = await this.httpGet(url);
-                return JSON.parse(response);
-            } catch (error) {
-                console.error('Failed to fetch registry from GitHub:', error);
-                // Fallback to mock data for development
-                return this.getMockRegistry();
-            }
+            const response = await this.httpGet(url);
+            return JSON.parse(response);
         });
     }
 
@@ -334,15 +328,9 @@ export class AgentRegistryService {
         return this.fetchWithCache('featured', async () => {
             const url = `${AgentRegistryService.BASE_URL}/index/featured.json`;
             
-            try {
-                const response = await this.httpGet(url);
-                const featuredData = JSON.parse(response);
-                return featuredData.agents || [];
-            } catch (error) {
-                console.error('Failed to fetch featured agents:', error);
-                // Fallback to mock data
-                return this.getMockAgents();
-            }
+            const response = await this.httpGet(url);
+            const featuredData = JSON.parse(response);
+            return featuredData.agents || [];
         });
     }
 
@@ -354,24 +342,14 @@ export class AgentRegistryService {
             const url = `${AgentRegistryService.BASE_URL}/index/categories/${category}.json`;
             console.log(`Fetching category agents for: ${category} from ${url}`);
             
-            try {
-                const response = await this.httpGet(url);
-                const categoryData = JSON.parse(response);
-                console.log(`Successfully fetched data for category ${category}:`, categoryData);
-                console.log(`Agents array:`, categoryData.agents);
-                console.log(`Agents count: ${categoryData.agents?.length || 0}`);
-                const agents = categoryData.agents || [];
-                console.log(`About to return ${agents.length} agents from getCategoryAgents`);
-                return agents;
-            } catch (error) {
-                console.error(`Failed to fetch category ${category}:`, error);
-                // Return mock data filtered by category
-                const mockAgents = this.getMockAgents();
-                const filtered = mockAgents.filter(agent => agent.category === category);
-                console.log(`Using mock data: ${mockAgents.length} total, ${filtered.length} filtered for category ${category}`);
-                console.log('Mock agents categories:', mockAgents.map(a => a.category));
-                return filtered;
-            }
+            const response = await this.httpGet(url);
+            const categoryData = JSON.parse(response);
+            console.log(`Successfully fetched data for category ${category}:`, categoryData);
+            console.log(`Agents array:`, categoryData.agents);
+            console.log(`Agents count: ${categoryData.agents?.length || 0}`);
+            const agents = categoryData.agents || [];
+            console.log(`About to return ${agents.length} agents from getCategoryAgents`);
+            return agents;
         });
     }
 
@@ -494,20 +472,17 @@ export class AgentRegistryService {
      * 下载 Agent 内容
      */
     async downloadAgent(agentId: string, version?: string): Promise<string> {
-        const details = await this.getAgentDetails(agentId);
-        const targetVersion = version || details.version;
-        
         // Parse author and name from agentId
         const [author, name] = this.parseAgentId(agentId);
+        const targetVersion = version || '1.0.0'; // Default to 1.0.0 if no version specified
+        
         const filename = `${name}_v${targetVersion}.md`;
         const agentUrl = `${AgentRegistryService.BASE_URL}/agents/${author}/${name}/${filename}`;
         
-        try {
+        return this.fetchWithCache(`agent_${agentId}_${targetVersion}`, async () => {
             const response = await this.httpGet(agentUrl);
             return response;
-        } catch (error) {
-            throw new Error(`Failed to download agent: ${error}`);
-        }
+        });
     }
 
     /**

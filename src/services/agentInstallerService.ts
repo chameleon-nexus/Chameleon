@@ -49,9 +49,12 @@ export class AgentInstallerService {
      */
     async installAgent(agentId: string, options: InstallOptions = {}): Promise<void> {
         try {
+            // Parse agentId to get the actual agent name
+            const { author, id } = this.parseAgentId(agentId);
+            
             // Get agent details from registry
             const agents = await this.registryService.getAllAgents();
-            const agent = agents.find(a => a.id === agentId);
+            const agent = agents.find(a => a.id === id && a.author === author);
             
             if (!agent) {
                 throw new Error(`Agent ${agentId} not found`);
@@ -179,20 +182,49 @@ export class AgentInstallerService {
     private getInstallPath(target: string, agentId: string): string {
         const homeDir = os.homedir();
         
+        // Parse agentId to get the actual agent name (without author prefix)
+        const { id } = this.parseAgentId(agentId);
+        
         switch (target) {
             case 'claude-code':
                 // Install to Claude Code's user agents directory: ~/.claude/agents/
-                return path.join(homeDir, '.claude', 'agents', `${agentId}.md`);
+                return path.join(homeDir, '.claude', 'agents', `${id}.md`);
             case 'codex':
                 // Install to Codex agents directory: ~/.codex/agents/
-                return path.join(homeDir, '.codex', 'agents', `${agentId}.md`);
+                return path.join(homeDir, '.codex', 'agents', `${id}.md`);
             case 'copilot':
                 // Install to Copilot agents directory: ~/.copilot/agents/
-                return path.join(homeDir, '.copilot', 'agents', `${agentId}.md`);
+                return path.join(homeDir, '.copilot', 'agents', `${id}.md`);
             default:
                 // Fallback for unknown targets
-                return path.join(homeDir, `.${target}`, 'agents', `${agentId}.md`);
+                return path.join(homeDir, `.${target}`, 'agents', `${id}.md`);
         }
+    }
+
+    /**
+     * 解析agent ID，支持 author/agent-name[@version] 格式
+     */
+    private parseAgentId(agentId: string): { author: string; id: string; version?: string } {
+        // Handle author/agent-name[@version] format
+        const versionMatch = agentId.match(/^(.+)@(.+)$/);
+        if (versionMatch) {
+            const [, idPart, version] = versionMatch;
+            const authorMatch = idPart.match(/^([^/]+)\/(.+)$/);
+            if (authorMatch) {
+                const [, author, id] = authorMatch;
+                return { author, id, version };
+            }
+        }
+        
+        // Handle author/agent-name format
+        const authorMatch = agentId.match(/^([^/]+)\/(.+)$/);
+        if (authorMatch) {
+            const [, author, id] = authorMatch;
+            return { author, id };
+        }
+        
+        // Fallback for legacy format (agent-name only)
+        return { author: 'unknown', id: agentId };
     }
 
     private async registerInstalledAgent(agent: InstalledAgent): Promise<void> {

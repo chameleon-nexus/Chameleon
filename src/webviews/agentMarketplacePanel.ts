@@ -1040,7 +1040,10 @@ export class AgentMarketplacePanel {
 
     private async installAgent(agent: any, targetType: string = 'claude-code') {
         try {
-            await this.installerService.installAgent(agent.id, {
+            // Construct full agent ID in author/agent-name format
+            const fullAgentId = agent.author ? `${agent.author}/${agent.id}` : agent.id;
+            
+            await this.installerService.installAgent(fullAgentId, {
                 target: targetType,
                 version: agent.version,
                 force: false
@@ -1055,7 +1058,10 @@ export class AgentMarketplacePanel {
 
     private async uninstallAgent(agent: any, targetType: string = 'claude-code') {
         try {
-            await this.installerService.uninstallAgent(agent.id, targetType);
+            // Construct full agent ID in author/agent-name format
+            const fullAgentId = agent.author ? `${agent.author}/${agent.id}` : agent.id;
+            
+            await this.installerService.uninstallAgent(fullAgentId, targetType);
             
             // Refresh install status in UI
             this.checkInstallStatus([agent]);
@@ -1072,10 +1078,13 @@ export class AgentMarketplacePanel {
             const installStatus: { [key: string]: { [target: string]: boolean } } = {};
             
             for (const agent of agents) {
+                // Construct full agent ID for comparison
+                const fullAgentId = agent.author ? `${agent.author}/${agent.id}` : agent.id;
+                
                 installStatus[agent.id] = {
-                    'claude-code': installedAgents.some(ia => ia.id === agent.id && ia.target === 'claude-code'),
-                    'codex': installedAgents.some(ia => ia.id === agent.id && ia.target === 'codex'),
-                    'copilot': installedAgents.some(ia => ia.id === agent.id && ia.target === 'copilot')
+                    'claude-code': installedAgents.some(ia => ia.id === fullAgentId && ia.target === 'claude-code'),
+                    'codex': installedAgents.some(ia => ia.id === fullAgentId && ia.target === 'codex'),
+                    'copilot': installedAgents.some(ia => ia.id === fullAgentId && ia.target === 'copilot')
                 };
             }
 
