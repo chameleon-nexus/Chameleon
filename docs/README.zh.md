@@ -44,18 +44,13 @@ Chameleon专为开发者、创作者和研究人员设计，通过其**通用多
 我们的代理商城支持12种语言的本地化界面：
 
 <div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="../docs/images/3.png" alt="代理商城 - 日文界面" width="400px"><br>
-        <em>日文界面</em>
-      </td>
-      <td align="center">
-        <img src="../docs/images/5.png" alt="代理商城 - 中文界面" width="400px"><br>
-        <em>中文界面</em>
-      </td>
-    </tr>
-  </table>
+  <img src="../docs/images/3.png" alt="代理商城 - 日文界面" width="800px">
+  <p><em>日文界面 - 为日本开发者提供完整的本地化体验</em></p>
+</div>
+
+<div align="center">
+  <img src="../docs/images/5.png" alt="代理商城 - 中文界面" width="800px">
+  <p><em>中文界面 - 原生中文语言支持</em></p>
 </div>
 
 ### 🎯 高级AI引擎支持

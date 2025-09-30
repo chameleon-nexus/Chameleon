@@ -47,18 +47,13 @@ Designed for developers, writers, and researchers, Chameleon puts you in control
 Our Agent Marketplace supports 12 languages with localized interfaces:
 
 <div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="./docs/images/3.png" alt="Agent Marketplace - Japanese" width="400px"><br>
-        <em>Japanese Interface</em>
-      </td>
-      <td align="center">
-        <img src="./docs/images/5.png" alt="Agent Marketplace - Chinese" width="400px"><br>
-        <em>Chinese Interface</em>
-      </td>
-    </tr>
-  </table>
+  <img src="./docs/images/3.png" alt="Agent Marketplace - Japanese" width="800px">
+  <p><em>Japanese Interface - Complete localization for Japanese developers</em></p>
+</div>
+
+<div align="center">
+  <img src="./docs/images/5.png" alt="Agent Marketplace - Chinese" width="800px">
+  <p><em>Chinese Interface - Native Chinese language support</em></p>
 </div>
 
 ### 🎯 Advanced AI Engine Support
