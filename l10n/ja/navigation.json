@@ -30,7 +30,18 @@
   "openEngineSettingsFailed": "エンジン設定を開くのに失敗しました",
   "openSystemSettingsFailed": "システム設定を開くのに失敗しました",
   "claudeModeEntered": "Claude専用モードに入りました",
-  "logoutSuccess": "ログアウトしました"
+  "codexModeEntered": "Codex専用モードに入りました",
+  "copilot": "Copilot CLI",
+  "copilotDesc": "GitHub Copilotのコマンドラインツール。強力なAI支援プログラミング機能を提供",
+  "copilotButton": "Copilot CLIを起動",
+  "copilotModeEntered": "Copilot専用モードに入りました",
+  "copilotFailed": "Copilot CLIの起動に失敗しました",
+  "logoutSuccess": "ログアウトしました",
+  "agentMarketplace": "エージェントマーケットプレイス",
+  "agentMarketplaceDesc": "プロフェッショナルなAIエージェントを発見・ダウンロードして開発効率を向上",
+  "agentMarketplaceButton": "マーケットプレイスに入る",
+  "engineSettingsButton": "設定を開く",
+  "systemSettingsButton": "設定を開く"
 }
 
 

@@ -30,5 +30,16 @@
   "openEngineSettingsFailed": "Error al abrir configuración del motor",
   "openSystemSettingsFailed": "Error al abrir configuración del sistema",
   "claudeModeEntered": "Modo exclusivo Claude ingresado",
-  "logoutSuccess": "Sesión cerrada exitosamente"
+  "codexModeEntered": "Modo exclusivo Codex ingresado",
+  "copilot": "Copilot CLI",
+  "copilotDesc": "Herramienta de línea de comandos de GitHub Copilot que proporciona capacidades de programación asistida por IA potentes",
+  "copilotButton": "Lanzar Copilot CLI",
+  "copilotModeEntered": "Modo exclusivo Copilot ingresado",
+  "copilotFailed": "Error al lanzar Copilot CLI",
+  "logoutSuccess": "Sesión cerrada exitosamente",
+  "agentMarketplace": "Mercado de Agentes",
+  "agentMarketplaceDesc": "Descubre y descarga agentes de IA especializados para tu flujo de trabajo de desarrollo",
+  "agentMarketplaceButton": "Entrar al Mercado",
+  "engineSettingsButton": "Abrir Configuración",
+  "systemSettingsButton": "Abrir Configuración"
 }

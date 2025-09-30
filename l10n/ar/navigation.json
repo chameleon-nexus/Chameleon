@@ -30,5 +30,16 @@
   "openEngineSettingsFailed": "فشل في فتح إعدادات المحرك",
   "openSystemSettingsFailed": "فشل في فتح إعدادات النظام",
   "claudeModeEntered": "دخل الوضع الحصري لـ Claude",
-  "logoutSuccess": "تم تسجيل الخروج بنجاح"
+  "codexModeEntered": "دخل الوضع الحصري لـ Codex",
+  "copilot": "Copilot CLI",
+  "copilotDesc": "أداة سطر أوامر GitHub Copilot التي توفر قدرات برمجة قوية مدعومة بالذكاء الاصطناعي",
+  "copilotButton": "إطلاق Copilot CLI",
+  "copilotModeEntered": "دخل الوضع الحصري لـ Copilot",
+  "copilotFailed": "فشل في إطلاق Copilot CLI",
+  "logoutSuccess": "تم تسجيل الخروج بنجاح",
+  "agentMarketplace": "سوق الوكلاء",
+  "agentMarketplaceDesc": "اكتشف وحمّل وكلاء الذكاء الاصطناعي المتخصصين لسير عمل التطوير الخاص بك",
+  "agentMarketplaceButton": "دخول السوق",
+  "engineSettingsButton": "فتح الإعدادات",
+  "systemSettingsButton": "فتح الإعدادات"
 }

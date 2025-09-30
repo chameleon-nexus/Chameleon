@@ -30,5 +30,16 @@
   "openEngineSettingsFailed": "Fehler beim Öffnen der Engine-Einstellungen",
   "openSystemSettingsFailed": "Fehler beim Öffnen der Systemeinstellungen",
   "claudeModeEntered": "Claude-exklusiver Modus eingegeben",
-  "logoutSuccess": "Erfolgreich abgemeldet"
+  "codexModeEntered": "Codex-exklusiver Modus eingegeben",
+  "copilot": "Copilot CLI",
+  "copilotDesc": "GitHub Copilots Kommandozeilen-Tool mit leistungsstarken KI-unterstützten Programmierfunktionen",
+  "copilotButton": "Copilot CLI starten",
+  "copilotModeEntered": "Copilot-exklusiver Modus eingegeben",
+  "copilotFailed": "Fehler beim Starten von Copilot CLI",
+  "logoutSuccess": "Erfolgreich abgemeldet",
+  "agentMarketplace": "Agent-Marktplatz",
+  "agentMarketplaceDesc": "Entdecken und laden Sie spezialisierte KI-Agenten für Ihren Entwicklungsworkflow herunter",
+  "agentMarketplaceButton": "Marktplatz betreten",
+  "engineSettingsButton": "Einstellungen öffnen",
+  "systemSettingsButton": "Einstellungen öffnen"
 }
