@@ -739,6 +739,7 @@ export class ClaudeWelcomePanel {
             const urls = {
                 'node': 'https://nodejs.org/',
                 'git': 'https://git-scm.com/downloads',
+                'npm': 'https://www.npmjs.com/',
                 '@anthropic-ai/claude-code': 'https://github.com/anthropics/claude-code',
                 '@chameleon-nexus-tech/claude-code-router': 'https://github.com/chameleon-nexus/claude-code-router'
             };

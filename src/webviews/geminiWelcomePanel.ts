@@ -618,6 +618,7 @@ export class GeminiWelcomePanel {
             const urls = {
                 'node': 'https://nodejs.org/',
                 'git': 'https://git-scm.com/downloads',
+                'npm': 'https://www.npmjs.com/',
                 '@google/gemini-cli': 'https://www.npmjs.com/package/@google/gemini-cli',
                 '@chameleon-nexus-tech/gemini-cli-openrouter': 'https://www.npmjs.com/package/@chameleon-nexus-tech/gemini-cli-openrouter'
             };
