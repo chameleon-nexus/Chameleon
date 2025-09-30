@@ -1,7 +1,7 @@
 {
   "name": "chameleon",
-  "displayName": "Chameleon - 智能文档助手",
-  "description": "专为文字工作者设计的智能文档处理和知识库管理工具",
+  "displayName": "Chameleon - Universal AI CLI Launcher",
+  "description": "Universal Multi-CLI Launcher for AI development tools. Supports Claude Code, Gemini CLI, Agent Marketplace, and third-party AI model integration.",
   "version": "0.1.0",
   "publisher": "chameleon-ai",
   "repository": {
