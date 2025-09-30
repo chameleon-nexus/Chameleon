@@ -28,30 +28,115 @@
 * **🎛️ 深度IDE統合**：VS Codeのネイティブ機能のように、右クリックメニュー、コードレンズ、専用パネルからAIツールをいつでも呼び出し。
 * **🌍 12言語サポート**：完全な中英日独仏西葡越印韓露阿国際化体験。
 
-## 🚀 インストールと設定
+## 🚀 インストール方法
 
-あなたの身分に応じて適切なインストールパスを選択してください：
+ニーズに最適なインストール方法を選択してください：
 
-### パス1：エンドユーザー（推奨）
+### 📦 方法1: VS Code Marketplace（推奨）
 
-以下の手順に従って、VS Code拡張機能マーケットプレイスからカメレオンをインストールして使用します。
+**Chameleonをインストールする最も簡単な方法 - ほとんどのユーザーに最適です。**
 
-**ステップ1：依存関係のインストール**
+1. **拡張機能のインストール:**
+   - Visual Studio Codeを開く
+   - 拡張機能ビューに移動（`Ctrl+Shift+X`または`Cmd+Shift+X`）
+   - **"chameleon-ai-launcher"**を検索
+   - 「インストール」をクリック
 
-カメレオンの動作には`Claude Code`と`Claude Code Router`が必要です。便利なインストールウィザードを提供しています：
-1. まず、VS Codeでこの拡張機能をインストールします（ステップ2を参照）。
-2. コマンドパレットを開きます（`Ctrl+Shift+P`または`Cmd+Shift+P`）。
-3. `Chameleon: インストールガイドを開く`コマンドを実行します。
-4. ガイド内の詳細な手順に従って、Node.js、Gitなどの前提環境のインストールを完了します。
+2. **依存関係のインストール:**
+   - インストール後、コマンドパレットを開く（`Ctrl+Shift+P`または`Cmd+Shift+P`）
+   - `Chameleon: Open Installation Guide`コマンドを実行
+   - Node.js、Git、Claude Code、Gemini CLIのインストール手順に従う
 
-**ステップ2：拡張機能のインストール**
+3. **設定と開始:**
+   - `Chameleon: Open AI Settings`を実行してAIプロバイダーを設定
+   - アクティビティバーのChameleonアイコンをクリックして開始！
 
-1. Visual Studio Codeを開きます。
-2. 拡張機能ビューに移動します（`Ctrl+Shift+X`）。
-3. **"Chameleon - 智能文档助手"**を検索します。
-4. 「インストール」をクリックします。
+### 📁 方法2: 事前ビルドVSIXパッケージ
 
-**ステップ3：AIプロバイダーの設定**
+**拡張機能パッケージファイルから直接インストール。**
+
+1. **VSIXをダウンロード:**
+   - [GitHub Releases](https://github.com/chameleon-nexus/Chameleon/releases)にアクセス
+   - 最新の`chameleon-ai-launcher-x.x.x.vsix`ファイルをダウンロード
+
+2. **VS Code経由でインストール:**
+   ```bash
+   # 方法A: コマンドライン
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # 方法B: VS Code UI
+   # 1. VS Codeを開く
+   # 2. 拡張機能ビューに移動（Ctrl+Shift+X）
+   # 3. "..."メニューをクリック → "VSIXからインストール..."
+   # 4. ダウンロードした.vsixファイルを選択
+   ```
+
+3. **設定を完了:**
+   - 方法1と同じ依存関係インストールと設定手順に従う
+
+### 🛠️ 方法3: ソースコードからビルド
+
+**拡張機能に貢献またはカスタマイズしたい開発者向け。**
+
+**前提条件:**
+- Git
+- Node.js（v16以上）
+- npmまたはyarn
+
+**手順:**
+
+1. **クローンとビルド:**
+   ```bash
+   # リポジトリをクローン
+   git clone https://github.com/chameleon-nexus/Chameleon.git
+   cd Chameleon
+   
+   # 依存関係をインストール
+   npm install
+   
+   # 拡張機能をコンパイル
+   npm run compile
+   
+   # 拡張機能をパッケージ化（オプション）
+   npm install -g @vscode/vsce
+   vsce package
+   ```
+
+2. **開発用インストール:**
+   ```bash
+   # 方法A: パッケージ版をインストール
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # 方法B: 開発モードで実行
+   # VS Codeでプロジェクトを開き、F5を押して拡張機能開発ホストを起動
+   ```
+
+3. **依存関係のインストール:**
+   - インストールガイドの説明に従ってNode.js、Git、Claude Code、Gemini CLIをインストール
+   - 拡張機能設定を通じてAIプロバイダーを設定
+
+---
+
+## ⚙️ インストール後の設定
+
+**インストール方法に関係なく、以下の手順を完了してください:**
+
+1. **Multi-CLI依存関係のインストール:**
+   - Node.jsとnpm
+   - Git
+   - Claude Code CLI（`npm install -g @anthropic-ai/claude-code`）
+   - Gemini CLIパッケージ
+
+2. **AIプロバイダーの設定:**
+   - コマンドパレットを開き`Chameleon: Open AI Settings`を実行
+   - OpenAI、Anthropic、Googleまたは他のプロバイダーのAPIキーを追加
+
+3. **インストールの確認:**
+   - VS CodeアクティビティバーのChameleonアイコンをクリック
+   - Claude CodeとGemini CLIページを確認
+   - すべての依存関係が「インストール済み」と表示されることを確認
+
+**ヘルプが必要ですか？** 詳細な手順については`Chameleon: Open Installation Guide`を実行してください！
 
 1. コマンドパレットを開きます（`Ctrl+Shift+P`）。
 2. `Chameleon: AI設定を開く`コマンドを実行します。
