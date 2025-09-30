@@ -28,51 +28,115 @@ Entwickelt für Entwickler, Autoren und Forscher, gibt Chameleon Ihnen die Kontr
 * **🎛️ Tiefe IDE-Integration**: Fühlt sich wie eine native VS Code-Funktion an. Greifen Sie über Rechtsklick-Menüs, Code-Lenses und dedizierte Seitenleisten-Panels jederzeit auf leistungsstarke KI-Tools zu.
 * **🌍 12-Sprachen-Unterstützung**: Vollständige internationale Erfahrung in Chinesisch, Englisch, Japanisch, Deutsch, Französisch, Spanisch, Portugiesisch, Vietnamesisch, Hindi, Koreanisch, Russisch und Arabisch.
 
-## 🚀 Installation und Einrichtung
+## 🚀 Installationsmethoden
 
-Wählen Sie den für Sie geeigneten Installationspfad:
+Wählen Sie die Installationsmethode, die am besten zu Ihren Bedürfnissen passt:
 
-### Option 1: Für Endbenutzer (Empfohlen)
+### 📦 Methode 1: VS Code Marketplace (Empfohlen)
 
-Befolgen Sie diese Schritte, um die Chameleon-Erweiterung aus dem VS Code Marketplace zu installieren und zu verwenden.
+**Der einfachste Weg, Chameleon zu installieren - perfekt für die meisten Benutzer.**
 
-**Schritt 1: Abhängigkeiten installieren**
+1. **Erweiterung installieren:**
+   - Öffnen Sie Visual Studio Code
+   - Gehen Sie zur Erweiterungsansicht (`Ctrl+Shift+X` oder `Cmd+Shift+X`)
+   - Suchen Sie nach **"chameleon-ai-launcher"**
+   - Klicken Sie auf "Installieren"
 
-Chameleon benötigt `Claude Code` und `Claude Code Router` zum Funktionieren. Wir haben dies einfach gemacht:
-1. Installieren Sie zuerst die Chameleon-Erweiterung (siehe Schritt 2).
-2. Öffnen Sie die Befehlspalette (`Ctrl+Shift+P` oder `Cmd+Shift+P`).
-3. Führen Sie den Befehl `Chameleon: Installationsanleitung öffnen` aus.
-4. Befolgen Sie die detaillierten Schritte im Leitfaden, um Node.js, Git und andere Voraussetzungen zu installieren.
+2. **Abhängigkeiten installieren:**
+   - Nach der Installation öffnen Sie die Befehlspalette (`Ctrl+Shift+P` oder `Cmd+Shift+P`)
+   - Führen Sie den Befehl `Chameleon: Open Installation Guide` aus
+   - Befolgen Sie die Schritt-für-Schritt-Anweisungen zur Installation von Node.js, Git, Claude Code und Gemini CLI
 
-**Schritt 2: Erweiterung installieren**
+3. **Konfigurieren und starten:**
+   - Führen Sie `Chameleon: Open AI Settings` aus, um Ihre AI-Anbieter zu konfigurieren
+   - Klicken Sie auf das Chameleon-Symbol in der Aktivitätsleiste, um zu beginnen!
 
-1. Öffnen Sie Visual Studio Code.
-2. Gehen Sie zur Erweiterungsansicht (`Ctrl+Shift+X`).
-3. Suchen Sie nach **"Chameleon - 智能文档助手"**.
-4. Klicken Sie auf "Installieren".
+### 📁 Methode 2: Vorgefertigtes VSIX-Paket
 
-**Schritt 3: KI-Provider konfigurieren**
+**Direkte Installation aus der Erweiterungspaket-Datei.**
 
-1. Öffnen Sie die Befehlspalette (`Ctrl+Shift+P`).
-2. Führen Sie den Befehl `Chameleon: KI-Einstellungen öffnen` aus.
-3. Wählen Sie einen KI-Provider aus und geben Sie Ihren API-Schlüssel ein.
-4. Konfiguration abgeschlossen! Klicken Sie auf das Chameleon-Symbol in der VS Code-Aktivitätsleiste, um zu beginnen.
+1. **VSIX herunterladen:**
+   - Gehen Sie zu [GitHub Releases](https://github.com/chameleon-nexus/Chameleon/releases)
+   - Laden Sie die neueste `chameleon-ai-launcher-x.x.x.vsix` Datei herunter
 
-### Option 2: Für Entwickler (Aus Quellcode)
+2. **Installation über VS Code:**
+   ```bash
+   # Methode A: Befehlszeile
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # Methode B: VS Code UI
+   # 1. VS Code öffnen
+   # 2. Zur Erweiterungsansicht gehen (Ctrl+Shift+X)
+   # 3. "..." Menü klicken → "Aus VSIX installieren..."
+   # 4. Die heruntergeladene .vsix Datei auswählen
+   ```
 
-Befolgen Sie diese Schritte, wenn Sie die Erweiterung aus dem Quellcode ausführen oder zum Projekt beitragen möchten.
+3. **Setup abschließen:**
+   - Befolgen Sie die gleichen Abhängigkeitsinstallations- und Konfigurationsschritte wie bei Methode 1
+
+### 🛠️ Methode 3: Aus Quellcode erstellen
+
+**Für Entwickler, die zur Erweiterung beitragen oder sie anpassen möchten.**
 
 **Voraussetzungen:**
-* Git installiert.
-* Node.js installiert (v16 oder höher empfohlen).
-* Alle Abhängigkeiten aus der **Installationsanleitung** (`Claude Code`, `Claude Code Router`, usw.) müssen installiert und konfiguriert sein.
+- Git
+- Node.js (v16 oder höher)
+- npm oder yarn
 
 **Schritte:**
 
-1. **Repository klonen:**
+1. **Klonen und erstellen:**
    ```bash
-   git clone https://github.com/chameleon-nexus/claude-code-vscode.git
-   cd claude-code-vscode
+   # Repository klonen
+   git clone https://github.com/chameleon-nexus/Chameleon.git
+   cd Chameleon
+   
+   # Abhängigkeiten installieren
+   npm install
+   
+   # Erweiterung kompilieren
+   npm run compile
+   
+   # Erweiterung paketieren (optional)
+   npm install -g @vscode/vsce
+   vsce package
+   ```
+
+2. **Für Entwicklung installieren:**
+   ```bash
+   # Methode A: Paketierte Version installieren
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # Methode B: Im Entwicklungsmodus ausführen
+   # Projekt in VS Code öffnen und F5 drücken, um Extension Development Host zu starten
+   ```
+
+3. **Abhängigkeiten installieren:**
+   - Node.js, Git, Claude Code und Gemini CLI wie in der Installationsanleitung beschrieben installieren
+   - AI-Anbieter über die Erweiterungseinstellungen konfigurieren
+
+---
+
+## ⚙️ Nach-Installations-Setup
+
+**Unabhängig von Ihrer Installationsmethode, führen Sie diese Schritte aus:**
+
+1. **Multi-CLI-Abhängigkeiten installieren:**
+   - Node.js und npm
+   - Git
+   - Claude Code CLI (`npm install -g @anthropic-ai/claude-code`)
+   - Gemini CLI-Pakete
+
+2. **AI-Anbieter konfigurieren:**
+   - Befehlspalette öffnen und `Chameleon: Open AI Settings` ausführen
+   - API-Schlüssel für OpenAI, Anthropic, Google oder andere Anbieter hinzufügen
+
+3. **Installation überprüfen:**
+   - Auf das Chameleon-Symbol in der VS Code-Aktivitätsleiste klicken
+   - Durch Claude Code und Gemini CLI-Seiten navigieren
+   - Überprüfen, dass alle Abhängigkeiten als "Installiert" angezeigt werden
+
+**Benötigen Sie Hilfe?** Führen Sie `Chameleon: Open Installation Guide` für detaillierte Schritt-für-Schritt-Anweisungen aus!
    ```
 
 2. **Projektabhängigkeiten installieren:**
