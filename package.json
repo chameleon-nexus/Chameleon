@@ -465,7 +465,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run build-obfuscated",
+    "vscode:prepublish": "npm run esbuild",
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",

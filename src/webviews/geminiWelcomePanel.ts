@@ -196,12 +196,17 @@ export class GeminiWelcomePanel {
                     break;
                 case '@google/gemini-cli':
                     // 官方模式：先完全清理所有相关包，再安装官方包
-                    installCommand = 'npm uninstall -g @google/gemini-cli; npm uninstall -g @chameleon-nexus-tech/gemini-cli; npm install -g @google/gemini-cli';
+                    installCommand = 'npm uninstall -g @google/gemini-cli; npm uninstall -g @chameleon-nexus-tech/gemini-cli; npm uninstall -g @chameleon-nexus-tech/gemini-cli-openrouter; npm install -g @google/gemini-cli';
                     break;
-                case '@chameleon-nexus-tech/gemini-cli':
+                case '@chameleon-nexus-tech/gemini-cli-openrouter':
                     // 三方模式：先完全清理所有相关包，再安装三方包
-                    installCommand = 'npm uninstall -g @google/gemini-cli; npm uninstall -g @chameleon-nexus-tech/gemini-cli; npm install -g @chameleon-nexus-tech/gemini-cli';
+                    installCommand = 'npm uninstall -g @google/gemini-cli; npm uninstall -g @chameleon-nexus-tech/gemini-cli; npm uninstall -g @chameleon-nexus-tech/gemini-cli-openrouter; npm install -g @chameleon-nexus-tech/gemini-cli-openrouter';
                     break;
+                case 'gemini-cli-openrouter-config':
+                    // 配置项：直接打开设置页面
+                    await vscode.commands.executeCommand('chameleon.settings');
+                    vscode.window.showInformationMessage(t('geminiWelcome.configureInSettings'));
+                    return;
                 default:
                     vscode.window.showErrorMessage(`${t('geminiWelcome.unsupportedDependency')}: ${dependency}`);
                     return;
@@ -237,6 +242,7 @@ export class GeminiWelcomePanel {
             cliThirdPartyDep: t('geminiWelcome.cliThirdPartyDep'),
             configRouter: t('geminiWelcome.configRouter'),
             clickToConfigure: t('geminiWelcome.clickToConfigure'),
+            configureInSettings: t('geminiWelcome.configureInSettings'),
             buttonInstall: t('welcome.button.install'),
             buttonWebsite: t('welcome.button.website')
         };
@@ -613,7 +619,7 @@ export class GeminiWelcomePanel {
                 'node': 'https://nodejs.org/',
                 'git': 'https://git-scm.com/downloads',
                 '@google/gemini-cli': 'https://www.npmjs.com/package/@google/gemini-cli',
-                '@chameleon-nexus-tech/gemini-cli': 'https://github.com/chameleon-nexus/gemini-cli'
+                '@chameleon-nexus-tech/gemini-cli-openrouter': 'https://www.npmjs.com/package/@chameleon-nexus-tech/gemini-cli-openrouter'
             };
             
             const url = urls[dep];
@@ -631,7 +637,8 @@ export class GeminiWelcomePanel {
                 'git': 'Git',
                 'npm': 'npm',
                 '@google/gemini-cli': L.cliOfficialDep,
-                '@chameleon-nexus-tech/gemini-cli': L.cliThirdPartyDep,
+                '@chameleon-nexus-tech/gemini-cli-openrouter': L.cliThirdPartyDep,
+                'gemini-cli-openrouter-config': L.configRouter,
                 'claude-code-router-config': L.configRouter
             };
             return names[dep] || dep;
@@ -647,7 +654,7 @@ export class GeminiWelcomePanel {
                 return ['@google/gemini-cli'];
             }
             if (mode === 'gemini-router') {
-                return ['@chameleon-nexus-tech/gemini-cli'];
+                return ['@chameleon-nexus-tech/gemini-cli-openrouter', 'gemini-cli-openrouter-config'];
             }
             return [];
         }
@@ -730,7 +737,7 @@ export class GeminiWelcomePanel {
                 nameEl.className = 'dep-name';
                 
                 let statusText = '';
-                if (dep === 'claude-code-router-config') {
+                if (dep === 'claude-code-router-config' || dep === 'gemini-cli-openrouter-config') {
                     statusText = installed ? ' - ' + L.configured : ' - ' + L.notConfigured;
                 } else {
                     statusText = installed ? ' - ' + L.installed : ' - ' + L.notInstalled;
@@ -743,7 +750,7 @@ export class GeminiWelcomePanel {
                 buttonContainer.style.gap = '8px';
                 buttonContainer.style.flexWrap = 'wrap';
                 
-                if (dep === 'claude-code-router-config') {
+                if (dep === 'claude-code-router-config' || dep === 'gemini-cli-openrouter-config') {
                     const configBtn = document.createElement('button');
                     configBtn.className = 'install-btn';
                     configBtn.textContent = L.clickToConfigure;

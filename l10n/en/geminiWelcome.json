@@ -27,12 +27,13 @@
   "installDepsFailed": "Failed to install dependencies",
   "aiSettingsDesc": "Configure AI model parameters and preferences",
   "systemSettingsDesc": "Configure welcome panel mode and other system options",
-  "configRouter": "Claude Code Router Configuration",
+  "configRouter": "Gemini CLI OpenRouter Configuration",
   "configured": "Configured",
   "notConfigured": "Not Configured",
   "installed": "Installed",
   "notInstalled": "Not Installed",
   "clickToConfigure": "Click to Configure",
   "backToNav": "← Back to Navigation",
-  "backToNavFailed": "Failed to return to navigation"
+  "backToNavFailed": "Failed to return to navigation",
+  "configureInSettings": "Please configure Gemini CLI OpenRouter in settings"
 }

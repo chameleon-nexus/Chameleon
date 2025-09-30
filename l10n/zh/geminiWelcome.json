@@ -27,14 +27,15 @@
   "installDepsFailed": "安装依赖失败",
   "aiSettingsDesc": "配置 AI 模型参数和偏好",
   "systemSettingsDesc": "配置欢迎面板模式和其他系统选项",
-  "configRouter": "Claude Code Router 配置",
+  "configRouter": "Gemini CLI OpenRouter 配置",
   "configured": "已配置",
   "notConfigured": "未配置",
   "installed": "已安装",
   "notInstalled": "未安装",
   "clickToConfigure": "点击配置",
   "backToNav": "← 返回导航",
-  "backToNavFailed": "返回导航失败"
+  "backToNavFailed": "返回导航失败",
+  "configureInSettings": "请在设置页面中配置Gemini CLI OpenRouter"
 }
 
 

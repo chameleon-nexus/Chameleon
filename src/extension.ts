@@ -254,14 +254,19 @@ async function checkModeDependencies(mode: string): Promise<{ [key: string]: boo
         case 'claude-native':
             console.log('[Extension] 检测 claude-native 模式依赖');
             result = {
-                ...baseDeps,
-                '@anthropic-ai/claude-code': await checkCommand('claude --version'),
+                'node': baseDeps.node,
+                'git': baseDeps.git,
+                'npm': baseDeps.npm,
+                '@anthropic-ai/claude-code': await checkNpmPackage('@anthropic-ai/claude-code'),
             };
             break;
         case 'claude-router':
             console.log('[Extension] 检测 claude-router 模式依赖');
             result = {
-                ...baseDeps,
+                'node': baseDeps.node,
+                'git': baseDeps.git,
+                'npm': baseDeps.npm,
+                '@anthropic-ai/claude-code': await checkNpmPackage('@anthropic-ai/claude-code'),
                 '@chameleon-nexus-tech/claude-code-router': await checkNpmPackage('@chameleon-nexus-tech/claude-code-router'),
                 'claude-code-router-config': await checkCCRConfig(),
             };
@@ -277,7 +282,8 @@ async function checkModeDependencies(mode: string): Promise<{ [key: string]: boo
             console.log('[Extension] 检测 gemini-router 模式依赖');
             result = {
                 ...baseDeps,
-                '@chameleon-nexus-tech/gemini-cli': await checkNpmPackage('@chameleon-nexus-tech/gemini-cli'),
+                '@chameleon-nexus-tech/gemini-cli-openrouter': await checkNpmPackage('@chameleon-nexus-tech/gemini-cli-openrouter'),
+                'gemini-cli-openrouter-config': await checkGeminiOpenRouterConfig(),
             };
             break;
         default:
@@ -372,6 +378,7 @@ function checkNpmPackage(packageName: string): Promise<boolean> {
     });
 }
 
+
 // 检查CCR配置文件是否存在
 async function checkCCRConfig(): Promise<boolean> {
     try {
@@ -382,6 +389,24 @@ async function checkCCRConfig(): Promise<boolean> {
         if (fs.existsSync(configPath)) {
             const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
             return config && config.APIKEY && config.APIKEY.trim() !== '';
+        }
+        
+        return false;
+    } catch (error) {
+        return false;
+    }
+}
+
+// 检查Gemini CLI OpenRouter配置文件是否存在
+async function checkGeminiOpenRouterConfig(): Promise<boolean> {
+    try {
+        const os = require('os');
+        const fs = require('fs');
+        const configPath = path.join(os.homedir(), '.gemini-cli-openrouter', 'config.json');
+        
+        if (fs.existsSync(configPath)) {
+            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            return config && config.OPENROUTER_API_KEY && config.OPENROUTER_API_KEY.trim() !== '';
         }
         
         return false;
