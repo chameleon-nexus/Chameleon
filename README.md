@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="./docs/images/6.png" alt="Chameleon Logo" width="120px">
   <h1>Chameleon AI Assistant</h1>
   <p>
     <strong>Your Open-Source, Universal AI Workstation inside VS Code.</strong>
