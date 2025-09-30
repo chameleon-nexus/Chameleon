@@ -22,12 +22,18 @@
   "installDepsFailed": "Fehler beim Installieren der Abhängigkeiten",
   "aiSettingsDesc": "KI-Modellparameter und -einstellungen konfigurieren",
   "systemSettingsDesc": "Willkommenspanel-Modus und andere Systemoptionen konfigurieren",
-  "configRouter": "Claude Code Router-Konfiguration",
+  "configRouter": "Gemini CLI OpenRouter-Konfiguration",
   "configured": "Konfiguriert",
   "notConfigured": "Nicht konfiguriert",
   "installed": "Installiert",
   "notInstalled": "Nicht installiert",
   "clickToConfigure": "Zum Konfigurieren klicken",
   "backToNav": "← Zurück zur Navigation",
-  "backToNavFailed": "Fehler beim Zurückkehren zur Navigation"
+  "backToNavFailed": "Fehler beim Zurückkehren zur Navigation",
+  "settings": "⚙️ Gemini-Einstellungen",
+  "settingsDesc": "Gemini CLI-Modelle und Parameter konfigurieren",
+  "systemSettings": "⚙️ Systemeinstellungen",
+  "openSystemSettingsFailed": "Fehler beim Öffnen der Systemeinstellungen",
+  "configureInSettings": "Bitte konfigurieren Sie Gemini CLI OpenRouter in den Einstellungen",
+  "restartRecommendation": "💡 Tipp: Starten Sie Ihren Computer nach der Installation aller Abhängigkeiten neu, um sicherzustellen, dass Umgebungsvariablen wirksam werden"
 }

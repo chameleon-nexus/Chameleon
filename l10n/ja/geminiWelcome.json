@@ -22,14 +22,20 @@
   "installDepsFailed": "依存関係のインストールに失敗しました",
   "aiSettingsDesc": "AIモデルパラメータと設定を設定",
   "systemSettingsDesc": "ウェルカムパネルモードとその他のシステムオプションを設定",
-  "configRouter": "Claude Code Router設定",
+  "configRouter": "Gemini CLI OpenRouter設定",
   "configured": "設定済み",
   "notConfigured": "未設定",
   "installed": "インストール済み",
   "notInstalled": "未インストール",
   "clickToConfigure": "クリックして設定",
   "backToNav": "← ナビゲーションに戻る",
-  "backToNavFailed": "ナビゲーションへの戻りに失敗しました"
+  "backToNavFailed": "ナビゲーションへの戻りに失敗しました",
+  "settings": "⚙️ Gemini設定",
+  "settingsDesc": "Gemini CLIモデルとパラメータを設定",
+  "systemSettings": "⚙️ システム設定",
+  "openSystemSettingsFailed": "システム設定の開きに失敗しました",
+  "configureInSettings": "設定でGemini CLI OpenRouterを設定してください",
+  "restartRecommendation": "💡 ヒント：すべての依存関係をインストールした後、環境変数を有効にするためにコンピューターを再起動してください"
 }
 
 

@@ -16,13 +16,29 @@
 
 ## 🦎 What is Chameleon?
 
-Chameleon is more than just another AI chat window. It's a powerful, open-source VS Code extension that transforms your editor into a professional-grade, local-first AI-powered Notebook.
+Chameleon is more than just another AI chat window. It's a powerful, open-source VS Code extension that transforms your editor into a professional-grade, multi-CLI AI launcher and intelligent agent marketplace.
 
-Designed for developers, writers, and researchers, Chameleon puts you in control. It integrates deeply with your workflow, allowing you to connect to any third-party AI provider (like OpenAI, Google Gemini, DeepSeek, and more), manage local and remote models, and build your own, private AI toolchain—all within the familiar environment of VS Code.
+Designed for developers, writers, and researchers, Chameleon puts you in control with its **Universal Multi-CLI Launcher** that seamlessly integrates **Claude Code** and **Gemini CLI** with extensive third-party AI model support. It features a comprehensive **Agent Marketplace** with hundreds of specialized AI agents, allowing you to connect to any AI provider, manage local and remote models, and build your own private AI toolchain—all within the familiar environment of VS Code.
 
 ## ✨ Core Features
 
-* **🎯 6 AI Engines, 20+ Selected Models**: Break free from vendor lock-in! Support for OpenRouter, DeepSeek, Google, Volcengine, Azure, Ollama and other 6 major AI engines, covering 20+ carefully selected models, including the latest GPT-4o, Claude 3.5 Sonnet, DeepSeek V3, etc.
+### 🚀 Universal Multi-CLI Launcher
+* **Claude Code Integration**: Native support for Claude Code CLI with official and third-party AI routing
+* **Gemini CLI Support**: Full integration with Gemini CLI including extensive third-party AI model compatibility
+* **Unified Interface**: Single dashboard to manage multiple CLI tools and AI providers seamlessly
+
+### 🛒 Agent Marketplace
+* **500+ Specialized Agents**: Discover and download from our comprehensive marketplace of AI agents
+* **Category-Based Organization**: Architecture, Programming, Infrastructure, Quality & Security, Data & AI, Documentation, and Business agents
+* **One-Click Installation**: Download agents directly to Claude Code or Codex with automatic format conversion
+* **Community-Driven**: Constantly expanding collection of community-contributed specialized agents
+
+### 🎯 Advanced AI Engine Support
+* **6 AI Engines, 20+ Selected Models**: Break free from vendor lock-in! Support for OpenRouter, DeepSeek, Google, Volcengine, Azure, Ollama and other 6 major AI engines, covering 20+ carefully selected models, including the latest GPT-4o, Claude 3.5 Sonnet, DeepSeek V3, etc.
+* **Third-Party Model Integration**: Extensive support for third-party AI models through both Claude Code and Gemini CLI
+* **Intelligent Model Routing**: Automatic selection of the best AI model based on task complexity and requirements
+
+### 💼 Professional Development Features
 * **Professional Notebook Interface**: Move beyond simple prompts. Structure your AI-driven tasks in a rich notebook format that combines Markdown, code snippets, and AI prompts. Perfect for complex tasks like code reviews, architectural design, and in-depth document analysis.
 * **Intelligent Document Processing**: Supercharge your writing and analysis with AI-powered summarization, optimization, and translation.
 * **Deep IDE Integration**: Chameleon feels like a native part of VS Code. Access powerful AI tools directly from the context menu, code lenses, and a dedicated sidebar panel.
@@ -37,9 +53,9 @@ Choose the path that's right for you:
 
 Follow these steps to install and use the Chameleon extension from the VS Code Marketplace.
 
-**Step 1: Install Dependencies**
+**Step 1: Install Multi-CLI Dependencies**
 
-Chameleon requires `Claude Code` and `Claude Code Router` to function. We've made this easy:
+Chameleon's Universal Multi-CLI Launcher requires `Claude Code` and `Gemini CLI` with their routers to function. We've made this easy:
 1. Install the Chameleon extension (see Step 2).
 2. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`).
 3. Run the `Chameleon: Open Installation Guide` command.

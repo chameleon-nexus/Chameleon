@@ -28,7 +28,10 @@
   "switchModeFailed": "モードの切り替えに失敗しました",
   "unsupportedDependency": "サポートされていない依存関係",
   "installDepsFailed": "依存関係のインストールに失敗しました",
-  "openSystemSettingsFailed": "システム設定の開きに失敗しました"
+  "openSystemSettingsFailed": "システム設定の開きに失敗しました",
+  "systemSettings": "⚙️ システム設定",
+  "systemSettingsDesc": "ウェルカムパネルモードやその他のシステムオプションを設定",
+  "restartRecommendation": "💡 ヒント：すべての依存関係をインストールした後、環境変数を有効にするためにコンピューターを再起動してください"
 }
 
 

@@ -22,12 +22,18 @@
   "installDepsFailed": "Error al instalar dependencias",
   "aiSettingsDesc": "Configurar parámetros de modelo de IA y preferencias",
   "systemSettingsDesc": "Configurar modo del panel de bienvenida y otras opciones del sistema",
-  "configRouter": "Configuración de Claude Code Router",
+  "configRouter": "Configuración de Gemini CLI OpenRouter",
   "configured": "Configurado",
   "notConfigured": "No Configurado",
   "installed": "Instalado",
   "notInstalled": "No Instalado",
   "clickToConfigure": "Hacer clic para configurar",
   "backToNav": "← Volver a Navegación",
-  "backToNavFailed": "Error al volver a la navegación"
+  "backToNavFailed": "Error al volver a la navegación",
+  "settings": "⚙️ Configuración de Gemini",
+  "settingsDesc": "Configurar modelos y parámetros de Gemini CLI",
+  "systemSettings": "⚙️ Configuración del Sistema",
+  "openSystemSettingsFailed": "Error al abrir configuración del sistema",
+  "configureInSettings": "Por favor configure Gemini CLI OpenRouter en la configuración",
+  "restartRecommendation": "💡 Consejo: Reinicie su computadora después de instalar todas las dependencias para asegurar que las variables de entorno tomen efecto"
 }

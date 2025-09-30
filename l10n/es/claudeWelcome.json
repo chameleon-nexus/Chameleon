@@ -28,5 +28,8 @@
   "switchModeFailed": "Error al cambiar modo",
   "unsupportedDependency": "Dependencia no soportada",
   "installDepsFailed": "Error al instalar dependencias",
-  "openSystemSettingsFailed": "Error al abrir configuración del sistema"
+  "openSystemSettingsFailed": "Error al abrir configuración del sistema",
+  "systemSettings": "⚙️ Configuración del Sistema",
+  "systemSettingsDesc": "Configurar modo del panel de bienvenida y otras opciones del sistema",
+  "restartRecommendation": "💡 Consejo: Reinicie su computadora después de instalar todas las dependencias para asegurar que las variables de entorno tomen efecto"
 }

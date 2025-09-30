@@ -28,5 +28,8 @@
   "switchModeFailed": "Fehler beim Wechseln des Modus",
   "unsupportedDependency": "Nicht unterstützte Abhängigkeit",
   "installDepsFailed": "Fehler beim Installieren der Abhängigkeiten",
-  "openSystemSettingsFailed": "Fehler beim Öffnen der Systemeinstellungen"
+  "openSystemSettingsFailed": "Fehler beim Öffnen der Systemeinstellungen",
+  "systemSettings": "⚙️ Systemeinstellungen",
+  "systemSettingsDesc": "Willkommenspanel-Modus und andere Systemoptionen konfigurieren",
+  "restartRecommendation": "💡 Tipp: Starten Sie Ihren Computer nach der Installation aller Abhängigkeiten neu, um sicherzustellen, dass Umgebungsvariablen wirksam werden"
 }
