@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/chameleon-nexus/claude-code-vscode/main/media/icon.svg" alt="Chameleon Logo" width="120px">
+  <img src="../docs/images/6.png" alt="Chameleon Logo" width="120px">
   <h1>Chameleon 智能助手</h1>
   <p>
     <strong>驾驭顶尖AI，重塑编码与创作流程。您的开源、可扩展的本地AI工作站。</strong>
