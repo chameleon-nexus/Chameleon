@@ -28,26 +28,115 @@ Conçu pour les développeurs, les rédacteurs et les chercheurs, Chameleon vous
 * **🎛️ Intégration IDE profonde** : Se sent comme une fonctionnalité native de VS Code. Accédez aux outils IA puissants directement via les menus contextuels, les code lenses et les panneaux de barre latérale dédiés.
 * **🌍 Support 12 langues** : Expérience internationale complète en chinois, anglais, japonais, allemand, français, espagnol, portugais, vietnamien, hindi, coréen, russe et arabe.
 
-## 🚀 Installation et configuration
+## 🚀 Méthodes d'installation
 
-Choisissez le chemin d'installation qui vous convient :
+Choisissez la méthode d'installation qui correspond le mieux à vos besoins :
 
-### Option 1 : Pour les utilisateurs finaux (Recommandé)
+### 📦 Méthode 1 : VS Code Marketplace (Recommandé)
 
-Suivez ces étapes pour installer et utiliser l'extension Chameleon depuis le VS Code Marketplace.
+**Le moyen le plus simple d'installer Chameleon - parfait pour la plupart des utilisateurs.**
 
-**Étape 1 : Installer les dépendances**
+1. **Installer l'extension :**
+   - Ouvrez Visual Studio Code
+   - Allez à la vue Extensions (`Ctrl+Shift+X` ou `Cmd+Shift+X`)
+   - Recherchez **"chameleon-ai-launcher"**
+   - Cliquez sur "Installer"
 
-Chameleon nécessite `Claude Code` et `Claude Code Router` pour fonctionner. Nous avons rendu cela facile :
-1. D'abord, installez cette extension dans VS Code (voir Étape 2).
-2. Ouvrez la palette de commandes (`Ctrl+Shift+P` ou `Cmd+Shift+P`).
-3. Exécutez la commande `Chameleon: Ouvrir le guide d'installation`.
-4. Suivez les étapes détaillées du guide pour terminer l'installation de Node.js, Git et d'autres prérequis.
+2. **Installer les dépendances :**
+   - Après l'installation, ouvrez la palette de commandes (`Ctrl+Shift+P` ou `Cmd+Shift+P`)
+   - Exécutez la commande `Chameleon: Open Installation Guide`
+   - Suivez les instructions étape par étape pour installer Node.js, Git, Claude Code et Gemini CLI
 
-**Étape 2 : Installer l'extension**
+3. **Configurer et démarrer :**
+   - Exécutez `Chameleon: Open AI Settings` pour configurer vos fournisseurs IA
+   - Cliquez sur l'icône Chameleon dans la barre d'activité pour commencer !
 
-1. Ouvrez Visual Studio Code.
-2. Allez à la vue Extensions (`Ctrl+Shift+X`).
+### 📁 Méthode 2 : Package VSIX pré-construit
+
+**Installation directe depuis le fichier de package d'extension.**
+
+1. **Télécharger VSIX :**
+   - Allez sur [GitHub Releases](https://github.com/chameleon-nexus/Chameleon/releases)
+   - Téléchargez le dernier fichier `chameleon-ai-launcher-x.x.x.vsix`
+
+2. **Installer via VS Code :**
+   ```bash
+   # Méthode A : Ligne de commande
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # Méthode B : Interface VS Code
+   # 1. Ouvrir VS Code
+   # 2. Aller à la vue Extensions (Ctrl+Shift+X)
+   # 3. Cliquer sur le menu "..." → "Installer depuis VSIX..."
+   # 4. Sélectionner le fichier .vsix téléchargé
+   ```
+
+3. **Terminer la configuration :**
+   - Suivez les mêmes étapes d'installation des dépendances et de configuration que la Méthode 1
+
+### 🛠️ Méthode 3 : Construire depuis le code source
+
+**Pour les développeurs qui souhaitent contribuer ou personnaliser l'extension.**
+
+**Prérequis :**
+- Git
+- Node.js (v16 ou supérieur)
+- npm ou yarn
+
+**Étapes :**
+
+1. **Cloner et construire :**
+   ```bash
+   # Cloner le dépôt
+   git clone https://github.com/chameleon-nexus/Chameleon.git
+   cd Chameleon
+   
+   # Installer les dépendances
+   npm install
+   
+   # Compiler l'extension
+   npm run compile
+   
+   # Empaqueter l'extension (optionnel)
+   npm install -g @vscode/vsce
+   vsce package
+   ```
+
+2. **Installer pour le développement :**
+   ```bash
+   # Méthode A : Installer la version empaquetée
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # Méthode B : Exécuter en mode développement
+   # Ouvrir le projet dans VS Code et appuyer sur F5 pour lancer l'hôte de développement d'extension
+   ```
+
+3. **Installer les dépendances :**
+   - Installer Node.js, Git, Claude Code et Gemini CLI comme décrit dans le guide d'installation
+   - Configurer les fournisseurs IA via les paramètres d'extension
+
+---
+
+## ⚙️ Configuration post-installation
+
+**Quelle que soit votre méthode d'installation, complétez ces étapes :**
+
+1. **Installer les dépendances Multi-CLI :**
+   - Node.js et npm
+   - Git
+   - Claude Code CLI (`npm install -g @anthropic-ai/claude-code`)
+   - Packages Gemini CLI
+
+2. **Configurer les fournisseurs IA :**
+   - Ouvrir la palette de commandes et exécuter `Chameleon: Open AI Settings`
+   - Ajouter vos clés API pour OpenAI, Anthropic, Google ou d'autres fournisseurs
+
+3. **Vérifier l'installation :**
+   - Cliquer sur l'icône Chameleon dans la barre d'activité de VS Code
+   - Naviguer dans les pages Claude Code et Gemini CLI
+   - Vérifier que toutes les dépendances s'affichent comme "Installées"
+
+**Besoin d'aide ?** Exécutez `Chameleon: Open Installation Guide` pour des instructions détaillées étape par étape !
 3. Recherchez **"Chameleon - 智能文档助手"**.
 4. Cliquez sur "Installer".
 
