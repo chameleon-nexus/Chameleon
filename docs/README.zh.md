@@ -223,7 +223,7 @@ Chameleon的智能路由系统会根据以下条件自动选择最佳模型：
 1. **安装扩展：**
    - 打开Visual Studio Code
    - 进入扩展视图（`Ctrl+Shift+X` 或 `Cmd+Shift+X`）
-   - 搜索 **"Chameleon - Universal AI CLI Launcher"**
+   - 搜索 **"chameleon-ai-launcher"**
    - 点击"安装"
 
 2. **安装依赖：**

@@ -78,7 +78,7 @@ Choose the installation method that best fits your needs:
 1. **Install the Extension:**
    - Open Visual Studio Code
    - Go to Extensions view (`Ctrl+Shift+X` or `Cmd+Shift+X`)
-   - Search for **"Chameleon - Universal AI CLI Launcher"**
+   - Search for **"chameleon-ai-launcher"**
    - Click "Install"
 
 2. **Install Dependencies:**
