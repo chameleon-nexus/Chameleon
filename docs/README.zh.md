@@ -17,6 +17,11 @@ Chameleon 不仅仅是又一个AI聊天窗口。它是一款强大的开源VS Co
 
 Chameleon专为开发者、创作者和研究人员设计，通过其**通用多CLI启动器**无缝集成**Claude Code**和**Gemini CLI**，并提供广泛的第三方AI模型支持。它配备了一个包含数百个专业AI代理的**综合代理商城**，让您能够连接任何AI供应商，管理本地与云端模型，并在您最熟悉的VS Code环境中，构建完全属于您自己的、私有的AI工具链。
 
+<div align="center">
+  <img src="../docs/images/1.png" alt="Chameleon导航界面" width="800px">
+  <p><em>通用多CLI启动器 - 在Claude Code和Gemini CLI之间无缝切换</em></p>
+</div>
+
 ## ✨ 核心功能
 
 ### 🚀 通用多CLI启动器
@@ -29,6 +34,29 @@ Chameleon专为开发者、创作者和研究人员设计，通过其**通用多
 * **分类组织**：架构设计、编程语言、基础设施、质量与安全、数据与AI、文档编写和业务分析代理
 * **一键安装**：直接下载代理到Claude Code或Codex，支持自动格式转换
 * **社区驱动**：持续扩展的社区贡献专业代理集合
+
+<div align="center">
+  <img src="../docs/images/2.png" alt="代理商城 - 英文界面" width="800px">
+  <p><em>代理商城 - 浏览和下载500+专业AI代理</em></p>
+</div>
+
+#### 🌍 多语言支持
+我们的代理商城支持12种语言的本地化界面：
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="../docs/images/3.png" alt="代理商城 - 日文界面" width="400px"><br>
+        <em>日文界面</em>
+      </td>
+      <td align="center">
+        <img src="../docs/images/5.png" alt="代理商城 - 中文界面" width="400px"><br>
+        <em>中文界面</em>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ### 🎯 高级AI引擎支持
 * **6种AI引擎，20+精选模型**：告别供应商锁定！支持OpenRouter、DeepSeek、Google、Volcengine、Azure、Ollama等6种主流AI引擎，涵盖20+个精选模型，包括最新的GPT-4o、Claude 3.5 Sonnet、DeepSeek V3等。

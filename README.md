@@ -20,6 +20,11 @@ Chameleon is more than just another AI chat window. It's a powerful, open-source
 
 Designed for developers, writers, and researchers, Chameleon puts you in control with its **Universal Multi-CLI Launcher** that seamlessly integrates **Claude Code** and **Gemini CLI** with extensive third-party AI model support. It features a comprehensive **Agent Marketplace** with hundreds of specialized AI agents, allowing you to connect to any AI provider, manage local and remote models, and build your own private AI toolchain—all within the familiar environment of VS Code.
 
+<div align="center">
+  <img src="./docs/images/1.png" alt="Chameleon Navigation Interface" width="800px">
+  <p><em>Universal Multi-CLI Launcher - Navigate between Claude Code and Gemini CLI seamlessly</em></p>
+</div>
+
 ## ✨ Core Features
 
 ### 🚀 Universal Multi-CLI Launcher
@@ -32,6 +37,29 @@ Designed for developers, writers, and researchers, Chameleon puts you in control
 * **Category-Based Organization**: Architecture, Programming, Infrastructure, Quality & Security, Data & AI, Documentation, and Business agents
 * **One-Click Installation**: Download agents directly to Claude Code or Codex with automatic format conversion
 * **Community-Driven**: Constantly expanding collection of community-contributed specialized agents
+
+<div align="center">
+  <img src="./docs/images/2.png" alt="Agent Marketplace - English" width="800px">
+  <p><em>Agent Marketplace - Browse and download 500+ specialized AI agents</em></p>
+</div>
+
+#### 🌍 Multi-Language Support
+Our Agent Marketplace supports 12 languages with localized interfaces:
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./docs/images/3.png" alt="Agent Marketplace - Japanese" width="400px"><br>
+        <em>Japanese Interface</em>
+      </td>
+      <td align="center">
+        <img src="./docs/images/5.png" alt="Agent Marketplace - Chinese" width="400px"><br>
+        <em>Chinese Interface</em>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ### 🎯 Advanced AI Engine Support
 * **6 AI Engines, 20+ Selected Models**: Break free from vendor lock-in! Support for OpenRouter, DeepSeek, Google, Volcengine, Azure, Ollama and other 6 major AI engines, covering 20+ carefully selected models, including the latest GPT-4o, Claude 3.5 Sonnet, DeepSeek V3, etc.
