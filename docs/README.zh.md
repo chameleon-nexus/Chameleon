@@ -212,36 +212,6 @@ Chameleon的智能路由系统会根据以下条件自动选择最佳模型：
 - **成本优化**: 在性能与成本间找到最佳平衡
 
 
-## 🏗️ 架构
-
-### 组件
-```
-Chameleon 扩展
-├── 欢迎面板          # 入门界面
-├── 设置面板          # AI供应商配置
-├── 聊天面板          # AI对话界面
-├── 安装指南面板      # 安装说明
-├── 系统设置面板      # 语言和主题设置
-└── Claude 客户端     # AI模型集成
-```
-
-### 文件结构
-```
-chameleon/
-├── src/
-│   ├── extension.ts           # 主扩展入口
-│   ├── webviews/              # UI面板
-│   │   ├── settingsPanel.ts   # AI设置
-│   │   ├── chatPanel.ts       # 聊天界面
-│   │   ├── installGuidePanel.ts # 安装指南
-│   │   └── systemSettingsPanel.ts # 系统设置
-│   └── utils/                 # 工具函数
-│       ├── i18n.ts           # 国际化
-│       └── claudeClient.ts   # AI客户端
-├── l10n/                     # 翻译文件
-├── package.json              # 扩展清单
-└── README.md                 # 本文件
-```
 
 ## 🌍 国际化
 
