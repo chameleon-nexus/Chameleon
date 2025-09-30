@@ -76,6 +76,9 @@ export class GeminiWelcomePanel {
                     case 'installDependency':
                         await this.installDependency(message.dependency);
                         break;
+                    case 'openUrl':
+                        await vscode.commands.executeCommand('chameleon.openUrl', message.url);
+                        break;
                 }
             },
             undefined,
@@ -622,8 +625,8 @@ export class GeminiWelcomePanel {
                 'node': 'https://nodejs.org/',
                 'git': 'https://git-scm.com/downloads',
                 'npm': 'https://www.npmjs.com/',
-                '@google/gemini-cli': 'https://www.npmjs.com/package/@google/gemini-cli',
-                '@chameleon-nexus-tech/gemini-cli-openrouter': 'https://www.npmjs.com/package/@chameleon-nexus-tech/gemini-cli-openrouter'
+                '@google/gemini-cli': 'https://github.com/google-gemini/gemini-cli',
+                '@chameleon-nexus-tech/gemini-cli-openrouter': 'https://github.com/chameleon-nexus/gemini-cli-openrouter'
             };
             
             const url = urls[dep];
@@ -686,6 +689,12 @@ export class GeminiWelcomePanel {
                 mode,
                 errorMessage,
                 depsKeys: deps ? Object.keys(deps) : null
+            });
+            console.log('[GeminiFrontend] 翻译对象检查:', {
+                L: L,
+                buttonInstall: L.buttonInstall,
+                buttonWebsite: L.buttonWebsite,
+                hasButtonWebsite: 'buttonWebsite' in L
             });
             
             const loadingEl = document.getElementById('depsLoading');
@@ -773,7 +782,11 @@ export class GeminiWelcomePanel {
                     const websiteBtn = document.createElement('button');
                     websiteBtn.className = 'install-btn';
                     websiteBtn.textContent = L.buttonWebsite;
-                    websiteBtn.onclick = () => openInstallPage(dep);
+                    websiteBtn.onclick = () => {
+                        console.log('[GeminiFrontend] Website button clicked for:', dep);
+                        openInstallPage(dep);
+                    };
+                    console.log('[GeminiFrontend] Created website button for:', dep, 'with text:', L.buttonWebsite);
                     buttonContainer.appendChild(websiteBtn);
                 }
                 
@@ -786,10 +799,10 @@ export class GeminiWelcomePanel {
 
         // 页面加载时自动检测依赖
         window.addEventListener('load', function() {
-            setTimeout(async () => {
+            setTimeout(() => {
                 try {
                     console.log('[GeminiFrontend] 调用 checkDependencies 函数');
-                    await checkDependencies();
+                    checkDependencies();
                 } catch (error) {
                     console.error('页面加载时依赖检测失败', error);
                     const loadingEl = document.getElementById('depsLoading');
