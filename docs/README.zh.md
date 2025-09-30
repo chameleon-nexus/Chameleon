@@ -212,6 +212,116 @@ Chameleon的智能路由系统会根据以下条件自动选择最佳模型：
 
 
 
+## 🚀 安装方法
+
+选择最适合您需求的安装方法：
+
+### 📦 方法一：VS Code商城安装（推荐）
+
+**最简单的安装方式 - 适合大多数用户。**
+
+1. **安装扩展：**
+   - 打开Visual Studio Code
+   - 进入扩展视图（`Ctrl+Shift+X` 或 `Cmd+Shift+X`）
+   - 搜索 **"Chameleon - Universal AI CLI Launcher"**
+   - 点击"安装"
+
+2. **安装依赖：**
+   - 安装完成后，打开命令面板（`Ctrl+Shift+P` 或 `Cmd+Shift+P`）
+   - 运行 `Chameleon: Open Installation Guide` 命令
+   - 按照分步说明安装Node.js、Git、Claude Code和Gemini CLI
+
+3. **配置和启动：**
+   - 运行 `Chameleon: Open AI Settings` 配置您的AI供应商
+   - 点击活动栏中的Chameleon图标开始使用！
+
+### 📁 方法二：预构建VSIX包安装
+
+**直接从扩展包文件安装。**
+
+1. **下载VSIX：**
+   - 访问 [GitHub Releases](https://github.com/chameleon-nexus/Chameleon/releases)
+   - 下载最新的 `chameleon-ai-launcher-x.x.x.vsix` 文件
+
+2. **通过VS Code安装：**
+   ```bash
+   # 方法A：命令行
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # 方法B：VS Code界面
+   # 1. 打开VS Code
+   # 2. 进入扩展视图（Ctrl+Shift+X）
+   # 3. 点击"..."菜单 → "从VSIX安装..."
+   # 4. 选择下载的.vsix文件
+   ```
+
+3. **完成设置：**
+   - 按照方法一相同的依赖安装和配置步骤
+
+### 🛠️ 方法三：源代码构建
+
+**适合想要贡献或自定义扩展的开发者。**
+
+**前置要求：**
+- Git
+- Node.js（v16或更高版本）
+- npm或yarn
+
+**步骤：**
+
+1. **克隆和构建：**
+   ```bash
+   # 克隆代码库
+   git clone https://github.com/chameleon-nexus/Chameleon.git
+   cd Chameleon
+   
+   # 安装依赖
+   npm install
+   
+   # 编译扩展
+   npm run compile
+   
+   # 打包扩展（可选）
+   npm install -g @vscode/vsce
+   vsce package
+   ```
+
+2. **开发安装：**
+   ```bash
+   # 方法A：安装打包版本
+   code --install-extension chameleon-ai-launcher-x.x.x.vsix
+   
+   # 方法B：开发模式运行
+   # 在VS Code中打开项目并按F5启动扩展开发主机
+   ```
+
+3. **安装依赖：**
+   - 按照安装指南说明安装Node.js、Git、Claude Code和Gemini CLI
+   - 通过扩展设置配置AI供应商
+
+---
+
+## ⚙️ 安装后设置
+
+**无论使用哪种安装方法，都需要完成以下步骤：**
+
+1. **安装多CLI依赖：**
+   - Node.js和npm
+   - Git
+   - Claude Code CLI（`npm install -g @anthropic-ai/claude-code`）
+   - Gemini CLI包
+
+2. **配置AI供应商：**
+   - 打开命令面板并运行 `Chameleon: Open AI Settings`
+   - 为OpenAI、Anthropic、Google或其他供应商添加API密钥
+
+3. **验证安装：**
+   - 点击VS Code活动栏中的Chameleon图标
+   - 浏览Claude Code和Gemini CLI页面
+   - 检查所有依赖都显示为"已安装"
+
+**需要帮助？** 运行 `Chameleon: Open Installation Guide` 获取详细的分步说明！
+
 ## 🌍 国际化
 
 Chameleon支持12种语言：
