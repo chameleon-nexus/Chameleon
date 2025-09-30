@@ -607,14 +607,6 @@ export class GeminiWelcomePanel {
         function backToNavigation() {
             vscode.postMessage({ command: 'backToNavigation' });
         }
-        
-        function showSettings() {
-            vscode.postMessage({ command: 'showSettings' });
-        }
-        
-        function showSystemSettings() {
-            vscode.postMessage({ command: 'showSystemSettings' });
-        }
 
         function installDependency(dep) {
             vscode.postMessage({
