@@ -30,7 +30,8 @@
   "switchModeFailed": "Failed to switch mode",
   "unsupportedDependency": "Unsupported dependency",
   "installDepsFailed": "Failed to install dependencies",
-  "openSystemSettingsFailed": "Failed to open system settings"
+  "openSystemSettingsFailed": "Failed to open system settings",
+  "restartRecommendation": "💡 Tip: Restart your computer after installing all dependencies to ensure environment variables take effect"
 }
 
 

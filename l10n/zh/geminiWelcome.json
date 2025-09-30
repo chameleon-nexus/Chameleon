@@ -35,7 +35,8 @@
   "clickToConfigure": "点击配置",
   "backToNav": "← 返回导航",
   "backToNavFailed": "返回导航失败",
-  "configureInSettings": "请在设置页面中配置Gemini CLI OpenRouter"
+  "configureInSettings": "请在设置页面中配置Gemini CLI OpenRouter",
+  "restartRecommendation": "💡 提示：安装全部依赖后建议重启电脑以确保环境变量生效"
 }
 
 

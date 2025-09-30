@@ -148,7 +148,11 @@ export class GeminiWelcomePanel {
     private async switchMode(mode: string) {
         try {
             await vscode.commands.executeCommand('chameleon.setActiveCliMode', mode);
-            setTimeout(() => this.checkDependencies(), 100);
+            // 通知前端模式已切换，前端会自动重新检测依赖
+            this.panel.webview.postMessage({ 
+                command: 'modeChanged', 
+                mode: mode 
+            });
         } catch (error) {
             vscode.window.showErrorMessage(`${t('geminiWelcome.switchModeFailed')}: ${(error as Error).message}`);
         }
@@ -243,6 +247,7 @@ export class GeminiWelcomePanel {
             configRouter: t('geminiWelcome.configRouter'),
             clickToConfigure: t('geminiWelcome.clickToConfigure'),
             configureInSettings: t('geminiWelcome.configureInSettings'),
+            restartRecommendation: t('geminiWelcome.restartRecommendation'),
             buttonInstall: t('welcome.button.install'),
             buttonWebsite: t('welcome.button.website')
         };
@@ -498,6 +503,9 @@ export class GeminiWelcomePanel {
                     <div class="deps-list" id="depsList" style="display: none;">
                         <!-- 依赖状态将在这里动态加�?-->
                     </div>
+                    <div class="restart-notice" style="margin-top: 15px; padding: 10px; background-color: var(--vscode-editor-inactiveSelectionBackground); border-radius: 4px; font-size: 12px; color: var(--vscode-descriptionForeground);">
+                        ${t('geminiWelcome.restartRecommendation')}
+                    </div>
                 </div>
 
                 <div class="feature-actions" style="margin-top: 15px;">
@@ -591,8 +599,9 @@ export class GeminiWelcomePanel {
             }
             
             const selectedMode = selector.value;
+            console.log('[GeminiFrontend] 切换模式到:', selectedMode);
             vscode.postMessage({ command: 'switchMode', mode: selectedMode });
-            setTimeout(checkDependencies, 100);
+            // 移除重复的依赖检测，后端会发送modeChanged消息触发检测
         }
 
         function backToNavigation() {
@@ -615,6 +624,8 @@ export class GeminiWelcomePanel {
         }
 
         function openInstallPage(dep) {
+            console.log('[GeminiFrontend] openInstallPage called for:', dep);
+            
             const urls = {
                 'node': 'https://nodejs.org/',
                 'git': 'https://git-scm.com/downloads',
@@ -625,10 +636,13 @@ export class GeminiWelcomePanel {
             
             const url = urls[dep];
             if (url) {
+                console.log('[GeminiFrontend] Opening URL:', url);
                 vscode.postMessage({ 
                     command: 'openUrl', 
                     url: url 
                 });
+            } else {
+                console.warn('[GeminiFrontend] No URL found for dependency:', dep);
             }
         }
 
@@ -800,6 +814,10 @@ export class GeminiWelcomePanel {
             if (event.data && event.data.command === 'dependenciesResult') {
                 console.log('[GeminiFrontend] 即将处理依赖检测结果');
                 displayDependencies(event.data.dependencies, event.data.mode, event.data.error);
+            } else if (event.data && event.data.command === 'modeChanged') {
+                console.log('[GeminiFrontend] 模式已切换，重新检测依赖:', event.data.mode);
+                // 重新检测依赖而不是重新加载整个页面
+                checkDependencies();
             } else {
                 console.log('[GeminiFrontend] 忽略消息命令:', event.data.command);
             }

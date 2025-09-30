@@ -30,7 +30,8 @@
   "switchModeFailed": "切换模式失败",
   "unsupportedDependency": "不支持的依赖",
   "installDepsFailed": "安装依赖失败",
-  "openSystemSettingsFailed": "打开系统设置失败"
+  "openSystemSettingsFailed": "打开系统设置失败",
+  "restartRecommendation": "💡 提示：安装全部依赖后建议重启电脑以确保环境变量生效"
 }
 
 

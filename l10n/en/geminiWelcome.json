@@ -35,5 +35,6 @@
   "clickToConfigure": "Click to Configure",
   "backToNav": "← Back to Navigation",
   "backToNavFailed": "Failed to return to navigation",
-  "configureInSettings": "Please configure Gemini CLI OpenRouter in settings"
+  "configureInSettings": "Please configure Gemini CLI OpenRouter in settings",
+  "restartRecommendation": "💡 Tip: Restart your computer after installing all dependencies to ensure environment variables take effect"
 }

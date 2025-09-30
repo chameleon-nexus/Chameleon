@@ -175,8 +175,11 @@ export class ClaudeWelcomePanel {
     private async switchMode(mode: string) {
         try {
             await vscode.commands.executeCommand('chameleon.setActiveCliMode', mode);
-            // 重新加载页面以更新UI
-            this.setupWebview();
+            // 不重新加载整个页面，而是通知前端更新依赖检测
+            this.panel.webview.postMessage({ 
+                command: 'modeChanged', 
+                mode: mode 
+            });
         } catch (error) {
             vscode.window.showErrorMessage(`${t('claudeWelcome.switchModeFailed')}: ${(error as Error).message}`);
         }
@@ -261,6 +264,7 @@ export class ClaudeWelcomePanel {
             unsupportedDependency: t('claudeWelcome.unsupportedDependency'),
             installDepsFailed: t('claudeWelcome.installDepsFailed'),
             openSystemSettingsFailed: t('claudeWelcome.openSystemSettingsFailed'),
+            restartRecommendation: t('claudeWelcome.restartRecommendation'),
             configured: t('claudeWelcome.configured'),
             notConfigured: t('claudeWelcome.notConfigured'),
             installed: t('claudeWelcome.installed'),
@@ -488,6 +492,9 @@ export class ClaudeWelcomePanel {
                     <div class="deps-list" id="depsList" style="display: none;">
                         <!-- ${t('claudeWelcome.depsLoadingComment')} -->
                     </div>
+                    <div class="restart-notice" style="margin-top: 15px; padding: 10px; background-color: var(--vscode-editor-inactiveSelectionBackground); border-radius: 4px; font-size: 12px; color: var(--vscode-descriptionForeground);">
+                        ${t('claudeWelcome.restartRecommendation')}
+                    </div>
                 </div>
 
                 <div class="feature-actions" style="margin-top: 15px;">
@@ -711,6 +718,10 @@ export class ClaudeWelcomePanel {
             if (message && message.command === 'dependenciesChecked') {
                 console.log('[ClaudeFrontend] 即将处理依赖检测结果');
                 displayDependencies(message.result, message.mode, message.error);
+            } else if (message && message.command === 'modeChanged') {
+                console.log('[ClaudeFrontend] 模式已切换，重新检测依赖:', message.mode);
+                // 重新检测依赖而不是重新加载整个页面
+                checkDependencies();
             } else {
                 console.log('[ClaudeFrontend] 忽略消息命令:', message && message.command);
             }
@@ -728,6 +739,8 @@ export class ClaudeWelcomePanel {
         }
         
         function openInstallPage(dep) {
+            console.log('[ClaudeFrontend] openInstallPage called for:', dep);
+            
             // When config item, open settings directly instead of external link.
             if (dep === 'claude-code-router-config') {
                 vscode.postMessage({ 
@@ -746,10 +759,13 @@ export class ClaudeWelcomePanel {
             
             const url = urls[dep];
             if (url) {
+                console.log('[ClaudeFrontend] Opening URL:', url);
                 vscode.postMessage({ 
                     command: 'openUrl', 
                     url: url 
                 });
+            } else {
+                console.warn('[ClaudeFrontend] No URL found for dependency:', dep);
             }
         }
         
