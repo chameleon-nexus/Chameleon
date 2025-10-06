@@ -2,8 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { t, getCurrentLanguage } from '../utils/i18n';
-import { AgentRegistryService, AgentInfo, SearchFilters } from '../services/agentRegistryService';
+import { AgentRegistryService, AgentInfo as RegistryAgentInfo, SearchFilters } from '../services/agentRegistryService';
+import { AGTHubService, AgentInfo as AGTHubAgentInfo } from '../services/agtHubService';
 import { AgentInstallerService, InstalledAgent } from '../services/agentInstallerService';
+
+type AgentInfo = RegistryAgentInfo | AGTHubAgentInfo;
 
 export class AgentMarketplacePanel {
     public static currentPanel: AgentMarketplacePanel | undefined;
@@ -12,7 +15,9 @@ export class AgentMarketplacePanel {
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
     private agentService: AgentRegistryService;
+    private agtHubService: AGTHubService;
     private installerService: AgentInstallerService;
+    private useAGTHub: boolean = true; // Use AGTHub by default
 
     public static createOrShow(extensionUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor
@@ -53,11 +58,21 @@ export class AgentMarketplacePanel {
                 update: () => Promise.resolve()
             },
             globalState: {
-                get: () => undefined,
-                update: () => Promise.resolve()
+                get: (key: string) => {
+                    // Read from VS Code's global state for AGTHub auth
+                    if (key.startsWith('agtHub.')) {
+                        return vscode.workspace.getConfiguration('chameleon').get(key);
+                    }
+                    return undefined;
+                },
+                update: (key: string, value: any) => {
+                    // Save to VS Code's global state for AGTHub auth
+                    return Promise.resolve();
+                }
             }
         } as any;
         this.agentService = new AgentRegistryService(mockContext);
+        this.agtHubService = new AGTHubService(mockContext);
         this.installerService = new AgentInstallerService();
 
         // Set the webview's initial html content
@@ -88,6 +103,24 @@ export class AgentMarketplacePanel {
                         return;
                     case 'convertAgent':
                         this.convertAgent(message.agent, message.fromType, message.toType);
+                        return;
+                    case 'publishAgent':
+                        this.publishAgent(message.agentData);
+                        return;
+                    case 'rateAgent':
+                        this.rateAgent(message.agentId, message.rating);
+                        return;
+                    case 'deleteRating':
+                        this.deleteRating(message.agentId);
+                        return;
+                    case 'login':
+                        this.login(message.email, message.code);
+                        return;
+                    case 'requestCode':
+                        this.requestVerificationCode(message.email);
+                        return;
+                    case 'logout':
+                        this.logout();
                         return;
                 }
             },
@@ -403,9 +436,184 @@ export class AgentMarketplacePanel {
                         padding: 40px;
                         color: var(--vscode-descriptionForeground);
                     }
+                    
+                    /* Auth and Publish UI */
+                    .toolbar {
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                        margin-bottom: 20px;
+                    }
+                    
+                    .toolbar-button {
+                        padding: 8px 16px;
+                        border: none;
+                        border-radius: 4px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        background-color: var(--vscode-button-background);
+                        color: var(--vscode-button-foreground);
+                    }
+                    
+                    .toolbar-button:hover {
+                        background-color: var(--vscode-button-hoverBackground);
+                    }
+                    
+                    .toolbar-button.secondary {
+                        background-color: var(--vscode-button-secondaryBackground);
+                        color: var(--vscode-button-secondaryForeground);
+                    }
+                    
+                    .user-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        color: var(--vscode-descriptionForeground);
+                        font-size: 14px;
+                    }
+                    
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        z-index: 1000;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    
+                    .modal.show {
+                        display: flex;
+                    }
+                    
+                    .modal-content {
+                        background-color: var(--vscode-editor-background);
+                        border: 1px solid var(--vscode-panel-border);
+                        border-radius: 8px;
+                        padding: 24px;
+                        max-width: 500px;
+                        width: 90%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                    }
+                    
+                    .modal-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                    }
+                    
+                    .modal-header h2 {
+                        margin: 0;
+                        color: var(--vscode-foreground);
+                    }
+                    
+                    .modal-close {
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        color: var(--vscode-foreground);
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                    }
+                    
+                    .form-group {
+                        margin-bottom: 16px;
+                    }
+                    
+                    .form-group label {
+                        display: block;
+                        margin-bottom: 6px;
+                        color: var(--vscode-foreground);
+                        font-weight: 500;
+                    }
+                    
+                    .form-input {
+                        width: 100%;
+                        padding: 8px 12px;
+                        border: 1px solid var(--vscode-input-border);
+                        background-color: var(--vscode-input-background);
+                        color: var(--vscode-input-foreground);
+                        border-radius: 4px;
+                        font-size: 14px;
+                        box-sizing: border-box;
+                    }
+                    
+                    .form-textarea {
+                        width: 100%;
+                        min-height: 100px;
+                        padding: 8px 12px;
+                        border: 1px solid var(--vscode-input-border);
+                        background-color: var(--vscode-input-background);
+                        color: var(--vscode-input-foreground);
+                        border-radius: 4px;
+                        font-size: 14px;
+                        box-sizing: border-box;
+                        font-family: inherit;
+                    }
+                    
+                    .form-actions {
+                        display: flex;
+                        gap: 10px;
+                        justify-content: flex-end;
+                        margin-top: 20px;
+                    }
+                    
+                    .rating-stars {
+                        display: flex;
+                        gap: 4px;
+                        align-items: center;
+                    }
+                    
+                    .star {
+                        font-size: 20px;
+                        cursor: pointer;
+                        color: var(--vscode-descriptionForeground);
+                        transition: color 0.2s;
+                    }
+                    
+                    .star.filled {
+                        color: #ffd700;
+                    }
+                    
+                    .star:hover {
+                        color: #ffd700;
+                    }
+                    
+                    .agent-rating {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        margin-top: 10px;
+                        padding: 10px;
+                        background-color: var(--vscode-editor-background);
+                        border-radius: 4px;
+                        border: 1px solid var(--vscode-panel-border);
+                    }
+                    
+                    .rating-label {
+                        font-size: 12px;
+                        color: var(--vscode-descriptionForeground);
+                    }
                 </style>
             </head>
             <body>
+                <!-- Toolbar with Login/Publish buttons -->
+                <div class="toolbar" id="toolbar">
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span id="userName"></span>
+                    </div>
+                    <button class="toolbar-button secondary" id="loginBtn">Login</button>
+                    <button class="toolbar-button" id="publishBtn" style="display: none;">Publish Agent</button>
+                    <button class="toolbar-button secondary" id="logoutBtn" style="display: none;">Logout</button>
+                </div>
+                
                 <div class="header">
                     <h1 id="pageTitle"></h1>
                     <p id="pageSubtitle"></p>
@@ -438,12 +646,132 @@ export class AgentMarketplacePanel {
                 <div id="agentGrid" class="agent-grid">
                     <div class="loading" id="loadingText"></div>
                 </div>
+                
+                <!-- Login Modal -->
+                <div class="modal" id="loginModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Login to AGTHub</h2>
+                            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginCode">Verification Code</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="loginCode" class="form-input" placeholder="Enter 6-digit code">
+                                <button class="toolbar-button" id="sendCodeBtn">Send Code</button>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="toolbar-button secondary" onclick="closeLoginModal()">Cancel</button>
+                            <button class="toolbar-button" id="loginSubmitBtn">Login</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Publish Modal -->
+                <div class="modal" id="publishModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Publish Agent</h2>
+                            <button class="modal-close" onclick="closePublishModal()">&times;</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="publishAgentId">Agent ID *</label>
+                            <input type="text" id="publishAgentId" class="form-input" placeholder="my-agent">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishVersion">Version *</label>
+                            <input type="text" id="publishVersion" class="form-input" placeholder="1.0.0" value="1.0.0">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishCategory">Category *</label>
+                            <select id="publishCategory" class="form-input">
+                                <option value="web-programming">Web & Application Programming</option>
+                                <option value="ui-mobile">UI/UX & Mobile</option>
+                                <option value="data-science">Data Science & Analytics</option>
+                                <option value="documentation">Documentation & Technical Writing</option>
+                                <option value="devops-infrastructure">DevOps & Infrastructure</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="publishTags">Tags (comma-separated) *</label>
+                            <input type="text" id="publishTags" class="form-input" placeholder="python, web, api">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishNameEn">Name (English) *</label>
+                            <input type="text" id="publishNameEn" class="form-input" placeholder="My Agent">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishDescEn">Description (English) *</label>
+                            <textarea id="publishDescEn" class="form-textarea" placeholder="Describe your agent..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="publishNameZh">Name (Chinese)</label>
+                            <input type="text" id="publishNameZh" class="form-input" placeholder="我的代理">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishDescZh">Description (Chinese)</label>
+                            <textarea id="publishDescZh" class="form-textarea" placeholder="描述您的代理..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="publishLicense">License *</label>
+                            <input type="text" id="publishLicense" class="form-input" placeholder="MIT" value="MIT">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishHomepage">Homepage URL</label>
+                            <input type="url" id="publishHomepage" class="form-input" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label for="publishContent">Agent Content (Markdown) *</label>
+                            <textarea id="publishContent" class="form-textarea" style="min-height: 200px;" placeholder="# My Agent
+
+Description...
+
+## Instructions
+..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="toolbar-button secondary" onclick="closePublishModal()">Cancel</button>
+                            <button class="toolbar-button" id="publishSubmitBtn">Publish</button>
+                        </div>
+                    </div>
+                </div>
 
                 <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
                     
                     // Get translations from TypeScript
                     const translations = ${jsTranslationsJSON};
+                    
+                    // Authentication state
+                    let isLoggedIn = false;
+                    let currentUser = null;
+                    
+                    // Modal management
+                    function openLoginModal() {
+                        document.getElementById('loginModal').classList.add('show');
+                    }
+                    
+                    function closeLoginModal() {
+                        document.getElementById('loginModal').classList.remove('show');
+                    }
+                    
+                    function openPublishModal() {
+                        if (!isLoggedIn) {
+                            alert('Please login first');
+                            openLoginModal();
+                            return;
+                        }
+                        document.getElementById('publishModal').classList.add('show');
+                    }
+                    
+                    function closePublishModal() {
+                        document.getElementById('publishModal').classList.remove('show');
+                    }
                     
                     // Initialize UI with translations when DOM is ready
                     function initializeTranslations() {
@@ -596,7 +924,7 @@ export class AgentMarketplacePanel {
                                 <div class="agent-meta">
                                     <span>👤 \${agent.author}</span>
                                     <span>📥 \${agent.downloads || 0}</span>
-                                    \${window.showRating !== false ? \`<span>⭐ \${(agent.rating || 0).toFixed(1)}</span>\` : ''}
+                                    \${window.showRating !== false ? \`<span>⭐ \${(agent.rating || 4.0).toFixed(1)} (\${agent.ratingCount || 0})</span>\` : ''}
                                 </div>
                                 
                                 <div class="agent-tags">
@@ -607,6 +935,19 @@ export class AgentMarketplacePanel {
                                     \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? '<span class="compatibility-badge compatibility-claude">' + translations.compatibility.claudeCode + '</span>' : ''}
                                     \${(agent.compatibility?.codex) ? '<span class="compatibility-badge compatibility-codex">' + translations.compatibility.codex + '</span>' : ''}
                                 </div>
+                                
+                                \${isLoggedIn && window.showRating !== false ? \`
+                                <div class="agent-rating">
+                                    <span class="rating-label">Rate this agent:</span>
+                                    <div class="rating-stars" data-agent-id="\${agent.id}">
+                                        <span class="star" data-rating="1">★</span>
+                                        <span class="star" data-rating="2">★</span>
+                                        <span class="star" data-rating="3">★</span>
+                                        <span class="star" data-rating="4">★</span>
+                                        <span class="star" data-rating="5">★</span>
+                                    </div>
+                                </div>
+                                \` : ''}
                                 
                                 <div class="agent-actions">
                                     <div class="install-buttons-wrapper" id="install-buttons-\${agent.id}">
@@ -623,6 +964,49 @@ export class AgentMarketplacePanel {
                                 </div>
                             </div>
                         \`).join('');
+                        
+                        // Add rating star listeners
+                        if (isLoggedIn) {
+                            document.querySelectorAll('.rating-stars').forEach(container => {
+                                const stars = container.querySelectorAll('.star');
+                                stars.forEach(star => {
+                                    star.addEventListener('click', function() {
+                                        const agentId = container.getAttribute('data-agent-id');
+                                        const rating = parseInt(this.getAttribute('data-rating'));
+                                        
+                                        vscode.postMessage({
+                                            command: 'rateAgent',
+                                            agentId: agentId,
+                                            rating: rating
+                                        });
+                                        
+                                        // Visual feedback
+                                        stars.forEach((s, idx) => {
+                                            if (idx < rating) {
+                                                s.classList.add('filled');
+                                            } else {
+                                                s.classList.remove('filled');
+                                            }
+                                        });
+                                    });
+                                    
+                                    star.addEventListener('mouseenter', function() {
+                                        const rating = parseInt(this.getAttribute('data-rating'));
+                                        stars.forEach((s, idx) => {
+                                            if (idx < rating) {
+                                                s.style.color = '#ffd700';
+                                            }
+                                        });
+                                    });
+                                    
+                                    star.addEventListener('mouseleave', function() {
+                                        stars.forEach(s => {
+                                            s.style.color = '';
+                                        });
+                                    });
+                                });
+                            });
+                        }
                     }
                     
                     
@@ -740,6 +1124,113 @@ export class AgentMarketplacePanel {
                         });
                     }
                     
+                    // Authentication handlers
+                    function handleSendCode() {
+                        const email = document.getElementById('loginEmail').value.trim();
+                        if (!email) {
+                            alert('Please enter your email');
+                            return;
+                        }
+                        
+                        vscode.postMessage({
+                            command: 'requestCode',
+                            email: email
+                        });
+                        
+                        document.getElementById('sendCodeBtn').disabled = true;
+                        document.getElementById('sendCodeBtn').textContent = 'Sent!';
+                        setTimeout(() => {
+                            document.getElementById('sendCodeBtn').disabled = false;
+                            document.getElementById('sendCodeBtn').textContent = 'Send Code';
+                        }, 60000); // Re-enable after 1 minute
+                    }
+                    
+                    function handleLogin() {
+                        const email = document.getElementById('loginEmail').value.trim();
+                        const code = document.getElementById('loginCode').value.trim();
+                        
+                        if (!email || !code) {
+                            alert('Please enter email and verification code');
+                            return;
+                        }
+                        
+                        vscode.postMessage({
+                            command: 'login',
+                            email: email,
+                            code: code
+                        });
+                    }
+                    
+                    function handleLogout() {
+                        vscode.postMessage({
+                            command: 'logout'
+                        });
+                    }
+                    
+                    function handlePublish() {
+                        const agentId = document.getElementById('publishAgentId').value.trim();
+                        const version = document.getElementById('publishVersion').value.trim();
+                        const category = document.getElementById('publishCategory').value;
+                        const tags = document.getElementById('publishTags').value.split(',').map(t => t.trim()).filter(t => t);
+                        const nameEn = document.getElementById('publishNameEn').value.trim();
+                        const descEn = document.getElementById('publishDescEn').value.trim();
+                        const nameZh = document.getElementById('publishNameZh').value.trim();
+                        const descZh = document.getElementById('publishDescZh').value.trim();
+                        const license = document.getElementById('publishLicense').value.trim();
+                        const homepage = document.getElementById('publishHomepage').value.trim();
+                        const content = document.getElementById('publishContent').value.trim();
+                        
+                        if (!agentId || !version || !category || tags.length === 0 || !nameEn || !descEn || !license || !content) {
+                            alert('Please fill in all required fields (*)');
+                            return;
+                        }
+                        
+                        const agentData = {
+                            agentId,
+                            version,
+                            category,
+                            tags,
+                            license,
+                            homepage: homepage || undefined,
+                            name_en: nameEn,
+                            name_zh: nameZh || undefined,
+                            description_en: descEn,
+                            description_zh: descZh || undefined,
+                            fileContent: content
+                        };
+                        
+                        vscode.postMessage({
+                            command: 'publishAgent',
+                            agentData: agentData
+                        });
+                        
+                        closePublishModal();
+                    }
+                    
+                    function updateAuthUI(loggedIn, userName) {
+                        isLoggedIn = loggedIn;
+                        currentUser = userName;
+                        
+                        const loginBtn = document.getElementById('loginBtn');
+                        const publishBtn = document.getElementById('publishBtn');
+                        const logoutBtn = document.getElementById('logoutBtn');
+                        const userInfo = document.getElementById('userInfo');
+                        const userNameSpan = document.getElementById('userName');
+                        
+                        if (loggedIn) {
+                            loginBtn.style.display = 'none';
+                            publishBtn.style.display = 'block';
+                            logoutBtn.style.display = 'block';
+                            userInfo.style.display = 'flex';
+                            userNameSpan.textContent = userName || 'User';
+                        } else {
+                            loginBtn.style.display = 'block';
+                            publishBtn.style.display = 'none';
+                            logoutBtn.style.display = 'none';
+                            userInfo.style.display = 'none';
+                        }
+                    }
+                    
                     // Initialize everything when DOM is ready
                     function initializeApp() {
                         console.log('Initializing Agent Marketplace...');
@@ -776,6 +1267,14 @@ export class AgentMarketplacePanel {
                         // Add agent button event listeners
                         addAgentButtonListeners();
                         
+                        // Add auth button event listeners
+                        document.getElementById('loginBtn').addEventListener('click', openLoginModal);
+                        document.getElementById('publishBtn').addEventListener('click', openPublishModal);
+                        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+                        document.getElementById('sendCodeBtn').addEventListener('click', handleSendCode);
+                        document.getElementById('loginSubmitBtn').addEventListener('click', handleLogin);
+                        document.getElementById('publishSubmitBtn').addEventListener('click', handlePublish);
+                        
                         // Listen for messages from VS Code
                         window.addEventListener('message', event => {
                             const message = event.data;
@@ -788,6 +1287,10 @@ export class AgentMarketplacePanel {
                                     filteredAgents = agents;
                                     window.showRating = message.showRating;
                                     console.log('showRating set to:', window.showRating);
+                                    // Update auth UI based on login status from search results
+                                    if (message.isLoggedIn !== undefined) {
+                                        updateAuthUI(message.isLoggedIn, currentUser);
+                                    }
                                     renderAgents();
                                     // Re-add button listeners after rendering
                                     addAgentButtonListeners();
@@ -807,6 +1310,40 @@ export class AgentMarketplacePanel {
                                     console.log('Received install status:', message.status);
                                     window.installStatus = message.status;
                                     updateInstallButtons();
+                                    break;
+                                case 'loginSuccess':
+                                    console.log('Login successful:', message.userName);
+                                    updateAuthUI(true, message.userName);
+                                    closeLoginModal();
+                                    // Clear form
+                                    document.getElementById('loginEmail').value = '';
+                                    document.getElementById('loginCode').value = '';
+                                    break;
+                                case 'loginFailed':
+                                    console.error('Login failed:', message.error);
+                                    alert('Login failed: ' + message.error);
+                                    break;
+                                case 'codeSent':
+                                    console.log('Verification code sent');
+                                    break;
+                                case 'logoutSuccess':
+                                    console.log('Logout successful');
+                                    updateAuthUI(false, null);
+                                    break;
+                                case 'publishSuccess':
+                                    console.log('Publish successful');
+                                    // Refresh agent list
+                                    handleFilterChange();
+                                    break;
+                                case 'ratingSuccess':
+                                    console.log('Rating submitted:', message.agentId);
+                                    // Refresh agent data
+                                    handleFilterChange();
+                                    break;
+                                case 'ratingDeleted':
+                                    console.log('Rating deleted:', message.agentId);
+                                    // Refresh agent data
+                                    handleFilterChange();
                                     break;
                             }
                         });
@@ -880,7 +1417,7 @@ export class AgentMarketplacePanel {
     }
 
     private async searchAgents(query: string, cliType: string, category: string) {
-        console.log('VS Code searchAgents called with:', { query, cliType, category });
+        console.log('VS Code searchAgents called with:', { query, cliType, category, useAGTHub: this.useAGTHub });
         
         try {
             const filters: SearchFilters = {};
@@ -889,7 +1426,15 @@ export class AgentMarketplacePanel {
             }
             
             console.log('Using filters:', filters);
-            let results = await this.agentService.searchAgents(query, filters);
+            
+            // Use AGTHub or GitHub Registry based on configuration
+            let results: any[] = [];
+            if (this.useAGTHub) {
+                results = await this.agtHubService.searchAgents(query, filters);
+            } else {
+                results = await this.agentService.searchAgents(query, filters);
+            }
+            
             console.log('Initial search results count:', results.length);
             
             // CLI类型过滤
@@ -917,7 +1462,8 @@ export class AgentMarketplacePanel {
             this._panel.webview.postMessage({
                 command: 'searchResults',
                 agents: results,
-                showRating: showRating
+                showRating: showRating,
+                isLoggedIn: this.useAGTHub && this.agtHubService.isLoggedIn()
             });
             
         } catch (error) {
@@ -1104,6 +1650,166 @@ When working on ${agent.category} tasks:
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
+    }
+
+    private async publishAgent(agentData: any) {
+        if (!this.useAGTHub) {
+            vscode.window.showErrorMessage('Publishing is only available with AGTHub');
+            return;
+        }
+
+        if (!this.agtHubService.isLoggedIn()) {
+            vscode.window.showErrorMessage('Please login to publish agents');
+            return;
+        }
+
+        try {
+            const result = await this.agtHubService.publishAgent(agentData);
+            
+            if (result.success) {
+                if (result.needsReview) {
+                    vscode.window.showInformationMessage(
+                        result.message || 'Your agent has been submitted for review'
+                    );
+                } else {
+                    vscode.window.showInformationMessage(
+                        result.message || 'Agent published successfully!'
+                    );
+                }
+                
+                // Refresh the agent list
+                this._panel.webview.postMessage({
+                    command: 'publishSuccess'
+                });
+            } else {
+                vscode.window.showErrorMessage(result.message || 'Failed to publish agent');
+            }
+        } catch (error) {
+            console.error('Publish agent failed:', error);
+            vscode.window.showErrorMessage(
+                `Failed to publish agent: ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    }
+
+    private async rateAgent(agentId: string, rating: number) {
+        if (!this.useAGTHub) {
+            vscode.window.showErrorMessage('Rating is only available with AGTHub');
+            return;
+        }
+
+        if (!this.agtHubService.isLoggedIn()) {
+            vscode.window.showErrorMessage('Please login to rate agents');
+            return;
+        }
+
+        try {
+            await this.agtHubService.rateAgent(agentId, rating);
+            vscode.window.showInformationMessage('Rating submitted successfully!');
+            
+            // Refresh the agent data
+            this._panel.webview.postMessage({
+                command: 'ratingSuccess',
+                agentId: agentId
+            });
+        } catch (error) {
+            console.error('Rate agent failed:', error);
+            vscode.window.showErrorMessage(
+                `Failed to rate agent: ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    }
+
+    private async deleteRating(agentId: string) {
+        if (!this.useAGTHub) {
+            return;
+        }
+
+        if (!this.agtHubService.isLoggedIn()) {
+            vscode.window.showErrorMessage('Please login first');
+            return;
+        }
+
+        try {
+            await this.agtHubService.deleteRating(agentId);
+            vscode.window.showInformationMessage('Rating deleted successfully!');
+            
+            // Refresh the agent data
+            this._panel.webview.postMessage({
+                command: 'ratingDeleted',
+                agentId: agentId
+            });
+        } catch (error) {
+            console.error('Delete rating failed:', error);
+            vscode.window.showErrorMessage(
+                `Failed to delete rating: ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    }
+
+    private async login(email: string, code: string) {
+        if (!this.useAGTHub) {
+            return;
+        }
+
+        try {
+            const result = await this.agtHubService.login(email, code);
+            vscode.window.showInformationMessage(`Welcome, ${result.userName}!`);
+            
+            // Notify webview of successful login
+            this._panel.webview.postMessage({
+                command: 'loginSuccess',
+                userName: result.userName,
+                email: email
+            });
+        } catch (error) {
+            console.error('Login failed:', error);
+            vscode.window.showErrorMessage(
+                `Login failed: ${error instanceof Error ? error.message : String(error)}`
+            );
+            
+            this._panel.webview.postMessage({
+                command: 'loginFailed',
+                error: error instanceof Error ? error.message : String(error)
+            });
+        }
+    }
+
+    private async requestVerificationCode(email: string) {
+        if (!this.useAGTHub) {
+            return;
+        }
+
+        try {
+            await this.agtHubService.requestVerificationCode(email);
+            vscode.window.showInformationMessage('Verification code sent to your email');
+            
+            this._panel.webview.postMessage({
+                command: 'codeSent'
+            });
+        } catch (error) {
+            console.error('Request code failed:', error);
+            vscode.window.showErrorMessage(
+                `Failed to send code: ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    }
+
+    private async logout() {
+        if (!this.useAGTHub) {
+            return;
+        }
+
+        try {
+            await this.agtHubService.logout();
+            vscode.window.showInformationMessage('Logged out successfully');
+            
+            this._panel.webview.postMessage({
+                command: 'logoutSuccess'
+            });
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     }
 
     public dispose() {

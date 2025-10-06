@@ -342,6 +342,11 @@
             "Gemini模型"
           ]
         },
+        "chameleon.agtHubApiUrl": {
+          "type": "string",
+          "default": "https://agthub-qexf.vercel.app",
+          "description": "AGTHub API URL for Agent Marketplace"
+        },
         "chameleon.subAgents": {
           "type": "array",
           "default": [],
