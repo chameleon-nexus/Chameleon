@@ -344,7 +344,7 @@
         },
         "chameleon.agtHubApiUrl": {
           "type": "string",
-          "default": "https://agthub-qexf.vercel.app",
+          "default": "https://agthub.vercel.app",
           "description": "AGTHub API URL for Agent Marketplace"
         },
         "chameleon.subAgents": {

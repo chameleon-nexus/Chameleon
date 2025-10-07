@@ -893,13 +893,39 @@ Description...
                         return icons[category] || '🤖';
                     }
                     
+                    // 转换兼容性数据格式
+                    function normalizeCompatibility(compatibility) {
+                        if (!compatibility) {
+                            return {
+                                claudeCode: false,
+                                'claude-code': false,
+                                codex: false
+                            };
+                        }
+                        
+                        // 如果已经是简单格式，直接返回
+                        if (typeof compatibility.claudeCode === 'boolean') {
+                            return compatibility;
+                        }
+                        
+                        // 转换复杂格式到简单格式
+                        return {
+                            claudeCode: !!(compatibility.claudeCode || compatibility['claude-code']),
+                            'claude-code': !!(compatibility.claudeCode || compatibility['claude-code']),
+                            codex: !!compatibility.codex,
+                            copilot: !!compatibility.copilot
+                        };
+                    }
+                    
                     function renderAgents() {
                         const grid = document.getElementById('agentGrid');
                         
                         console.log('Rendering agents:', {
                             totalAgents: agents.length,
                             filteredAgents: filteredAgents.length,
-                            sampleAgent: agents[0]
+                            sampleAgent: agents[0],
+                            translations: translations,
+                            actions: translations.actions
                         });
                         
                         if (filteredAgents.length === 0) {
@@ -912,7 +938,17 @@ Description...
                             return;
                         }
                         
-                        grid.innerHTML = filteredAgents.map(agent => \`
+                        grid.innerHTML = filteredAgents.map(agent => {
+                            // 标准化兼容性数据
+                            const compatibility = agent.compatibility;
+                            const normalizedCompat = {
+                                claudeCode: !!(compatibility?.claudeCode || compatibility?.['claude-code']),
+                                'claude-code': !!(compatibility?.claudeCode || compatibility?.['claude-code']),
+                                codex: !!compatibility?.codex,
+                                copilot: !!compatibility?.copilot
+                            };
+                            
+                            return \`
                             <div class="agent-card">
                                 <div class="agent-header">
                                     <div class="agent-icon">\${getAgentIcon(agent.category)}</div>
@@ -922,48 +958,48 @@ Description...
                                 <p class="agent-description">\${getAgentDescription(agent)}</p>
                                 
                                 <div class="agent-meta">
-                                    <span>👤 \${agent.author}</span>
+                                    <span>👤 \${typeof agent.author === 'object' ? (agent.author?.name || agent.author?.author || 'Unknown') : agent.author}</span>
                                     <span>📥 \${agent.downloads || 0}</span>
-                                    \${window.showRating !== false ? \`<span>⭐ \${(agent.rating || 4.0).toFixed(1)} (\${agent.ratingCount || 0})</span>\` : ''}
+                                    \${window.showRating !== false ? '<span>⭐ ' + (agent.rating || 4.0).toFixed(1) + ' (' + (agent.ratingCount || 0) + ')</span>' : ''}
                                 </div>
                                 
                                 <div class="agent-tags">
-                                    \${(agent.tags || []).map(tag => \`<span class="agent-tag">\${tag}</span>\`).join('')}
+                                    \${(agent.tags || []).map(tag => '<span class="agent-tag">' + tag + '</span>').join('')}
                                 </div>
                                 
                                 <div class="compatibility">
-                                    \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? '<span class="compatibility-badge compatibility-claude">' + translations.compatibility.claudeCode + '</span>' : ''}
-                                    \${(agent.compatibility?.codex) ? '<span class="compatibility-badge compatibility-codex">' + translations.compatibility.codex + '</span>' : ''}
+                                    \${normalizedCompat.claudeCode || normalizedCompat['claude-code'] ? '<span class="compatibility-badge compatibility-claude">' + (translations.compatibility?.claudeCode || 'Claude Code') + '</span>' : ''}
+                                    \${normalizedCompat.codex ? '<span class="compatibility-badge compatibility-codex">' + (translations.compatibility?.codex || 'Codex') + '</span>' : ''}
                                 </div>
                                 
-                                \${isLoggedIn && window.showRating !== false ? \`
-                                <div class="agent-rating">
-                                    <span class="rating-label">Rate this agent:</span>
-                                    <div class="rating-stars" data-agent-id="\${agent.id}">
-                                        <span class="star" data-rating="1">★</span>
-                                        <span class="star" data-rating="2">★</span>
-                                        <span class="star" data-rating="3">★</span>
-                                        <span class="star" data-rating="4">★</span>
-                                        <span class="star" data-rating="5">★</span>
-                                    </div>
-                                </div>
-                                \` : ''}
+                                \${isLoggedIn && window.showRating !== false ? 
+                                    '<div class="agent-rating">' +
+                                        '<span class="rating-label">Rate this agent:</span>' +
+                                        '<div class="rating-stars" data-agent-id="' + agent.id + '">' +
+                                            '<span class="star" data-rating="1">★</span>' +
+                                            '<span class="star" data-rating="2">★</span>' +
+                                            '<span class="star" data-rating="3">★</span>' +
+                                            '<span class="star" data-rating="4">★</span>' +
+                                            '<span class="star" data-rating="5">★</span>' +
+                                        '</div>' +
+                                    '</div>' 
+                                    : ''}
                                 
                                 <div class="agent-actions">
                                     <div class="install-buttons-wrapper" id="install-buttons-\${agent.id}">
-                                        \${(agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) ? 
-                                            '<button class="action-button action-button-primary install-btn-claude" data-agent-id="' + agent.id + '" data-target="claude-code">' + translations.actions.downloadToClaudeCode + '</button>' + 
+                                        \${(normalizedCompat.claudeCode || normalizedCompat['claude-code']) ? 
+                                            '<button class="action-button action-button-primary install-btn-claude" data-agent-id="' + agent.id + '" data-target="claude-code">' + (translations.actions?.downloadToClaudeCode || 'Download to Claude Code') + '</button>' + 
                                             '<button class="action-button action-button-danger uninstall-btn-claude" data-agent-id="' + agent.id + '" data-target="claude-code" style="display: none;">卸载 Claude Code</button>'
                                             : ''}
-                                        \${(agent.compatibility?.codex) ? 
-                                            '<button class="action-button action-button-primary install-btn-codex" data-agent-id="' + agent.id + '" data-target="codex">' + translations.actions.downloadToCodex + '</button>' + 
+                                        \${normalizedCompat.codex ? 
+                                            '<button class="action-button action-button-primary install-btn-codex" data-agent-id="' + agent.id + '" data-target="codex">' + (translations.actions?.downloadToCodex || 'Download to Codex') + '</button>' + 
                                             '<button class="action-button action-button-danger uninstall-btn-codex" data-agent-id="' + agent.id + '" data-target="codex" style="display: none;">卸载 Codex</button>'
                                             : ''}
-                                        \${((agent.compatibility?.claudeCode || agent.compatibility?.['claude-code']) && agent.compatibility?.codex) ? '<button class="action-button action-button-secondary convert-btn" data-agent-id="' + agent.id + '" data-from="claude-code" data-to="codex">' + translations.actions.convertToCodex + '</button>' : ''}
+                                        \${(normalizedCompat.claudeCode || normalizedCompat['claude-code']) && normalizedCompat.codex ? '<button class="action-button action-button-secondary convert-btn" data-agent-id="' + agent.id + '" data-from="claude-code" data-to="codex">' + (translations.actions?.convertToCodex || 'Convert to Codex') + '</button>' : ''}
                                     </div>
                                 </div>
                             </div>
-                        \`).join('');
+                        \`}).join('');
                         
                         // Add rating star listeners
                         if (isLoggedIn) {
@@ -1442,13 +1478,20 @@ Description...
                 console.log('Applying CLI type filter:', cliType);
                 const beforeFilterCount = results.length;
                 results = results.filter(agent => {
+                    // 处理兼容性数据格式
+                    const compatibility = agent.compatibility;
                     if (cliType === 'claude-code') {
-                        // 处理两种格式：新格式 {claudeCode: {...}} 和 GitHub格式 {"claude-code": true}
-                        return agent.compatibility?.claudeCode || agent.compatibility?.['claude-code'];
+                        // 处理复杂格式和简单格式
+                        if (typeof compatibility?.claudeCode === 'boolean') {
+                            return compatibility.claudeCode || compatibility['claude-code'];
+                        } else if (compatibility?.claudeCode || compatibility?.['claude-code']) {
+                            return true; // 有复杂格式数据就认为支持
+                        }
+                        return false;
                     } else if (cliType === 'codex') {
-                        return agent.compatibility?.codex;
+                        return typeof compatibility?.codex === 'boolean' ? compatibility.codex : !!compatibility?.codex;
                     } else if (cliType === 'copilot') {
-                        return agent.compatibility?.copilot;
+                        return typeof compatibility?.copilot === 'boolean' ? compatibility.copilot : !!compatibility?.copilot;
                     }
                     return false;
                 });

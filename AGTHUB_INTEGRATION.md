@@ -21,12 +21,12 @@ Chameleon VS Code 插件现已完全集成 AGTHub Agent 市场，支持：
 
 ```json
 {
-  "chameleon.agtHubApiUrl": "https://agthub-qexf.vercel.app"
+  "chameleon.agtHubApiUrl": "https://agthub.vercel.app"
 }
 ```
 
 可选值：
-- **生产环境**: `https://agthub-qexf.vercel.app` (默认)
+- **生产环境**: `https://agthub.vercel.app` (默认)
 - **本地开发**: `http://localhost:3000`
 - **自定义域名**: `https://your-agthub-domain.com`
 

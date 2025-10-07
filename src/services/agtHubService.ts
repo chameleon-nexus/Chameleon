@@ -50,7 +50,7 @@ export class AGTHubService {
      */
     private getConfiguredApiUrl(): string {
         const config = vscode.workspace.getConfiguration('chameleon');
-        return config.get<string>('agtHubApiUrl') || 'https://agthub-qexf.vercel.app';
+        return config.get<string>('agtHubApiUrl') || 'https://agthub.vercel.app';
     }
 
     /**
