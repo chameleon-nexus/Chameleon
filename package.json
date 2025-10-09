@@ -1,5 +1,5 @@
 {
-  "name": "chameleon",
+  "name": "chameleon-ai-launcher",
   "displayName": "Chameleon - Universal AI CLI Launcher",
   "description": "Universal Multi-CLI Launcher for AI development tools. Supports Claude Code, Gemini CLI, Agent Marketplace, and third-party AI model integration.",
   "version": "0.1.0",
@@ -276,7 +276,7 @@
         },
         "chameleon.requireLogin": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Require user authentication to access Chameleon features. When enabled, users must log in before accessing the navigation panel. When disabled, users can directly access the navigation panel without authentication."
         },
         "chameleon.activeCliMode": {
@@ -341,11 +341,6 @@
             "Claude模型",
             "Gemini模型"
           ]
-        },
-        "chameleon.agtHubApiUrl": {
-          "type": "string",
-          "default": "https://agthub.vercel.app",
-          "description": "AGTHub API URL for Agent Marketplace"
         },
         "chameleon.subAgents": {
           "type": "array",
