@@ -2,7 +2,7 @@
   "name": "chameleon-ai-launcher",
   "displayName": "Chameleon - Universal AI CLI Launcher",
   "description": "Universal Multi-CLI Launcher for AI development tools. Supports Claude Code, Gemini CLI, Agent Marketplace, and third-party AI model integration.",
-  "version": "0.1.0",
+  "version": "1.2.1",
   "publisher": "chameleon-ai",
   "repository": {
     "type": "git",

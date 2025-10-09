@@ -599,8 +599,11 @@ export class AgentMarketplacePanel {
                 </style>
             </head>
             <body>
-                <!-- Toolbar with Paid Agents button -->
+                <!-- Toolbar with Paid Agents and Publish buttons -->
                 <div class="toolbar" id="toolbar">
+                    <button class="toolbar-button" id="publishAgentBtn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                        🚀 ${currentLanguage === 'zh' ? '发布' : 'Publish'}
+                    </button>
                     <button class="toolbar-button" id="paidAgentsBtn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                         💎 ${currentLanguage === 'zh' ? '付费专区' : 'Paid Agents'}
                     </button>
@@ -1162,6 +1165,24 @@ Description...
                         }
                     }
                     
+                    // Open Publish page in browser
+                    function openPublishPage() {
+                        console.log('🔥 openPublishPage function called!');
+                        const url = 'https://www.agthub.org';
+                        console.log('🌐 Opening URL:', url);
+                        console.log('📤 Sending openExternal message to vscode...');
+                        
+                        try {
+                            vscode.postMessage({
+                                command: 'openExternal',
+                                url: url
+                            });
+                            console.log('✅ Message sent successfully!');
+                        } catch (error) {
+                            console.error('❌ Error sending message:', error);
+                        }
+                    }
+                    
                     function handlePublish() {
                         const agentId = document.getElementById('publishAgentId').value.trim();
                         const version = document.getElementById('publishVersion').value.trim();
@@ -1259,6 +1280,19 @@ Description...
                         document.getElementById('cliTypeFilter').addEventListener('change', handleFilterChange);
                         document.getElementById('categoryFilter').addEventListener('change', handleFilterChange);
                         document.getElementById('searchInput').addEventListener('input', handleFilterChange);
+                        
+                        // Add publish button listener
+                        const publishAgentBtn = document.getElementById('publishAgentBtn');
+                        if (publishAgentBtn) {
+                            console.log('🔘 Binding publishAgentBtn click event...');
+                            publishAgentBtn.addEventListener('click', () => {
+                                console.log('🖱️ Publish button clicked!');
+                                openPublishPage();
+                            });
+                            console.log('✅ publishAgentBtn event bound successfully');
+                        } else {
+                            console.error('❌ publishAgentBtn not found!');
+                        }
                         
                         // Add paid agents button listener
                         const paidAgentsBtn = document.getElementById('paidAgentsBtn');
