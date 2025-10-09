@@ -304,6 +304,57 @@ Chameleon supporte 12 langues :
 - Русский (ru)
 - العربية (ar)
 
+## 🏪 AGTHub - Marché d'Agents IA
+
+**[AGTHub](https://www.agthub.org)** est le marché officiel d'agents IA pour Chameleon, offrant une plateforme complète pour découvrir, partager et gérer des agents IA.
+
+### 🌟 Fonctionnalités principales
+
+- **🔍 Bibliothèque d'agents étendue**: Parcourez des centaines d'agents IA gratuits et premium dans plusieurs catégories
+- **📤 Publication facile**: Partagez vos agents personnalisés avec la communauté mondiale via le web ou CLI
+- **💰 Monétisation**: Proposez des agents premium à la vente et construisez votre entreprise d'agents IA
+- **⭐ Évaluations communautaires**: Découvrez les meilleurs agents grâce aux avis et évaluations de la communauté
+- **🌐 Support multilingue**: Support complet pour l'anglais, le chinois simplifié, le japonais et le vietnamien
+- **🚀 Intégration directe**: Installez des agents depuis AGTHub vers Chameleon en un clic
+
+### 🎯 Pour les utilisateurs de Chameleon
+
+AGTHub s'intègre parfaitement au marché d'agents de Chameleon:
+
+1. **Parcourir et découvrir**: Explorez les agents sur [www.agthub.org](https://www.agthub.org) ou directement dans Chameleon
+2. **Installation en un clic**: Installez des agents gratuits instantanément via le panneau du marché de Chameleon
+3. **Accès premium**: Achetez des agents premium sur AGTHub pour des fonctionnalités avancées
+4. **Restez à jour**: Recevez des notifications automatiques sur les mises à jour d'agents et les nouvelles versions
+
+### 🛠️ Pour les développeurs d'agents
+
+Créez et partagez vos agents avec la communauté:
+
+- **Publication web**: Utilisez le [tableau de bord AGTHub](https://www.agthub.org/dashboard) intuitif pour publier des agents
+- **Publication CLI**: Publiez via ligne de commande avec `agt publish` (nécessite [@chameleon-nexus/agents-cli](https://www.npmjs.com/package/@chameleon-nexus/agents-cli))
+- **Gestion des versions**: Mettez à jour vos agents facilement - les nouvelles versions remplacent automatiquement les anciennes
+- **Analytiques**: Suivez les téléchargements, évaluations et retours utilisateurs pour vos agents
+- **Options premium**: Monétisez votre travail en proposant des agents premium
+
+### 💼 Pour les entreprises
+
+Fonctionnalités spéciales pour les équipes d'entreprise:
+
+- **Connexion entreprise**: Authentification dédiée pour les comptes organisationnels
+- **Accès premium gratuit**: Les utilisateurs entreprise accèdent gratuitement à tous les agents payants
+- **Gestion en masse**: Gérez efficacement les agents dans toute votre équipe
+- **Publication privée**: Partagez des agents en interne au sein de votre organisation
+
+### 🔗 Liens rapides
+
+- **Site web AGTHub**: [https://www.agthub.org](https://www.agthub.org)
+- **Agents gratuits**: [Parcourir les agents gratuits](https://www.agthub.org)
+- **Agents premium**: [Explorer la section premium](https://www.agthub.org/paid)
+- **Tableau de bord développeur**: [Publiez vos agents](https://www.agthub.org/dashboard)
+- **Outil CLI**: [Agents CLI sur npm](https://www.npmjs.com/package/@chameleon-nexus/agents-cli)
+
+> **💡 Conseil pro**: Bien que le marché intégré de Chameleon soit parfait pour parcourir rapidement, visitez [AGTHub](https://www.agthub.org) pour l'expérience complète avec des descriptions d'agents détaillées, des avis et des filtres de recherche avancés!
+
 ## 🔧 Dépannage
 
 ### Problèmes courants
