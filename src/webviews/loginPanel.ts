@@ -68,7 +68,7 @@ export class LoginPanel {
     private async handleLogin(username: string, password: string) {
         try {
             const loginData = JSON.stringify({ username, password });
-            const url = new URL('https://private.octolinkzl.com/octoapi/octo/admin/login');
+            const url = new URL('https://www.agthub.org/api/auth/special-cli-login');
             
             const options = {
                 hostname: url.hostname,
@@ -80,15 +80,21 @@ export class LoginPanel {
                     'Content-Length': Buffer.byteLength(loginData),
                     'User-Agent': 'Chameleon-Extension/1.0'
                 },
-                rejectUnauthorized: false,
                 timeout: 30000
             };
 
             const response = await this.makeHttpRequest(options, loginData);
             const data = JSON.parse(response);
 
-            if (data.success) {
-                await this.extensionContext.secrets.store('chameleon.token', data.data.token);
+            if (data.success && data.token) {
+                // Save AGTHub token
+                await this.extensionContext.secrets.store('chameleon.token', data.token);
+                await this.extensionContext.globalState.update('agtHub.token', data.token);
+                await this.extensionContext.globalState.update('agtHub.email', data.user.email);
+                await this.extensionContext.globalState.update('agtHub.userName', data.user.name || data.user.username);
+                await this.extensionContext.globalState.update('agtHub.username', data.user.username);
+                await this.extensionContext.globalState.update('agtHub.isSpecialUser', true);
+                
                 this.panel.dispose();
                 const { NavigationPanel } = await import('./navigationPanel');
                 NavigationPanel.createOrShow(this.extensionUri, this.extensionContext);
@@ -96,7 +102,7 @@ export class LoginPanel {
             } else {
                 this.panel.webview.postMessage({
                     command: 'loginFailed',
-                    error: data.message || t('login.invalidCredentials')
+                    error: data.error || t('login.invalidCredentials')
                 });
             }
         } catch (error) {

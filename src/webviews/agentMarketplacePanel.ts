@@ -2,11 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { t, getCurrentLanguage } from '../utils/i18n';
-import { AgentRegistryService, AgentInfo as RegistryAgentInfo, SearchFilters } from '../services/agentRegistryService';
-import { AGTHubService, AgentInfo as AGTHubAgentInfo } from '../services/agtHubService';
+import { AGTHubService, AgentInfo, SearchFilters } from '../services/agtHubService';
 import { AgentInstallerService, InstalledAgent } from '../services/agentInstallerService';
-
-type AgentInfo = RegistryAgentInfo | AGTHubAgentInfo;
 
 export class AgentMarketplacePanel {
     public static currentPanel: AgentMarketplacePanel | undefined;
@@ -14,10 +11,8 @@ export class AgentMarketplacePanel {
     private readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
-    private agentService: AgentRegistryService;
     private agtHubService: AGTHubService;
     private installerService: AgentInstallerService;
-    private useAGTHub: boolean = true; // Use AGTHub by default
 
     public static createOrShow(extensionUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor
@@ -71,7 +66,7 @@ export class AgentMarketplacePanel {
                 }
             }
         } as any;
-        this.agentService = new AgentRegistryService(mockContext);
+        // Only use AGTHub service (disable GitHub registry)
         this.agtHubService = new AGTHubService(mockContext);
         this.installerService = new AgentInstallerService();
 
@@ -113,17 +108,11 @@ export class AgentMarketplacePanel {
                     case 'deleteRating':
                         this.deleteRating(message.agentId);
                         return;
-                    case 'specialLogin':
-                        this.specialLogin(message.username, message.password);
-                        return;
-                    case 'login':
-                        this.login(message.email, message.code);
-                        return;
-                    case 'requestCode':
-                        this.requestVerificationCode(message.email);
-                        return;
-                    case 'logout':
-                        this.logout();
+                    case 'openExternal':
+                        if (message.url) {
+                            console.log('Opening external URL:', message.url);
+                            vscode.env.openExternal(vscode.Uri.parse(message.url));
+                        }
                         return;
                 }
             },
@@ -138,18 +127,21 @@ export class AgentMarketplacePanel {
     }
 
     private async _getHtmlForWebview(webview: vscode.Webview) {
-        // Fetch real data from GitHub registry
+        // Get current language
+        const currentLanguage = getCurrentLanguage();
+        
+        // Fetch data from AGTHub
         let agents: any[] = [];
         let categories: any = {};
         
         try {
-            const featuredAgents = await this.agentService.getFeaturedAgents();
-            const registryCategories = await this.agentService.getCategories();
+            const featuredAgents = await this.agtHubService.getFeaturedAgents();
+            const agtHubCategories = await this.agtHubService.getCategories();
             
             agents = featuredAgents;
-            categories = registryCategories;
+            categories = agtHubCategories;
         } catch (error) {
-            console.error('Failed to fetch agents from registry:', error);
+            console.error('Failed to fetch agents from AGTHub:', error);
             // Fallback to empty data
             agents = [];
             categories = {};
@@ -607,14 +599,11 @@ export class AgentMarketplacePanel {
                 </style>
             </head>
             <body>
-                <!-- Toolbar with Login/Publish buttons -->
+                <!-- Toolbar with Paid Agents button -->
                 <div class="toolbar" id="toolbar">
-                    <div class="user-info" id="userInfo" style="display: none;">
-                        <span id="userName"></span>
-                    </div>
-                    <button class="toolbar-button secondary" id="loginBtn">Login</button>
-                    <button class="toolbar-button" id="publishBtn" style="display: none;">Publish Agent</button>
-                    <button class="toolbar-button secondary" id="logoutBtn" style="display: none;">Logout</button>
+                    <button class="toolbar-button" id="paidAgentsBtn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        💎 ${currentLanguage === 'zh' ? '付费专区' : 'Paid Agents'}
+                    </button>
                 </div>
                 
                 <div class="header">
@@ -648,28 +637,6 @@ export class AgentMarketplacePanel {
                 
                 <div id="agentGrid" class="agent-grid">
                     <div class="loading" id="loadingText"></div>
-                </div>
-                
-                <!-- Login Modal -->
-                <div class="modal" id="loginModal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>${currentLanguage === 'zh' ? '登录 AGTHub' : 'Login to AGTHub'}</h2>
-                            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
-                        </div>
-                        <div class="form-group">
-                            <label for="loginUsername">${currentLanguage === 'zh' ? '用户名' : 'Username'}</label>
-                            <input type="text" id="loginUsername" class="form-input" placeholder="${currentLanguage === 'zh' ? '请输入用户名' : 'Enter username'}">
-                        </div>
-                        <div class="form-group">
-                            <label for="loginPassword">${currentLanguage === 'zh' ? '密码' : 'Password'}</label>
-                            <input type="password" id="loginPassword" class="form-input" placeholder="${currentLanguage === 'zh' ? '请输入密码' : 'Enter password'}">
-                        </div>
-                        <div class="form-actions">
-                            <button class="toolbar-button secondary" onclick="closeLoginModal()">${currentLanguage === 'zh' ? '取消' : 'Cancel'}</button>
-                            <button class="toolbar-button" id="loginSubmitBtn">${currentLanguage === 'zh' ? '登录' : 'Login'}</button>
-                        </div>
-                    </div>
                 </div>
                 
                 <!-- Publish Modal -->
@@ -824,6 +791,23 @@ Description...
                     // No more sample data - only use real GitHub registry data
                     
                     let filteredAgents = [...agents];
+                    
+                    // Filter change handler - calls VS Code to search
+                    function handleFilterChange() {
+                        const cliType = document.getElementById('cliTypeFilter').value || '';
+                        const category = document.getElementById('categoryFilter').value || '';
+                        const query = document.getElementById('searchInput').value || '';
+                        
+                        console.log('Filter changed:', { cliType, category, query });
+                        
+                        // Send search request to VS Code extension
+                        vscode.postMessage({
+                            command: 'searchAgents',
+                            query: query,
+                            cliType: cliType,
+                            category: category
+                        });
+                    }
                     
                     // Helper functions to handle different data formats with i18n support
                     // Use the language setting passed from the backend
@@ -1160,27 +1144,22 @@ Description...
                         });
                     }
                     
-                    // Authentication handlers
-                    function handleLogin() {
-                        const username = document.getElementById('loginUsername').value.trim();
-                        const password = document.getElementById('loginPassword').value.trim();
+                    // Open Paid Agents page in browser
+                    function openPaidAgents() {
+                        console.log('🔥 openPaidAgents function called!');
+                        const url = 'https://www.agthub.org/paid';
+                        console.log('🌐 Opening URL:', url);
+                        console.log('📤 Sending openExternal message to vscode...');
                         
-                        if (!username || !password) {
-                            alert('${currentLanguage === 'zh' ? '请输入用户名和密码' : 'Please enter username and password'}');
-                            return;
+                        try {
+                            vscode.postMessage({
+                                command: 'openExternal',
+                                url: url
+                            });
+                            console.log('✅ Message sent successfully!');
+                        } catch (error) {
+                            console.error('❌ Error sending message:', error);
                         }
-                        
-                        vscode.postMessage({
-                            command: 'specialLogin',
-                            username: username,
-                            password: password
-                        });
-                    }
-                    
-                    function handleLogout() {
-                        vscode.postMessage({
-                            command: 'logout'
-                        });
                     }
                     
                     function handlePublish() {
@@ -1233,17 +1212,18 @@ Description...
                         const userInfo = document.getElementById('userInfo');
                         const userNameSpan = document.getElementById('userName');
                         
+                        // Safely check if elements exist before accessing properties
                         if (loggedIn) {
-                            loginBtn.style.display = 'none';
-                            publishBtn.style.display = 'block';
-                            logoutBtn.style.display = 'block';
-                            userInfo.style.display = 'flex';
-                            userNameSpan.textContent = userName || 'User';
+                            if (loginBtn) loginBtn.style.display = 'none';
+                            if (publishBtn) publishBtn.style.display = 'block';
+                            if (logoutBtn) logoutBtn.style.display = 'block';
+                            if (userInfo) userInfo.style.display = 'flex';
+                            if (userNameSpan) userNameSpan.textContent = userName || 'User';
                         } else {
-                            loginBtn.style.display = 'block';
-                            publishBtn.style.display = 'none';
-                            logoutBtn.style.display = 'none';
-                            userInfo.style.display = 'none';
+                            if (loginBtn) loginBtn.style.display = 'block';
+                            if (publishBtn) publishBtn.style.display = 'none';
+                            if (logoutBtn) logoutBtn.style.display = 'none';
+                            if (userInfo) userInfo.style.display = 'none';
                         }
                     }
                     
@@ -1280,34 +1260,45 @@ Description...
                         document.getElementById('categoryFilter').addEventListener('change', handleFilterChange);
                         document.getElementById('searchInput').addEventListener('input', handleFilterChange);
                         
+                        // Add paid agents button listener
+                        const paidAgentsBtn = document.getElementById('paidAgentsBtn');
+                        if (paidAgentsBtn) {
+                            console.log('🔘 Binding paidAgentsBtn click event...');
+                            paidAgentsBtn.addEventListener('click', () => {
+                                console.log('🖱️ Paid Agents button clicked!');
+                                openPaidAgents();
+                            });
+                            console.log('✅ paidAgentsBtn event bound successfully');
+                        } else {
+                            console.error('❌ paidAgentsBtn not found!');
+                        }
+                        
                         // Add agent button event listeners
                         addAgentButtonListeners();
                         
-                        // Add auth button event listeners
-                        document.getElementById('loginBtn').addEventListener('click', openLoginModal);
-                        document.getElementById('publishBtn').addEventListener('click', openPublishModal);
-                        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-                        document.getElementById('sendCodeBtn').addEventListener('click', handleSendCode);
-                        document.getElementById('loginSubmitBtn').addEventListener('click', handleLogin);
+                        // Add publish button event listener
                         document.getElementById('publishSubmitBtn').addEventListener('click', handlePublish);
                         
                         // Listen for messages from VS Code
                         window.addEventListener('message', event => {
                             const message = event.data;
-                            console.log('Received message from VS Code:', message);
+                            console.log('🔔 Received message from VS Code:', message);
                             
                             switch (message.command) {
                                 case 'searchResults':
-                                    console.log('Updating agents with search results:', message.agents.length, 'agents');
+                                    console.log('🔄 Updating agents with search results:', message.agents.length, 'agents');
                                     agents = message.agents;
                                     filteredAgents = agents;
                                     window.showRating = message.showRating;
                                     console.log('showRating set to:', window.showRating);
+                                    console.log('📊 First agent sample:', agents[0]);
                                     // Update auth UI based on login status from search results
                                     if (message.isLoggedIn !== undefined) {
                                         updateAuthUI(message.isLoggedIn, currentUser);
                                     }
+                                    console.log('🎨 Calling renderAgents()...');
                                     renderAgents();
+                                    console.log('✅ renderAgents() completed');
                                     // Re-add button listeners after rendering
                                     addAgentButtonListeners();
                                     // Check install status for new agents
@@ -1433,7 +1424,7 @@ Description...
     }
 
     private async searchAgents(query: string, cliType: string, category: string) {
-        console.log('VS Code searchAgents called with:', { query, cliType, category, useAGTHub: this.useAGTHub });
+        console.log('VS Code searchAgents called with:', { query, cliType, category });
         
         try {
             const filters: SearchFilters = {};
@@ -1443,13 +1434,9 @@ Description...
             
             console.log('Using filters:', filters);
             
-            // Use AGTHub or GitHub Registry based on configuration
+            // Always use AGTHub (GitHub registry disabled)
             let results: any[] = [];
-            if (this.useAGTHub) {
-                results = await this.agtHubService.searchAgents(query, filters);
-            } else {
-                results = await this.agentService.searchAgents(query, filters);
-            }
+            results = await this.agtHubService.searchAgents(query, filters);
             
             console.log('Initial search results count:', results.length);
             
@@ -1486,7 +1473,7 @@ Description...
                 command: 'searchResults',
                 agents: results,
                 showRating: showRating,
-                isLoggedIn: this.useAGTHub && this.agtHubService.isLoggedIn()
+                isLoggedIn: this.agtHubService.isLoggedIn()
             });
             
         } catch (error) {
@@ -1500,8 +1487,19 @@ Description...
 
     private async installAgent(agent: any, targetType: string = 'claude-code') {
         try {
-            // Construct full agent ID in author/agent-name format
-            const fullAgentId = agent.author ? `${agent.author}/${agent.id}` : agent.id;
+            // Extract author name - handle both string and object formats
+            let authorName = 'unknown';
+            if (typeof agent.author === 'string') {
+                authorName = agent.author;
+            } else if (agent.author && typeof agent.author === 'object') {
+                authorName = agent.author.name || agent.author.email?.split('@')[0] || 'unknown';
+            }
+            
+            // Use agentId (not id) for AGTHub agents
+            const agentId = agent.agentId || agent.id;
+            const fullAgentId = `${authorName}/${agentId}`;
+            
+            console.log('Installing agent:', { agent, fullAgentId, authorName, agentId });
             
             await this.installerService.installAgent(fullAgentId, {
                 target: targetType,
@@ -1518,8 +1516,17 @@ Description...
 
     private async uninstallAgent(agent: any, targetType: string = 'claude-code') {
         try {
-            // Construct full agent ID in author/agent-name format
-            const fullAgentId = agent.author ? `${agent.author}/${agent.id}` : agent.id;
+            // Extract author name - handle both string and object formats
+            let authorName = 'unknown';
+            if (typeof agent.author === 'string') {
+                authorName = agent.author;
+            } else if (agent.author && typeof agent.author === 'object') {
+                authorName = agent.author.name || agent.author.email?.split('@')[0] || 'unknown';
+            }
+            
+            // Use agentId (not id) for AGTHub agents
+            const agentId = agent.agentId || agent.id;
+            const fullAgentId = `${authorName}/${agentId}`;
             
             await this.installerService.uninstallAgent(fullAgentId, targetType);
             
@@ -1538,14 +1545,33 @@ Description...
             const installStatus: { [key: string]: { [target: string]: boolean } } = {};
             
             for (const agent of agents) {
-                // Construct full agent ID for comparison
-                const fullAgentId = agent.author ? `${agent.author}/${agent.id}` : agent.id;
+                // Extract author name - handle both string and object formats
+                let authorName = 'unknown';
+                if (typeof agent.author === 'string') {
+                    authorName = agent.author;
+                } else if (agent.author && typeof agent.author === 'object') {
+                    authorName = agent.author.name || agent.author.email?.split('@')[0] || 'unknown';
+                }
                 
-                installStatus[agent.id] = {
+                // Use agentId (not id) for AGTHub agents
+                const agentId = agent.agentId || agent.id;
+                const fullAgentId = `${authorName}/${agentId}`;
+                
+                // Use the full ID (with db id prefix) as the key for webview
+                const statusKey = agent.id;
+                
+                installStatus[statusKey] = {
                     'claude-code': installedAgents.some(ia => ia.id === fullAgentId && ia.target === 'claude-code'),
                     'codex': installedAgents.some(ia => ia.id === fullAgentId && ia.target === 'codex'),
                     'copilot': installedAgents.some(ia => ia.id === fullAgentId && ia.target === 'copilot')
                 };
+                
+                console.log('Install status check:', { 
+                    agentId, 
+                    fullAgentId, 
+                    statusKey, 
+                    status: installStatus[statusKey] 
+                });
             }
 
             // Send install status back to webview
@@ -1676,11 +1702,6 @@ When working on ${agent.category} tasks:
     }
 
     private async publishAgent(agentData: any) {
-        if (!this.useAGTHub) {
-            vscode.window.showErrorMessage('Publishing is only available with AGTHub');
-            return;
-        }
-
         if (!this.agtHubService.isLoggedIn()) {
             vscode.window.showErrorMessage('Please login to publish agents');
             return;
@@ -1716,11 +1737,6 @@ When working on ${agent.category} tasks:
     }
 
     private async rateAgent(agentId: string, rating: number) {
-        if (!this.useAGTHub) {
-            vscode.window.showErrorMessage('Rating is only available with AGTHub');
-            return;
-        }
-
         if (!this.agtHubService.isLoggedIn()) {
             vscode.window.showErrorMessage('Please login to rate agents');
             return;
@@ -1744,10 +1760,6 @@ When working on ${agent.category} tasks:
     }
 
     private async deleteRating(agentId: string) {
-        if (!this.useAGTHub) {
-            return;
-        }
-
         if (!this.agtHubService.isLoggedIn()) {
             vscode.window.showErrorMessage('Please login first');
             return;
@@ -1770,100 +1782,6 @@ When working on ${agent.category} tasks:
         }
     }
 
-    private async specialLogin(username: string, password: string) {
-        if (!this.useAGTHub) {
-            return;
-        }
-
-        try {
-            const result = await this.agtHubService.loginWithCredentials(username, password);
-            const userName = result.user.name || result.user.username;
-            vscode.window.showInformationMessage(`Welcome, ${userName}!`);
-            
-            // Notify webview of successful login
-            this._panel.webview.postMessage({
-                command: 'loginSuccess',
-                userName: userName,
-                email: result.user.email,
-                isSpecialUser: true
-            });
-        } catch (error) {
-            console.error('Special login failed:', error);
-            vscode.window.showErrorMessage(
-                `Login failed: ${error instanceof Error ? error.message : String(error)}`
-            );
-            
-            this._panel.webview.postMessage({
-                command: 'loginFailed',
-                error: error instanceof Error ? error.message : String(error)
-            });
-        }
-    }
-
-    private async login(email: string, code: string) {
-        if (!this.useAGTHub) {
-            return;
-        }
-
-        try {
-            const result = await this.agtHubService.login(email, code);
-            vscode.window.showInformationMessage(`Welcome, ${result.userName}!`);
-            
-            // Notify webview of successful login
-            this._panel.webview.postMessage({
-                command: 'loginSuccess',
-                userName: result.userName,
-                email: email
-            });
-        } catch (error) {
-            console.error('Login failed:', error);
-            vscode.window.showErrorMessage(
-                `Login failed: ${error instanceof Error ? error.message : String(error)}`
-            );
-            
-            this._panel.webview.postMessage({
-                command: 'loginFailed',
-                error: error instanceof Error ? error.message : String(error)
-            });
-        }
-    }
-
-    private async requestVerificationCode(email: string) {
-        if (!this.useAGTHub) {
-            return;
-        }
-
-        try {
-            await this.agtHubService.requestVerificationCode(email);
-            vscode.window.showInformationMessage('Verification code sent to your email');
-            
-            this._panel.webview.postMessage({
-                command: 'codeSent'
-            });
-        } catch (error) {
-            console.error('Request code failed:', error);
-            vscode.window.showErrorMessage(
-                `Failed to send code: ${error instanceof Error ? error.message : String(error)}`
-            );
-        }
-    }
-
-    private async logout() {
-        if (!this.useAGTHub) {
-            return;
-        }
-
-        try {
-            await this.agtHubService.logout();
-            vscode.window.showInformationMessage('Logged out successfully');
-            
-            this._panel.webview.postMessage({
-                command: 'logoutSuccess'
-            });
-        } catch (error) {
-            console.error('Logout failed:', error);
-        }
-    }
 
     public dispose() {
         AgentMarketplacePanel.currentPanel = undefined;

@@ -1,5 +1,6 @@
 // src/services/agtHubService.ts
 import * as vscode from 'vscode';
+import axios from 'axios';
 import * as https from 'https';
 import * as http from 'http';
 
@@ -62,45 +63,31 @@ export class AGTHubService {
     }
 
     /**
-     * HTTP请求辅助方法
+     * HTTP请求辅助方法 (使用 axios)
      */
-    private httpRequest(url: string, method: string = 'GET', body?: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const urlObj = new URL(url);
-            const isHttps = urlObj.protocol === 'https:';
-            const httpClient = isHttps ? https : http;
-
-            const options: http.RequestOptions = {
-                hostname: urlObj.hostname,
-                port: urlObj.port || (isHttps ? 443 : 80),
-                path: urlObj.pathname + urlObj.search,
+    private async httpRequest(url: string, method: string = 'GET', body?: any): Promise<any> {
+        console.log(`[HTTP ${method}] ${url}`);
+        if (body) console.log('[HTTP Body]', body);
+        
+        try {
+            const response = await axios({
                 method: method,
+                url: url,
+                data: body,
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(body ? { 'Content-Length': Buffer.byteLength(body) } : {})
                 }
-            };
-
-            const req = httpClient.request(options, (res) => {
-                let data = '';
-                res.on('data', (chunk) => data += chunk);
-                res.on('end', () => {
-                    if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
-                        resolve(data);
-                    } else {
-                        reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage} - ${data}`));
-                    }
-                });
             });
-
-            req.on('error', reject);
-
-            if (body) {
-                req.write(body);
+            console.log(`[HTTP ${method}] Success: ${response.status}`);
+            return response.data;
+        } catch (error: any) {
+            console.error(`[HTTP ${method}] Error:`, error.message);
+            if (error.response) {
+                console.error('[HTTP Response]', error.response.status, error.response.data);
+                throw new Error(`HTTP ${error.response.status}: ${error.response.statusText} - ${JSON.stringify(error.response.data)}`);
             }
-
-            req.end();
-        });
+            throw error;
+        }
     }
 
     /**
@@ -114,11 +101,79 @@ export class AGTHubService {
         
         const url = `${this.apiUrl}/api/agents/search?${params.toString()}`;
         
+        console.log('=== AGTHub Search Debug ===');
+        console.log('API URL:', this.apiUrl);
+        console.log('Full URL:', url);
+        console.log('Query:', query);
+        console.log('Filters:', filters);
+        
         return this.fetchWithCache(`search-${params.toString()}`, async () => {
-            const response = await this.httpRequest(url);
-            const data = JSON.parse(response);
+            const data = await this.httpRequest(url);
+            console.log('Response received, agents count:', data.agents?.length || 0);
             return data.agents || [];
         });
+    }
+
+    /**
+     * 获取特色Agents
+     */
+    async getFeaturedAgents(): Promise<AgentInfo[]> {
+        return this.searchAgents('', { sortBy: 'downloads', limit: 100 });
+    }
+
+    /**
+     * 获取分类列表 (与 AGTHub 完全一致的分类结构和顺序)
+     */
+    async getCategories(): Promise<any> {
+        // AGTHub's category structure - must match exactly
+        const CATEGORY_TEMPLATE = {
+            'core-architecture': { en: 'Core Architecture', zh: '核心架构', group: 'development', order: 1 },
+            'web-programming': { en: 'Web & Application', zh: 'Web与应用', group: 'development', order: 2 },
+            'systems-programming': { en: 'Systems & Low-Level', zh: '系统底层', group: 'development', order: 3 },
+            'enterprise-programming': { en: 'Enterprise & JVM', zh: '企业与JVM', group: 'development', order: 4 },
+            'ui-mobile': { en: 'UI/UX & Mobile', zh: 'UI/UX与移动端', group: 'development', order: 5 },
+            'specialized-platforms': { en: 'Specialized Platforms', zh: '专业平台', group: 'development', order: 6 },
+            'devops-deployment': { en: 'DevOps & Deployment', zh: '运维部署', group: 'operations', order: 7 },
+            'database-management': { en: 'Database Management', zh: '数据库管理', group: 'operations', order: 8 },
+            'incident-network': { en: 'Incident & Network', zh: '故障网络', group: 'operations', order: 9 },
+            'code-quality': { en: 'Code Quality & Review', zh: '代码质量', group: 'quality', order: 10 },
+            'testing-debugging': { en: 'Testing & Debugging', zh: '测试调试', group: 'quality', order: 11 },
+            'performance-observability': { en: 'Performance', zh: '性能监控', group: 'quality', order: 12 },
+            'machine-learning': { en: 'Machine Learning & AI', zh: '机器学习', group: 'data', order: 13 },
+            'data-analytics': { en: 'Data Engineering', zh: '数据工程', group: 'data', order: 14 },
+            'seo-content': { en: 'SEO & Content', zh: 'SEO内容', group: 'content', order: 15 },
+            'documentation': { en: 'Documentation', zh: '文档', group: 'content', order: 16 },
+            'business-finance': { en: 'Business & Finance', zh: '商业财务', group: 'business', order: 17 },
+            'marketing-sales': { en: 'Marketing & Sales', zh: '营销销售', group: 'business', order: 18 },
+            'support-legal': { en: 'Support & Legal', zh: '支持法务', group: 'business', order: 19 },
+            'specialized-domains': { en: 'Specialized Domains', zh: '专业领域', group: 'specialized', order: 20 }
+        };
+        
+        // Fetch all agents to calculate counts
+        const agents = await this.searchAgents('', { limit: 1000 });
+        
+        const categoryMap: { [key: string]: number } = {};
+        agents.forEach((agent: any) => {
+            if (agent.category) {
+                categoryMap[agent.category] = (categoryMap[agent.category] || 0) + 1;
+            }
+        });
+        
+        // Build categories in the exact order as AGTHub
+        const sortedCategories = Object.keys(CATEGORY_TEMPLATE)
+            .sort((a, b) => CATEGORY_TEMPLATE[a as keyof typeof CATEGORY_TEMPLATE].order - CATEGORY_TEMPLATE[b as keyof typeof CATEGORY_TEMPLATE].order);
+        
+        const result: any = {};
+        sortedCategories.forEach(key => {
+            const template = CATEGORY_TEMPLATE[key as keyof typeof CATEGORY_TEMPLATE];
+            result[key] = {
+                name: { en: template.en, zh: template.zh },
+                count: categoryMap[key] || 0,
+                group: template.group
+            };
+        });
+        
+        return result;
     }
 
     /**
@@ -128,8 +183,7 @@ export class AGTHubService {
         const url = `${this.apiUrl}/api/agents/${agentId}`;
         
         try {
-            const response = await this.httpRequest(url);
-            return JSON.parse(response);
+            return await this.httpRequest(url);
         } catch (error) {
             console.error(`Failed to fetch agent details for ${agentId}:`, error);
             return null;
@@ -143,8 +197,7 @@ export class AGTHubService {
         const url = `${this.apiUrl}/api/agents/${agentId}/download`;
         
         try {
-            const response = await this.httpRequest(url);
-            const data = JSON.parse(response);
+            const data = await this.httpRequest(url);
             return data.content || '';
         } catch (error) {
             console.error(`Failed to download agent ${agentId}:`, error);
@@ -163,10 +216,9 @@ export class AGTHubService {
         }
 
         const url = `${this.apiUrl}/api/agents/${agentId}/rate`;
-        const body = JSON.stringify({ rating });
 
         try {
-            await this.httpRequest(url, 'POST', body);
+            await this.httpRequest(url, 'POST', { rating });
             this.clearCache(); // Clear cache to refresh agent data
         } catch (error) {
             console.error(`Failed to rate agent ${agentId}:`, error);
@@ -308,11 +360,9 @@ export class AGTHubService {
      */
     async loginWithCredentials(username: string, password: string): Promise<{ token: string; user: any }> {
         const url = `${this.apiUrl}/api/auth/special-cli-login`;
-        const body = JSON.stringify({ username, password });
 
         try {
-            const response = await this.httpRequest(url, 'POST', body);
-            const data = JSON.parse(response);
+            const data = await this.httpRequest(url, 'POST', { username, password });
             
             if (data.token) {
                 // Save token to global state
@@ -335,11 +385,9 @@ export class AGTHubService {
      */
     async login(email: string, code: string): Promise<{ token: string; userName: string }> {
         const url = `${this.apiUrl}/api/cli/login`;
-        const body = JSON.stringify({ email, code });
 
         try {
-            const response = await this.httpRequest(url, 'POST', body);
-            const data = JSON.parse(response);
+            const data = await this.httpRequest(url, 'POST', { email, code });
             
             if (data.token) {
                 // Save token to global state
