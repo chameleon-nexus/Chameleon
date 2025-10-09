@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { AgentRegistryService } from './agentRegistryService';
+import { AGTHubService } from './agtHubService';
+import axios from 'axios';
 
 export interface InstalledAgent {
     id: string;
@@ -25,10 +26,10 @@ export class AgentInstallerService {
     // We'll use a centralized registry file under .agents for cross-CLI compatibility
     private static readonly INSTALLED_REGISTRY = path.join(os.homedir(), '.agents', 'installed.json');
     
-    private registryService: AgentRegistryService;
+    private agtHubService: AGTHubService;
 
     constructor() {
-        // Create a minimal context object for the AgentRegistryService
+        // Create a minimal context object for the AGTHubService
         const mockContext = {
             subscriptions: [],
             workspaceState: {
@@ -41,7 +42,7 @@ export class AgentInstallerService {
             }
         } as any;
         
-        this.registryService = new AgentRegistryService(mockContext);
+        this.agtHubService = new AGTHubService(mockContext);
     }
 
     /**
@@ -52,9 +53,11 @@ export class AgentInstallerService {
             // Parse agentId to get the actual agent name
             const { author, id } = this.parseAgentId(agentId);
             
-            // Get agent details from registry
-            const agents = await this.registryService.getAllAgents();
-            const agent = agents.find(a => a.id === id && a.author === author);
+            // Search for agent using AGTHub API
+            const agents = await this.agtHubService.searchAgents(id);
+            
+            // Find the agent by full ID (author/agent-id)
+            const agent = agents.find(a => a.id === agentId);
             
             if (!agent) {
                 throw new Error(`Agent ${agentId} not found`);
@@ -75,8 +78,22 @@ export class AgentInstallerService {
                 throw new Error(`Agent ${agentId} is already installed for ${target}. Use force option to reinstall.`);
             }
 
-            // Download agent content
-            const content = await this.registryService.downloadAgent(agentId, version);
+            // Download agent content from AGTHub
+            const apiUrl = this.agtHubService['apiUrl'] || 'https://www.agthub.org';
+            
+            // Get agent's database ID first
+            const searchUrl = `${apiUrl}/api/agents/search?q=${id}`;
+            const searchResponse = await axios.get(searchUrl);
+            const agentData = searchResponse.data.agents?.find((a: any) => a.agentId === id && a.author?.name === author);
+            
+            if (!agentData) {
+                throw new Error(`Agent ${agentId} not found in AGTHub`);
+            }
+            
+            // Download using the database ID
+            const downloadUrl = `${apiUrl}/api/agents/${agentData.id}/download`;
+            const downloadResponse = await axios.get(downloadUrl);
+            const content = downloadResponse.data;
             
             // Determine install path
             const installPath = this.getInstallPath(target, agentId, version);

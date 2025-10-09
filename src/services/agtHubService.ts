@@ -110,7 +110,26 @@ export class AGTHubService {
         return this.fetchWithCache(`search-${params.toString()}`, async () => {
             const data = await this.httpRequest(url);
             console.log('Response received, agents count:', data.agents?.length || 0);
-            return data.agents || [];
+            
+            // Transform agents to ensure id is in author/agent-id format
+            const agents = (data.agents || []).map((agent: any) => {
+                const authorName = agent.author?.name || 'unknown';
+                const agentId = agent.agentId || agent.id;
+                
+                // Create full ID in format "author/agentId"
+                const fullId = `${authorName}/${agentId}`;
+                
+                return {
+                    ...agent,
+                    id: fullId,
+                    agentId: agentId,
+                    author: authorName
+                };
+            });
+            
+            console.log('Transformed agents:', agents.map((a: any) => ({ id: a.id, agentId: a.agentId, author: a.author })));
+            
+            return agents;
         });
     }
 
