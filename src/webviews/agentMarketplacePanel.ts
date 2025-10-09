@@ -113,6 +113,9 @@ export class AgentMarketplacePanel {
                     case 'deleteRating':
                         this.deleteRating(message.agentId);
                         return;
+                    case 'specialLogin':
+                        this.specialLogin(message.username, message.password);
+                        return;
                     case 'login':
                         this.login(message.email, message.code);
                         return;
@@ -651,23 +654,20 @@ export class AgentMarketplacePanel {
                 <div class="modal" id="loginModal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Login to AGTHub</h2>
+                            <h2>${currentLanguage === 'zh' ? '登录 AGTHub' : 'Login to AGTHub'}</h2>
                             <button class="modal-close" onclick="closeLoginModal()">&times;</button>
                         </div>
                         <div class="form-group">
-                            <label for="loginEmail">Email</label>
-                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
+                            <label for="loginUsername">${currentLanguage === 'zh' ? '用户名' : 'Username'}</label>
+                            <input type="text" id="loginUsername" class="form-input" placeholder="${currentLanguage === 'zh' ? '请输入用户名' : 'Enter username'}">
                         </div>
                         <div class="form-group">
-                            <label for="loginCode">Verification Code</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="text" id="loginCode" class="form-input" placeholder="Enter 6-digit code">
-                                <button class="toolbar-button" id="sendCodeBtn">Send Code</button>
-                            </div>
+                            <label for="loginPassword">${currentLanguage === 'zh' ? '密码' : 'Password'}</label>
+                            <input type="password" id="loginPassword" class="form-input" placeholder="${currentLanguage === 'zh' ? '请输入密码' : 'Enter password'}">
                         </div>
                         <div class="form-actions">
-                            <button class="toolbar-button secondary" onclick="closeLoginModal()">Cancel</button>
-                            <button class="toolbar-button" id="loginSubmitBtn">Login</button>
+                            <button class="toolbar-button secondary" onclick="closeLoginModal()">${currentLanguage === 'zh' ? '取消' : 'Cancel'}</button>
+                            <button class="toolbar-button" id="loginSubmitBtn">${currentLanguage === 'zh' ? '登录' : 'Login'}</button>
                         </div>
                     </div>
                 </div>
@@ -1161,39 +1161,19 @@ Description...
                     }
                     
                     // Authentication handlers
-                    function handleSendCode() {
-                        const email = document.getElementById('loginEmail').value.trim();
-                        if (!email) {
-                            alert('Please enter your email');
-                            return;
-                        }
-                        
-                        vscode.postMessage({
-                            command: 'requestCode',
-                            email: email
-                        });
-                        
-                        document.getElementById('sendCodeBtn').disabled = true;
-                        document.getElementById('sendCodeBtn').textContent = 'Sent!';
-                        setTimeout(() => {
-                            document.getElementById('sendCodeBtn').disabled = false;
-                            document.getElementById('sendCodeBtn').textContent = 'Send Code';
-                        }, 60000); // Re-enable after 1 minute
-                    }
-                    
                     function handleLogin() {
-                        const email = document.getElementById('loginEmail').value.trim();
-                        const code = document.getElementById('loginCode').value.trim();
+                        const username = document.getElementById('loginUsername').value.trim();
+                        const password = document.getElementById('loginPassword').value.trim();
                         
-                        if (!email || !code) {
-                            alert('Please enter email and verification code');
+                        if (!username || !password) {
+                            alert('${currentLanguage === 'zh' ? '请输入用户名和密码' : 'Please enter username and password'}');
                             return;
                         }
                         
                         vscode.postMessage({
-                            command: 'login',
-                            email: email,
-                            code: code
+                            command: 'specialLogin',
+                            username: username,
+                            password: password
                         });
                     }
                     
@@ -1787,6 +1767,36 @@ When working on ${agent.category} tasks:
             vscode.window.showErrorMessage(
                 `Failed to delete rating: ${error instanceof Error ? error.message : String(error)}`
             );
+        }
+    }
+
+    private async specialLogin(username: string, password: string) {
+        if (!this.useAGTHub) {
+            return;
+        }
+
+        try {
+            const result = await this.agtHubService.loginWithCredentials(username, password);
+            const userName = result.user.name || result.user.username;
+            vscode.window.showInformationMessage(`Welcome, ${userName}!`);
+            
+            // Notify webview of successful login
+            this._panel.webview.postMessage({
+                command: 'loginSuccess',
+                userName: userName,
+                email: result.user.email,
+                isSpecialUser: true
+            });
+        } catch (error) {
+            console.error('Special login failed:', error);
+            vscode.window.showErrorMessage(
+                `Login failed: ${error instanceof Error ? error.message : String(error)}`
+            );
+            
+            this._panel.webview.postMessage({
+                command: 'loginFailed',
+                error: error instanceof Error ? error.message : String(error)
+            });
         }
     }
 

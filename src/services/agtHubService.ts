@@ -50,7 +50,7 @@ export class AGTHubService {
      */
     private getConfiguredApiUrl(): string {
         const config = vscode.workspace.getConfiguration('chameleon');
-        return config.get<string>('agtHubApiUrl') || 'https://agthub.vercel.app';
+        return config.get<string>('agtHubApiUrl') || 'https://www.agthub.org';
     }
 
     /**
@@ -304,7 +304,34 @@ export class AGTHubService {
     }
 
     /**
-     * 登录AGTHub
+     * 特殊用户登录（用户名+密码）
+     */
+    async loginWithCredentials(username: string, password: string): Promise<{ token: string; user: any }> {
+        const url = `${this.apiUrl}/api/auth/special-cli-login`;
+        const body = JSON.stringify({ username, password });
+
+        try {
+            const response = await this.httpRequest(url, 'POST', body);
+            const data = JSON.parse(response);
+            
+            if (data.token) {
+                // Save token to global state
+                await this.context.globalState.update('agtHub.token', data.token);
+                await this.context.globalState.update('agtHub.email', data.user.email);
+                await this.context.globalState.update('agtHub.userName', data.user.name || data.user.username);
+                await this.context.globalState.update('agtHub.username', data.user.username);
+                await this.context.globalState.update('agtHub.isSpecialUser', true);
+            }
+
+            return data;
+        } catch (error) {
+            console.error('Special login failed:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * 登录AGTHub（邮箱验证码方式 - 保留兼容性）
      */
     async login(email: string, code: string): Promise<{ token: string; userName: string }> {
         const url = `${this.apiUrl}/api/cli/login`;
