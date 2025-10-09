@@ -196,6 +196,57 @@ Chameleon支持12种语言：
 - Русский (ru)
 - العربية (ar)
 
+## 🏪 AGTHub - AI Agent 市场
+
+**[AGTHub](https://www.agthub.org)** 是 Chameleon 的官方 AI Agent 市场平台，为发现、分享和管理 AI Agent 提供全面的解决方案。
+
+### 🌟 核心功能
+
+- **🔍 丰富的 Agent 库**：浏览数百个免费和付费的 AI Agent，覆盖多个类别
+- **📤 轻松发布**：通过网页或 CLI 与全球社区分享您的自定义 Agent
+- **💰 变现能力**：提供付费 Agent 销售并建立您的 AI Agent 业务
+- **⭐ 社区评分**：通过社区评价和评分发现最佳 Agent
+- **🌐 多语言支持**：完整支持英语、简体中文、日本語和 Tiếng Việt
+- **🚀 直接集成**：从 AGTHub 一键安装 Agent 到 Chameleon
+
+### 🎯 面向 Chameleon 用户
+
+AGTHub 与 Chameleon 的 Agent 市场无缝集成：
+
+1. **浏览与发现**：在 [www.agthub.org](https://www.agthub.org) 或直接在 Chameleon 中探索 Agent
+2. **一键安装**：通过 Chameleon 的市场面板即时安装免费 Agent
+3. **高级访问**：在 AGTHub 上购买付费 Agent 以获得高级功能
+4. **保持更新**：自动接收 Agent 更新和新版本通知
+
+### 🛠️ 面向 Agent 开发者
+
+创建并与社区分享您的 Agent：
+
+- **网页发布**：使用直观的 [AGTHub 控制台](https://www.agthub.org/dashboard) 发布 Agent
+- **CLI 发布**：通过命令行使用 `agt publish` 发布（需要 [@chameleon-nexus/agents-cli](https://www.npmjs.com/package/@chameleon-nexus/agents-cli)）
+- **版本管理**：轻松更新您的 Agent - 新版本自动替换旧版本
+- **数据分析**：跟踪下载量、评分和用户反馈
+- **付费选项**：通过提供付费 Agent 实现您的作品变现
+
+### 💼 面向企业
+
+为企业团队提供的特殊功能：
+
+- **企业登录**：为组织账户提供专用身份验证
+- **免费高级访问**：企业用户可免费访问所有付费 Agent
+- **批量管理**：高效管理整个团队的 Agent
+- **私有发布**：在组织内部共享 Agent
+
+### 🔗 快速链接
+
+- **AGTHub 网站**：[https://www.agthub.org](https://www.agthub.org)
+- **免费 Agent**：[浏览免费 Agent](https://www.agthub.org)
+- **付费 Agent**：[探索付费专区](https://www.agthub.org/paid)
+- **开发者控制台**：[发布您的 Agent](https://www.agthub.org/dashboard)
+- **CLI 工具**：[npm 上的 Agents CLI](https://www.npmjs.com/package/@chameleon-nexus/agents-cli)
+
+> **💡 专业提示**：虽然 Chameleon 的内置市场非常适合快速浏览，但访问 [AGTHub](https://www.agthub.org) 可获得完整体验，包括详细的 Agent 描述、评论和高级搜索过滤器！
+
 ## 🔧 故障排除
 
 ### 常见问题

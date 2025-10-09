@@ -300,6 +300,57 @@ chameleon/
 - Русский (ru)
 - العربية (ar)
 
+## 🏪 AGTHub - AI Agent マーケットプレイス
+
+**[AGTHub](https://www.agthub.org)** は Chameleon の公式 AI Agent マーケットプレイスで、AI Agent の発見、共有、管理のための包括的なプラットフォームを提供します。
+
+### 🌟 主要機能
+
+- **🔍 豊富な Agent ライブラリ**：複数のカテゴリーにわたる数百の無料およびプレミアム AI Agent を閲覧
+- **📤 簡単な公開**：ウェブまたは CLI を通じてカスタム Agent をグローバルコミュニティと共有
+- **💰 収益化**：プレミアム Agent を販売して AI Agent ビジネスを構築
+- **⭐ コミュニティ評価**：コミュニティのレビューと評価で最高の Agent を発見
+- **🌐 多言語サポート**：英語、简体中文、日本語、Tiếng Việt に完全対応
+- **🚀 直接統合**：AGTHub から Chameleon にワンクリックで Agent をインストール
+
+### 🎯 Chameleon ユーザー向け
+
+AGTHub は Chameleon の Agent マーケットプレイスとシームレスに統合：
+
+1. **閲覧と発見**：[www.agthub.org](https://www.agthub.org) または Chameleon 内で直接 Agent を探索
+2. **ワンクリックインストール**：Chameleon のマーケットプレイスパネルから無料 Agent を即座にインストール
+3. **プレミアムアクセス**：AGTHub でプレミアム Agent を購入して高度な機能を利用
+4. **最新情報を入手**：Agent の更新と新リリースの自動通知を受信
+
+### 🛠️ Agent 開発者向け
+
+コミュニティと Agent を作成して共有：
+
+- **ウェブ公開**：直感的な [AGTHub ダッシュボード](https://www.agthub.org/dashboard) を使用して Agent を公開
+- **CLI 公開**：`agt publish` を使用してコマンドラインから公開（[@chameleon-nexus/agents-cli](https://www.npmjs.com/package/@chameleon-nexus/agents-cli) が必要）
+- **バージョン管理**：Agent を簡単に更新 - 新バージョンが自動的に古いバージョンを置き換え
+- **分析**：ダウンロード数、評価、ユーザーフィードバックを追跡
+- **プレミアムオプション**：プレミアム Agent を提供して作品を収益化
+
+### 💼 エンタープライズ向け
+
+エンタープライズチーム向けの特別機能：
+
+- **エンタープライズログイン**：組織アカウント専用の認証
+- **無料プレミアムアクセス**：エンタープライズユーザーはすべての有料 Agent に無料でアクセス可能
+- **一括管理**：チーム全体の Agent を効率的に管理
+- **プライベート公開**：組織内で Agent を内部共有
+
+### 🔗 クイックリンク
+
+- **AGTHub ウェブサイト**：[https://www.agthub.org](https://www.agthub.org)
+- **無料 Agent**：[無料 Agent を閲覧](https://www.agthub.org)
+- **プレミアム Agent**：[プレミアムセクションを探索](https://www.agthub.org/paid)
+- **開発者ダッシュボード**：[Agent を公開](https://www.agthub.org/dashboard)
+- **CLI ツール**：[npm の Agents CLI](https://www.npmjs.com/package/@chameleon-nexus/agents-cli)
+
+> **💡 プロのヒント**：Chameleon の内蔵マーケットプレイスはクイック閲覧に最適ですが、詳細な Agent の説明、レビュー、高度な検索フィルターを備えた完全な体験には [AGTHub](https://www.agthub.org) をご覧ください！
+
 ## 🔧 トラブルシューティング
 
 ### よくある問題

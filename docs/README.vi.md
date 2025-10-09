@@ -300,6 +300,57 @@ Chameleon hỗ trợ 12 ngôn ngữ:
 - Русский (ru)
 - العربية (ar)
 
+## 🏪 AGTHub - Thị trường AI Agent
+
+**[AGTHub](https://www.agthub.org)** là thị trường AI Agent chính thức của Chameleon, cung cấp nền tảng toàn diện để khám phá, chia sẻ và quản lý AI Agent.
+
+### 🌟 Tính năng chính
+
+- **🔍 Thư viện Agent phong phú**：Duyệt hàng trăm AI Agent miễn phí và cao cấp trên nhiều danh mục
+- **📤 Xuất bản dễ dàng**：Chia sẻ Agent tùy chỉnh với cộng đồng toàn cầu qua web hoặc CLI
+- **💰 Kiếm tiền**：Bán Agent cao cấp và xây dựng doanh nghiệp AI Agent
+- **⭐ Đánh giá cộng đồng**：Khám phá Agent tốt nhất qua đánh giá và xếp hạng cộng đồng
+- **🌐 Hỗ trợ đa ngôn ngữ**：Hỗ trợ đầy đủ tiếng Anh, 简体中文, 日本語 và Tiếng Việt
+- **🚀 Tích hợp trực tiếp**：Cài đặt Agent từ AGTHub vào Chameleon chỉ với một cú nhấp chuột
+
+### 🎯 Dành cho người dùng Chameleon
+
+AGTHub tích hợp liền mạch với Thị trường Agent của Chameleon:
+
+1. **Duyệt & Khám phá**：Khám phá Agent trên [www.agthub.org](https://www.agthub.org) hoặc trực tiếp trong Chameleon
+2. **Cài đặt một cú nhấp**：Cài đặt Agent miễn phí ngay lập tức qua bảng thị trường của Chameleon
+3. **Truy cập cao cấp**：Mua Agent cao cấp trên AGTHub để có tính năng nâng cao
+4. **Luôn cập nhật**：Nhận thông báo tự động về cập nhật Agent và bản phát hành mới
+
+### 🛠️ Dành cho nhà phát triển Agent
+
+Tạo và chia sẻ Agent với cộng đồng:
+
+- **Xuất bản trên Web**：Sử dụng [Bảng điều khiển AGTHub](https://www.agthub.org/dashboard) trực quan để xuất bản Agent
+- **Xuất bản CLI**：Xuất bản qua dòng lệnh bằng `agt publish` (cần [@chameleon-nexus/agents-cli](https://www.npmjs.com/package/@chameleon-nexus/agents-cli))
+- **Quản lý phiên bản**：Cập nhật Agent dễ dàng - phiên bản mới tự động thay thế phiên bản cũ
+- **Phân tích**：Theo dõi lượt tải xuống, đánh giá và phản hồi người dùng
+- **Tùy chọn cao cấp**：Kiếm tiền từ tác phẩm bằng cách cung cấp Agent cao cấp
+
+### 💼 Dành cho doanh nghiệp
+
+Tính năng đặc biệt cho nhóm doanh nghiệp:
+
+- **Đăng nhập doanh nghiệp**：Xác thực chuyên dụng cho tài khoản tổ chức
+- **Truy cập cao cấp miễn phí**：Người dùng doanh nghiệp truy cập tất cả Agent trả phí miễn phí
+- **Quản lý hàng loạt**：Quản lý Agent hiệu quả trên toàn đội ngũ
+- **Xuất bản riêng tư**：Chia sẻ Agent nội bộ trong tổ chức
+
+### 🔗 Liên kết nhanh
+
+- **Trang web AGTHub**：[https://www.agthub.org](https://www.agthub.org)
+- **Agent miễn phí**：[Duyệt Agent miễn phí](https://www.agthub.org)
+- **Agent cao cấp**：[Khám phá mục cao cấp](https://www.agthub.org/paid)
+- **Bảng điều khiển nhà phát triển**：[Xuất bản Agent của bạn](https://www.agthub.org/dashboard)
+- **Công cụ CLI**：[Agents CLI trên npm](https://www.npmjs.com/package/@chameleon-nexus/agents-cli)
+
+> **💡 Mẹo chuyên nghiệp**：Mặc dù thị trường tích hợp của Chameleon hoàn hảo để duyệt nhanh, hãy truy cập [AGTHub](https://www.agthub.org) để có trải nghiệm đầy đủ với mô tả Agent chi tiết, đánh giá và bộ lọc tìm kiếm nâng cao!
+
 ## 🔧 Khắc phục sự cố
 
 ### Vấn đề thường gặp
