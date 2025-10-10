@@ -276,7 +276,7 @@
         },
         "chameleon.requireLogin": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Require user authentication to access Chameleon features. When enabled, users must log in before accessing the navigation panel. When disabled, users can directly access the navigation panel without authentication."
         },
         "chameleon.activeCliMode": {
