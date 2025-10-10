@@ -103,6 +103,9 @@ export class ClaudeWelcomePanel {
                         case 'installDependency':
                             await this.installDependency(message.dependency);
                             break;
+                        case 'installSpecKitCN':
+                            await this.installSpecKitCN();
+                            break;
                     }
                 },
                 undefined
@@ -246,6 +249,21 @@ export class ClaudeWelcomePanel {
             
         } catch (error) {
             vscode.window.showErrorMessage(`${t('claudeWelcome.installDepsFailed')}: ${(error as Error).message}`);
+        }
+    }
+
+    private async installSpecKitCN() {
+        try {
+            vscode.window.showInformationMessage('开始安装 SpecKit-CN...');
+            
+            const result = await vscode.commands.executeCommand('chameleon.installSpecKitCN');
+            
+            if (result) {
+                // 安装成功，重新检测依赖
+                await this.checkDependencies();
+            }
+        } catch (error) {
+            vscode.window.showErrorMessage(`SpecKit-CN 安装失败: ${(error as Error).message}`);
         }
     }
 
@@ -606,7 +624,7 @@ export class ClaudeWelcomePanel {
                 return ['@anthropic-ai/claude-code'];
             }
             if (mode === 'claude-router') {
-                return ['@chameleon-nexus-tech/claude-code-router', 'claude-code-router-config'];
+                return ['@chameleon-nexus-tech/claude-code-router', 'claude-code-router-config', 'speckit-cn'];
             }
             return [];
         }
@@ -689,6 +707,18 @@ export class ClaudeWelcomePanel {
                     configBtn.textContent = L.clickToConfigure;
                     configBtn.onclick = () => openInstallPage(dep);
                     buttonContainer.appendChild(configBtn);
+                } else if (dep === 'speckit-cn') {
+                    const installBtn = document.createElement('button');
+                    installBtn.className = 'install-btn';
+                    installBtn.textContent = '一键安装';
+                    installBtn.onclick = () => installSpecKitCN();
+                    buttonContainer.appendChild(installBtn);
+                    
+                    const websiteBtn = document.createElement('button');
+                    websiteBtn.className = 'install-btn';
+                    websiteBtn.textContent = L.buttonWebsite;
+                    websiteBtn.onclick = () => openInstallPage(dep);
+                    buttonContainer.appendChild(websiteBtn);
                 } else {
                     const installBtn = document.createElement('button');
                     installBtn.className = 'install-btn';
@@ -733,7 +763,8 @@ export class ClaudeWelcomePanel {
                 'git': 'Git',
                 '@anthropic-ai/claude-code': 'Claude Code (Official)',
                 '@chameleon-nexus-tech/claude-code-router': 'Claude Code Router (Chameleon Nexus Fork)',
-                'claude-code-router-config': 'Claude Code Router Configuration'
+                'claude-code-router-config': 'Claude Code Router Configuration',
+                'speckit-cn': 'SpecKit-CN (中文规格驱动开发工具)'
             };
             return names[dep] || dep;
         }
@@ -754,7 +785,8 @@ export class ClaudeWelcomePanel {
                 'git': 'https://git-scm.com/downloads',
                 'npm': 'https://www.npmjs.com/',
                 '@anthropic-ai/claude-code': 'https://github.com/anthropics/claude-code',
-                '@chameleon-nexus-tech/claude-code-router': 'https://github.com/chameleon-nexus/claude-code-router'
+                '@chameleon-nexus-tech/claude-code-router': 'https://github.com/chameleon-nexus/claude-code-router',
+                'speckit-cn': 'https://github.com/chameleon-nexus/speckit-cn'
             };
             
             const url = urls[dep];
@@ -773,6 +805,13 @@ export class ClaudeWelcomePanel {
             vscode.postMessage({
                 command: 'installDependency',
                 dependency: dep
+            });
+        }
+        
+        function installSpecKitCN() {
+            console.log('[ClaudeFrontend] installSpecKitCN called');
+            vscode.postMessage({
+                command: 'installSpecKitCN'
             });
         }
         

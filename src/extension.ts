@@ -51,6 +51,13 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('chameleon.openUrl', async (url: string) => {
             vscode.env.openExternal(vscode.Uri.parse(url));
         }),
+        vscode.commands.registerCommand('chameleon.installSpecKitCN', async () => {
+            const result = await installSpecKitCN();
+            if (result) {
+                // 重新检测依赖
+                vscode.commands.executeCommand('chameleon.checkDependencies', 'claude-router');
+            }
+        }),
         vscode.commands.registerCommand('chameleon.systemSettings', () => showSystemSettingsPanel(context)),
         vscode.commands.registerCommand('chameleon.login', () => showLoginPanel(context)),
         vscode.commands.registerCommand('chameleon.navigation', () => showNavigationPanel(context)),
@@ -269,6 +276,7 @@ async function checkModeDependencies(mode: string): Promise<{ [key: string]: boo
                 '@anthropic-ai/claude-code': await checkNpmPackage('@anthropic-ai/claude-code'),
                 '@chameleon-nexus-tech/claude-code-router': await checkNpmPackage('@chameleon-nexus-tech/claude-code-router'),
                 'claude-code-router-config': await checkCCRConfig(),
+                'speckit-cn': await checkSpecKitCN(),
             };
             break;
         case 'gemini-native':
@@ -411,6 +419,142 @@ async function checkGeminiOpenRouterConfig(): Promise<boolean> {
         
         return false;
     } catch (error) {
+        return false;
+    }
+}
+
+// 检查 SpecKit-CN 是否已安装
+async function checkSpecKitCN(): Promise<boolean> {
+    try {
+        const fs = require('fs');
+        const os = require('os');
+        
+        // 检查两个位置：
+        // 1. 项目根目录的 .specify
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+            return false;
+        }
+        
+        const projectRoot = workspaceFolders[0].uri.fsPath;
+        const projectSpecifyPath = path.join(projectRoot, '.specify');
+        
+        // 2. 用户目录的 .claude/commands
+        const userCommandsPath = path.join(os.homedir(), '.claude', 'commands');
+        
+        // 检查关键文件是否存在
+        const projectExists = fs.existsSync(projectSpecifyPath) && 
+                            fs.existsSync(path.join(projectSpecifyPath, 'templates'));
+        
+        const userExists = fs.existsSync(userCommandsPath) &&
+                         fs.existsSync(path.join(userCommandsPath, '提需求.md'));
+        
+        console.log('[Extension] SpecKit-CN 检测结果:', { projectExists, userExists });
+        
+        return projectExists && userExists;
+    } catch (error) {
+        console.error('[Extension] SpecKit-CN 检测失败:', error);
+        return false;
+    }
+}
+
+// 安装 SpecKit-CN
+async function installSpecKitCN(): Promise<boolean> {
+    try {
+        const fs = require('fs');
+        const os = require('os');
+        const { promisify } = require('util');
+        const copyFile = promisify(fs.copyFile);
+        const mkdir = promisify(fs.mkdir);
+        const readdir = promisify(fs.readdir);
+        
+        // GitHub 仓库 URL
+        const REPO_URL = 'https://github.com/chameleon-nexus/speckit-cn';
+        const TEMP_DIR = path.join(os.tmpdir(), 'speckit-cn-temp');
+        
+        vscode.window.showInformationMessage('开始下载 SpecKit-CN...');
+        
+        // 1. 克隆仓库到临时目录
+        const { spawn } = require('child_process');
+        await new Promise((resolve, reject) => {
+            // 如果临时目录已存在，先删除
+            if (fs.existsSync(TEMP_DIR)) {
+                fs.rmSync(TEMP_DIR, { recursive: true, force: true });
+            }
+            
+            const gitClone = spawn('git', ['clone', '--depth', '1', REPO_URL, TEMP_DIR], {
+                stdio: 'pipe'
+            });
+            
+            gitClone.on('close', (code: number) => {
+                if (code === 0) {
+                    resolve(true);
+                } else {
+                    reject(new Error(`Git clone 失败，退出码: ${code}`));
+                }
+            });
+            
+            gitClone.on('error', (error: Error) => {
+                reject(error);
+            });
+        });
+        
+        vscode.window.showInformationMessage('下载完成，开始安装...');
+        
+        // 2. 复制文件
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+            throw new Error('未找到工作区文件夹');
+        }
+        
+        const projectRoot = workspaceFolders[0].uri.fsPath;
+        
+        // 递归复制目录函数
+        async function copyDir(src: string, dest: string) {
+            await mkdir(dest, { recursive: true });
+            const entries = await readdir(src, { withFileTypes: true });
+            
+            for (const entry of entries) {
+                const srcPath = path.join(src, entry.name);
+                const destPath = path.join(dest, entry.name);
+                
+                if (entry.isDirectory()) {
+                    await copyDir(srcPath, destPath);
+                } else {
+                    await copyFile(srcPath, destPath);
+                }
+            }
+        }
+        
+        // 复制 .specify 到项目根目录
+        const sourceSpecifyPath = path.join(TEMP_DIR, 'claude', '.specify');
+        const destSpecifyPath = path.join(projectRoot, '.specify');
+        
+        if (fs.existsSync(sourceSpecifyPath)) {
+            console.log('[Extension] 复制 .specify 到项目根目录:', destSpecifyPath);
+            await copyDir(sourceSpecifyPath, destSpecifyPath);
+        }
+        
+        // 复制 .claude/commands 到用户目录
+        const sourceCommandsPath = path.join(TEMP_DIR, 'claude', '.claude', 'commands');
+        const destCommandsPath = path.join(os.homedir(), '.claude', 'commands');
+        
+        if (fs.existsSync(sourceCommandsPath)) {
+            console.log('[Extension] 复制 commands 到用户目录:', destCommandsPath);
+            await copyDir(sourceCommandsPath, destCommandsPath);
+        }
+        
+        // 3. 清理临时目录
+        if (fs.existsSync(TEMP_DIR)) {
+            fs.rmSync(TEMP_DIR, { recursive: true, force: true });
+        }
+        
+        vscode.window.showInformationMessage('✅ SpecKit-CN 安装完成！');
+        return true;
+        
+    } catch (error) {
+        console.error('[Extension] SpecKit-CN 安装失败:', error);
+        vscode.window.showErrorMessage(`SpecKit-CN 安装失败: ${(error as Error).message}`);
         return false;
     }
 }
