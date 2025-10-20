@@ -3,7 +3,7 @@
   "displayName": "Chameleon - Universal AI CLI Launcher",
   "description": "Universal Multi-CLI Launcher for AI development tools. Supports Claude Code, Gemini CLI, Agent Marketplace, and third-party AI model integration.",
   "version": "1.2.2",
-  "publisher": "chameleon-ai",
+  "publisher": "chameleon-ai-launcher",
   "repository": {
     "type": "git",
     "url": "https://github.com/chameleon-nexus/claude-code-vscode.git"
@@ -12,22 +12,28 @@
     "vscode": "^1.80.0"
   },
   "categories": [
-    "Documentation",
-    "Notebooks",
     "Machine Learning",
-    "Productivity",
-    "Writing"
+    "Notebooks",
+    "Other"
   ],
   "keywords": [
-    "文档处理",
-    "知识库",
-    "文字工作",
-    "智能写作",
-    "claude",
+    "cli",
+    "cli-launcher",
+    "ai-cli",
+    "agent-marketplace",
+    "prompt-market",
+    "claude-code",
+    "gemini-cli",
+    "codex",
+    "copilot",
+    "ai-tools",
+    "ai-assistant",
+    "prompt-management",
+    "agent-manager",
+    "ai-development",
     "notebook",
-    "ai",
     "chameleon",
-    "文档助手"
+    "ai-router"
   ],
   "activationEvents": [
     "onStartupFinished",
